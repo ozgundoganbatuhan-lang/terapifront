@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TerapiSeansım</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script>
+/* ══════════════════════════════════════════
+   !! RAILWAY URL'NİZİ BURAYA YAZIN !!
+   Örnek: https://terapiseansim-production.up.railway.app
+══════════════════════════════════════════ */
+var BACKEND_URL = 'https://terapiseansimbackend-production.up.railway.app';
+</script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sage:#2D5A3D;--sage2:#3D7A52;--sage3:#4F9A68;--sage4:#A8D5B5;--sage5:#E8F5EC;
+  --ink:#1A2820;--body:#2C3D33;--mid:#4E6556;--muted:#7A9280;
+  --page:#F4F1EB;--card:#FFFFFF;--s1:#F0EDE7;--s2:#E5E1D8;
+  --bdr:rgba(26,40,32,.08);--bdr2:rgba(26,40,32,.14);
+  --rose:#A63D52;--rose-bg:rgba(166,61,82,.07);
+  --amber:#9A6B1F;--amber-bg:rgba(154,107,31,.08);
+  --blue:#2A5F8F;--blue-bg:rgba(42,95,143,.08);
+  --shadow:0 1px 4px rgba(26,40,32,.06),0 4px 16px rgba(26,40,32,.05);
+  --shadow-lg:0 8px 32px rgba(26,40,32,.14);
+  --sb:230px;
+  --font-head:"Playfair Display",Georgia,serif;
+  --font-body:"DM Sans",system-ui,sans-serif;
+}
+html{-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);background:var(--page);color:var(--ink);display:flex;min-height:100vh;font-size:14px;line-height:1.5}
+
+/* ── SIDEBAR ── */
+.sb{width:var(--sb);background:var(--sage);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;overflow-y:auto;overflow-x:hidden}
+.sb-logo{padding:22px 18px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.1)}
+.sb-logo-mark{font-family:var(--font-head);font-size:20px;font-style:italic;color:#fff;opacity:.9}
+.sb-logo-sep{width:1px;height:18px;background:rgba(255,255,255,.2)}
+.sb-logo-name{font-size:13px;font-weight:500;color:rgba(255,255,255,.7);letter-spacing:.02em}
+.sb-nav{padding:10px 10px;flex:1}
+.sb-sec{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:12px 8px 4px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.55);font-size:13px;font-weight:400;transition:all .15s;margin-bottom:1px}
+.sb-item:hover{background:rgba(255,255,255,.08);color:rgba(255,255,255,.85)}
+.sb-item.on{background:rgba(255,255,255,.14);color:#fff;font-weight:500}
+.sb-item .ic{font-size:14px;width:18px;text-align:center;flex-shrink:0;opacity:.8}
+.sb-badge{background:var(--rose);color:#fff;border-radius:99px;font-size:10px;font-weight:700;padding:1px 6px;margin-left:auto}
+.sb-footer{padding:10px 10px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-user-name{padding:6px 10px;font-size:11.5px;color:rgba(255,255,255,.4);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-trial{display:none;background:var(--amber);color:#fff;border-radius:5px;font-size:10px;font-weight:600;padding:1px 6px;margin-left:6px}
+.sb-logout{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,.38);font-size:12px;transition:all .15s;border:none;background:none;width:100%;font-family:var(--font-body)}
+.sb-logout:hover{background:rgba(166,61,82,.25);color:#E8889A}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sb);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:rgba(244,241,235,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bdr);padding:0 28px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.topbar-title{font-family:var(--font-head);font-size:17px;font-weight:500;color:var(--ink);font-style:italic}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.content{padding:24px 28px;flex:1}
+.view{display:none}.view.on{display:block}
+
+/* ── STAT GRID ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--bdr);border-radius:14px;padding:18px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.stat:hover{transform:translateY(-1px);box-shadow:var(--shadow)}
+.stat-accent{position:absolute;top:0;left:0;right:0;height:3px;border-radius:14px 14px 0 0}
+.stat-ic{font-size:18px;margin-bottom:10px;opacity:.7}
+.stat-v{font-family:var(--font-head);font-size:30px;font-weight:700;color:var(--ink);letter-spacing:-.02em;margin-bottom:2px;min-height:36px}
+.stat-l{font-size:11.5px;color:var(--muted);font-weight:400}
+.stat-sk{background:var(--s2);border-radius:6px;animation:sk 1.4s ease infinite}
+@keyframes sk{0%,100%{opacity:.6}50%{opacity:.3}}
+
+/* ── DASH GRID ── */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dash-grid .full{grid-column:1/-1}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:14px;border:1px solid var(--bdr);box-shadow:var(--shadow)}
+.card-h{padding:15px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.card-t{font-size:13px;font-weight:600;color:var(--ink)}
+.card-body{padding:16px 18px}
+
+/* ── SCHEDULE ── */
+.sched-item{display:flex;align-items:center;gap:10px;padding:9px 8px;border-radius:8px;cursor:pointer;transition:background .12s}
+.sched-item:hover{background:var(--sage5)}
+.sched-dot{width:7px;height:7px;border-radius:50%;background:var(--sage3);flex-shrink:0}
+.sched-time{font-size:12px;font-weight:600;color:var(--mid);min-width:38px;font-variant-numeric:tabular-nums}
+.sched-name{font-size:13px;font-weight:500;color:var(--ink)}
+.sched-meta{font-size:11px;color:var(--muted);margin-top:1px}
+.sched-item-full{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;border:1px solid var(--bdr);margin-bottom:7px;background:var(--card);transition:box-shadow .12s}
+.sched-item-full:hover{box-shadow:var(--sh-sm)}
+.sched-item-full:last-child{margin-bottom:0}
+.sched-time-col{display:flex;flex-direction:column;align-items:center;min-width:44px;flex-shrink:0}
+.sched-dur{font-size:10px;color:var(--muted);margin-top:2px}
+.sched-body{flex:1;min-width:0}
+.sched-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0}
+
+/* ── RISK ── */
+.risk-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.risk-row:last-child{border-bottom:none}
+.risk-dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:7px;flex-shrink:0}
+
+/* ── MINI CAL ── */
+.mc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mc-nav{background:none;border:none;cursor:pointer;color:var(--mid);font-size:15px;padding:3px 8px;border-radius:6px;font-family:var(--font-body)}
+.mc-nav:hover{background:var(--sage5)}
+.mc-label{font-size:13px;font-weight:600;color:var(--ink)}
+.mc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mc-dh{font-size:9.5px;font-weight:600;text-align:center;color:var(--muted);padding:3px 0;text-transform:uppercase}
+.mc-day{font-size:12px;text-align:center;padding:5px 2px;border-radius:6px;cursor:pointer;color:var(--body);position:relative;font-variant-numeric:tabular-nums}
+.mc-day:hover{background:var(--sage5)}
+.mc-day.other{color:var(--muted);opacity:.4}
+.mc-day.today{background:var(--sage5);color:var(--sage);font-weight:700;border:1.5px solid var(--sage4)}
+.mc-day.has-apt::after{content:"";width:4px;height:4px;border-radius:50%;background:var(--sage3);position:absolute;bottom:1px;left:50%;transform:translateX(-50%)}
+
+/* ── CAL GRID ── */
+.cal-dh{font-size:10px;font-weight:600;text-align:center;color:var(--muted);padding:6px 0;text-transform:uppercase}
+.cal-grid-7{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-cell{border:1px solid var(--bdr);border-radius:8px;min-height:86px;padding:6px;background:var(--card);cursor:pointer;transition:background .12s}
+.cal-cell:hover{background:var(--sage5)}
+.cal-cell.other{background:var(--s1);opacity:.5;cursor:default}
+.cal-cell.today{border-color:var(--sage3);border-width:2px}
+.cal-num{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:3px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cal-cell.today .cal-num{background:var(--sage);color:#fff}
+.cal-apt-pill{font-size:10px;background:var(--sage5);color:var(--sage);border-radius:4px;padding:1px 5px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-left:2px solid var(--sage3)}
+.cal-gcal-pill{font-size:10px;background:#EEF2FF;color:#3B5998;border-radius:4px;padding:1px 5px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border-left:2px solid #7B9DE0}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;font-family:var(--font-body);cursor:pointer;transition:all .15s;border:1.5px solid transparent;white-space:nowrap;line-height:1}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{padding:5px 11px;font-size:12px;border-radius:6px}
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:5px}
+.bp{background:var(--sage);color:#fff;border-color:var(--sage)}
+.bp:hover:not(:disabled){background:var(--sage2)}
+.bo{background:var(--card);color:var(--mid);border-color:var(--bdr2)}
+.bo:hover:not(:disabled){border-color:var(--sage2);color:var(--sage)}
+.br{background:var(--card);color:var(--rose);border-color:rgba(166,61,82,.2)}
+.br:hover:not(:disabled){background:var(--rose-bg)}
+.ba{background:var(--card);color:var(--amber);border-color:rgba(154,107,31,.25)}
+.ba:hover:not(:disabled){background:var(--amber-bg)}
+.bb{background:var(--card);color:var(--blue);border-color:rgba(42,95,143,.25)}
+.bb:hover:not(:disabled){background:var(--blue-bg)}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--bdr);background:var(--card)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:10px 14px;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:var(--s1);border-bottom:1px solid var(--bdr);text-align:left;white-space:nowrap}
+tbody td{padding:10px 14px;font-size:13px;color:var(--body);border-bottom:1px solid var(--bdr);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--sage5)}
+.td-ac{display:flex;gap:4px;flex-wrap:wrap}
+.td-name{font-weight:500;color:var(--sage);cursor:pointer}
+.td-name:hover{text-decoration:underline}
+
+/* ── FORM ── */
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fg label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--mid)}
+.fg input,.fg textarea,.fg select{padding:9px 11px;border:1.5px solid var(--bdr2);border-radius:8px;font-size:13.5px;color:var(--ink);background:var(--card);font-family:var(--font-body);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--sage2);box-shadow:0 0 0 3px rgba(45,90,61,.1)}
+.fg textarea{resize:vertical;min-height:80px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ── MODAL ── */
+.mo{position:fixed;inset:0;background:rgba(26,40,32,.5);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.mo.open{display:flex}
+.mo-box{background:var(--card);border-radius:16px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.mo-box.wide{max-width:680px}
+.mo-head{padding:18px 20px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.mo-title{font-family:var(--font-head);font-size:18px;font-weight:500;color:var(--ink);font-style:italic}
+.mo-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:17px;line-height:1;padding:4px;border-radius:5px}
+.mo-close:hover{color:var(--rose);background:var(--rose-bg)}
+.mo-body{padding:20px}
+.mo-foot{padding:14px 20px;border-top:1px solid var(--bdr);display:flex;justify-content:flex-end;gap:8px;background:var(--s1);border-radius:0 0 16px 16px}
+
+/* ── ALERT ── */
+.alert{border-radius:8px;padding:10px 13px;font-size:13px;margin-bottom:10px;display:none;line-height:1.5}
+.alert.show{display:block}
+.a-err{background:var(--rose-bg);color:var(--rose);border:1px solid rgba(166,61,82,.2)}
+.a-ok{background:rgba(45,90,61,.08);color:var(--sage);border:1px solid rgba(45,90,61,.2)}
+.a-warn{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(154,107,31,.2)}
+.a-info{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(42,95,143,.2)}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:600;vertical-align:middle;white-space:nowrap}
+.bg-g{background:rgba(45,90,61,.1);color:var(--sage)}
+.bg-r{background:var(--rose-bg);color:var(--rose)}
+.bg-a{background:var(--amber-bg);color:var(--amber)}
+.bg-b{background:var(--blue-bg);color:var(--blue)}
+.bg-m{background:var(--s2);color:var(--muted)}
+.bg-ink{background:var(--s2);color:var(--ink)}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:32px 16px;color:var(--muted)}
+.empty-ic{font-size:32px;margin-bottom:8px;opacity:.4}
+.empty-t{font-size:14px;font-weight:500;margin-bottom:3px;color:var(--mid)}
+.empty-s{font-size:12px;opacity:.7}
+
+/* ── PAGE HEADER ── */
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.ph h2{font-family:var(--font-head);font-size:22px;font-weight:500;color:var(--ink);font-style:italic}
+.ph-ac{display:flex;gap:8px;align-items:center}
+
+/* ── SEARCH ── */
+.srch-row{display:flex;gap:8px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.srch{padding:8px 12px;border:1.5px solid var(--bdr2);border-radius:8px;font-size:13px;color:var(--ink);background:var(--card);outline:none;font-family:var(--font-body);transition:border-color .15s}
+.srch:focus{border-color:var(--sage2)}
+.srch.wide{min-width:180px;flex:1}
+.sel{padding:7px 10px;border:1.5px solid var(--bdr2);border-radius:8px;font-size:13px;color:var(--ink);background:var(--card);outline:none;font-family:var(--font-body)}
+
+/* ── AI ── */
+.ai-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.ai-card{border:1.5px solid var(--bdr2);border-radius:10px;padding:12px;cursor:pointer;transition:all .15s;background:var(--card)}
+.ai-card:hover,.ai-card.on{border-color:var(--sage2);background:var(--sage5)}
+.ai-card-ic{font-size:20px;margin-bottom:6px}
+.ai-card-t{font-size:12.5px;font-weight:600;color:var(--ink)}
+.ai-card-d{font-size:11px;color:var(--muted);margin-top:2px}
+.ai-result-box{background:var(--s1);border-radius:10px;padding:16px;margin-top:12px;display:none;border:1px solid var(--bdr)}
+.ai-result-txt{font-size:13.5px;line-height:1.8;color:var(--ink);white-space:pre-wrap;font-family:var(--font-body)}
+.ai-thinking{display:none;text-align:center;padding:28px;color:var(--muted)}
+.dots span{animation:dot 1.2s infinite;opacity:0}
+.dots span:nth-child(2){animation-delay:.3s}
+.dots span:nth-child(3){animation-delay:.6s}
+@keyframes dot{0%,100%{opacity:0}50%{opacity:1}}
+
+/* ── SCALE ── */
+.scale-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.sc-tab{padding:5px 11px;border:1.5px solid var(--bdr2);border-radius:7px;font-size:12px;font-weight:500;cursor:pointer;background:var(--card);color:var(--mid);font-family:var(--font-body);transition:all .12s}
+.sc-tab.on{border-color:var(--sage2);background:var(--sage5);color:var(--sage)}
+.sc-q{margin-bottom:10px}
+.sc-q-txt{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:6px}
+.sc-opts{display:flex;flex-wrap:wrap;gap:5px}
+.sc-opt{padding:5px 10px;border:1.5px solid var(--bdr2);border-radius:7px;font-size:12px;cursor:pointer;background:var(--card);color:var(--mid);font-family:var(--font-body);transition:all .12s}
+.sc-opt.on{border-color:var(--sage2);background:var(--sage5);color:var(--sage);font-weight:600}
+.sc-score{background:var(--sage5);border:1px solid var(--sage4);border-radius:10px;padding:14px 18px;text-align:center;margin:14px 0}
+.sc-score-v{font-family:var(--font-head);font-size:34px;font-weight:700;color:var(--sage)}
+.sc-score-l{font-size:12px;color:var(--mid);margin-top:3px}
+
+/* ── NOTE CARD ── */
+.note-card{background:var(--card);border:1px solid var(--bdr);border-radius:10px;padding:14px;margin-bottom:10px;transition:box-shadow .15s}
+.note-card:hover{box-shadow:var(--shadow)}
+.note-meta{font-size:11px;color:var(--muted);margin-bottom:6px;display:flex;gap:8px;flex-wrap:wrap}
+.note-meta span{background:var(--s1);border-radius:4px;padding:1px 6px}
+.note-body{font-size:13.5px;color:var(--ink);line-height:1.75;white-space:pre-wrap}
+.note-hw{background:var(--sage5);border-radius:6px;padding:8px 10px;margin-top:8px;font-size:12.5px;color:var(--sage)}
+.note-foot{margin-top:10px;display:flex;justify-content:flex-end;gap:6px}
+
+/* ── SETTINGS ── */
+.set-sec{margin-bottom:22px}
+.set-sec-t{font-size:12.5px;font-weight:600;color:var(--ink);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--bdr)}
+.th-tag{display:inline-flex;align-items:center;gap:5px;background:var(--sage5);border-radius:6px;padding:4px 8px;font-size:12px;color:var(--sage);margin:3px}
+.th-tag-rm{background:none;border:none;cursor:pointer;color:var(--muted);font-size:12px;line-height:1;padding:0}
+.th-tag-rm:hover{color:var(--rose)}
+
+/* ── DRAWER ── */
+#drawer-overlay{position:fixed;inset:0;background:rgba(26,40,32,.45);z-index:150;display:none}
+#drawer-overlay.open{display:block}
+#drawer{position:fixed;right:0;top:0;height:100vh;width:380px;background:var(--card);z-index:160;transform:translateX(100%);transition:transform .25s cubic-bezier(.25,.46,.45,.94);overflow-y:auto;box-shadow:-8px 0 40px rgba(26,40,32,.15)}
+#drawer.open{transform:none}
+.dr-head{padding:20px;border-bottom:1px solid var(--bdr);display:flex;align-items:flex-start;justify-content:space-between}
+.dr-name{font-family:var(--font-head);font-size:20px;font-weight:500;color:var(--ink);font-style:italic}
+.dr-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.dr-close{background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted);padding:4px}
+.dr-body{padding:16px 20px}
+.dr-sec{margin-bottom:16px}
+.dr-sec-t{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.dr-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.dr-row:last-child{border-bottom:none}
+.dr-row-l{color:var(--muted)}
+.dr-row-v{font-weight:500;color:var(--ink)}
+.dr-acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bdr)}
+
+/* ── GCAL EVENTS ── */
+.gcal-ev{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.gcal-ev:last-child{border-bottom:none}
+.gcal-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;background:#4285F4}
+.gcal-title{font-size:13px;color:var(--ink);font-weight:500}
+.gcal-time{font-size:11px;color:var(--muted);margin-top:2px}
+/* Dashboard aksiyon bar */
+.dash-actions{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.dash-act-btn{display:flex;align-items:center;gap:7px;padding:9px 16px;background:var(--card);border:1.5px solid var(--bdr);border-radius:10px;font-size:13px;font-weight:500;color:var(--ink);cursor:pointer;font-family:var(--B);transition:all .15s}
+.dash-act-btn:hover{background:var(--sage5);border-color:var(--sage3);color:var(--sage)}
+.dash-act-ic{font-size:15px}
+.dash-date{font-size:12px;color:var(--muted);margin-left:auto}
+/* Finans */
+.fin-kpi{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:20px}
+.fin-kpi-card{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:14px 16px}
+.fin-kpi-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.fin-kpi-val{font-family:var(--D);font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.03em}
+.fin-kpi-sub{font-size:11px;color:var(--muted);margin-top:3px}
+.fin-kpi-card.accent{background:var(--sage);border-color:var(--sage)}
+.fin-kpi-card.accent .fin-kpi-lbl,.fin-kpi-card.accent .fin-kpi-val,.fin-kpi-card.accent .fin-kpi-sub{color:#fff}
+.fin-kpi-card.accent .fin-kpi-lbl,.fin-kpi-card.accent .fin-kpi-sub{opacity:.7}
+.fin-kpi-card.pending{border-color:rgba(196,133,58,.4);background:rgba(196,133,58,.05)}
+.fin-kpi-card.pending .fin-kpi-val{color:var(--amber)}
+.fin-chart{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:18px 20px;margin-bottom:20px}
+.fin-chart-h{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.fin-bars{display:flex;align-items:flex-end;gap:6px;height:90px}
+.fin-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.fin-bar{width:100%;border-radius:4px 4px 0 0;background:var(--sage3);min-height:3px;transition:height .4s ease}
+.fin-bar.cur{background:var(--sage)}
+.fin-bar-lbl{font-size:9px;color:var(--muted);text-align:center;white-space:nowrap}
+.fin-bar-amt{font-size:9px;color:var(--muted);text-align:center;white-space:nowrap}
+.fin-section{background:var(--card);border:1.5px solid var(--bdr);border-radius:12px;padding:18px 20px;margin-bottom:16px}
+.fin-section-h{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bdr)}
+.fin-patient-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bdr)}
+.fin-patient-row:last-child{border:none}
+.fin-pat-name{flex:1;font-size:13px;color:var(--ink);font-weight:500}
+.fin-pat-bar-wrap{width:100px;height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
+.fin-pat-bar{height:100%;background:var(--sage3);border-radius:3px}
+.fin-pat-amt{font-size:12px;font-weight:600;color:var(--ink);min-width:72px;text-align:right}
+.fin-pending-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bdr)}
+.fin-pending-row:last-child{border:none}
+.fin-pend-name{flex:1;font-size:13px;color:var(--ink)}
+.fin-pend-amt{font-size:13px;font-weight:600;color:var(--amber);min-width:70px;text-align:right}
+.fin-pend-date{font-size:11px;color:var(--muted);min-width:60px;text-align:right}
+/* GCal setup guide */
+.gcal-guide{background:var(--s1);border:1.5px solid var(--bdr);border-radius:10px;padding:16px 18px;font-size:13px;color:var(--body);line-height:1.7}
+.gcal-guide h4{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.gcal-guide ol{padding-left:18px;margin:0}
+.gcal-guide li{margin-bottom:5px}
+.gcal-guide code{background:var(--s2);padding:1px 5px;border-radius:4px;font-size:12px;font-family:monospace}
+.reminder-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border:1px solid rgba(42,96,64,.3);border-radius:6px;background:rgba(42,96,64,.06);color:var(--sage2);font-size:11.5px;cursor:pointer;font-family:var(--B);transition:all .15s}
+.reminder-btn:hover{background:rgba(42,96,64,.12);border-color:var(--sage3)}
+
+/* ── CHART ── */
+.chart-wrap{position:relative;height:150px}
+
+/* ── TOAST ── */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:7px;pointer-events:none}
+.toast{background:var(--sage);color:#fff;border-radius:10px;padding:10px 16px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(26,40,32,.2);max-width:320px;animation:tin .2s ease;pointer-events:auto}
+.toast.out{animation:tout .2s ease forwards}
+@keyframes tin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes tout{to{opacity:0;transform:translateY(6px)}}
+
+/* ── CONFIG ERROR BANNER ── */
+#cfg-banner{background:#FFF8F0;border:2px solid var(--amber);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:none}
+#cfg-banner.show{display:block}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:4px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  :root{--sb:0px}
+  .sb{transform:translateX(-100%);transition:transform .25s}
+  .sb.mobile-open{transform:none}
+  .main{margin-left:0}
+  .stat-grid{grid-template-columns:1fr 1fr}
+  .dash-grid{grid-template-columns:1fr}
+  .f2,.f3{grid-template-columns:1fr}
+  .ai-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb" id="sidebar">
+  <div class="sb-logo">
+    <span class="sb-logo-mark">Ts</span>
+    <div class="sb-logo-sep"></div>
+    <span class="sb-logo-name">TerapiSeansım</span>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Genel</div>
+    <div class="sb-item on" data-v="dashboard"><span class="ic">⊡</span>Gösterge Paneli</div>
+    <div class="sb-item" data-v="calendar"><span class="ic">📅</span>Takvim <span class="sb-badge" id="badge-today" style="display:none">0</span></div>
+    <div class="sb-sec">Klinik</div>
+    <div class="sb-item" data-v="appointments"><span class="ic">🕐</span>Randevular</div>
+    <div class="sb-item" data-v="patients"><span class="ic">◉</span>Hastalar</div>
+    <div class="sb-item" data-v="notes"><span class="ic">✍️</span>Seans Notları</div>
+    <div class="sb-item" data-v="scores"><span class="ic">📊</span>Değerlendirmeler</div>
+    <div class="sb-sec">Araçlar</div>
+    <div class="sb-item" data-v="ai"><span class="ic">✦</span>AI Araçlar</div>
+    <div class="sb-sec">Finans</div>
+    <div class="sb-item" data-v="finance"><span class="ic">💰</span>Gelir Analizi</div>
+    <div class="sb-item" data-v="packages"><span class="ic">📦</span>Paketler</div>
+    <div class="sb-item" data-v="invoices"><span class="ic">🧾</span>Faturalar</div>
+    <div class="sb-sec">Hesap</div>
+    <div class="sb-item" data-v="settings"><span class="ic">⚙️</span>Ayarlar</div>
+    <div class="sb-item" data-v="kvkk"><span class="ic">🔒</span>KVKK & Veri</div>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-user-name" id="sb-user"><span id="sb-user-text">—</span><span class="sb-trial" id="sb-trial"></span></div>
+    <button class="sb-logout" id="logout-btn">← Çıkış Yap</button>
+  </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbar-title">Gösterge Paneli</div>
+    <div class="topbar-actions" id="topbar-actions"></div>
+  </div>
+  <div class="content">
+
+    <!-- CONFIG HATA BANNER — sadece URL set edilmemişse görünür -->
+    <div id="cfg-banner">
+      <strong style="color:var(--amber);font-size:14px">⚠️ Backend bağlantısı kurulamadı</strong>
+      <p style="font-size:13px;color:#555;margin-top:6px">Sunucuya ulaşılamıyor. Lütfen internet bağlantınızı veya Railway servisini kontrol edin.</p>
+    </div>
+
+    <!-- ═ DASHBOARD ═ -->
+    <div class="view on" id="v-dashboard">
+      <!-- Hızlı aksiyon bar -->
+      <div class="dash-actions">
+        <button class="dash-act-btn" id="btn-dash-new-apt"><span class="dash-act-ic">🕐</span><span>Randevu Ekle</span></button>
+        <button class="dash-act-btn" id="btn-dash-new-pat"><span class="dash-act-ic">◉</span><span>Hasta Ekle</span></button>
+        <button class="dash-act-btn" id="btn-dash-new-note"><span class="dash-act-ic">✍️</span><span>Not Ekle</span></button>
+        <button class="dash-act-btn" id="btn-dash-new-inv"><span class="dash-act-ic">🧾</span><span>Fatura Kes</span></button>
+      </div>
+      <!-- KPI kartlar -->
+      <div class="stat-grid">
+        <div class="stat" style="cursor:pointer" data-nav="patients"><div class="stat-accent" style="background:var(--sage3)"></div><div class="stat-ic">◉</div><div class="stat-v stat-sk" id="ds-total" style="width:60px;border-radius:6px"> </div><div class="stat-l">Toplam Hasta</div></div>
+        <div class="stat" style="cursor:pointer" data-nav="appointments"><div class="stat-accent" style="background:var(--blue)"></div><div class="stat-ic">🕐</div><div class="stat-v stat-sk" id="ds-today" style="width:60px;border-radius:6px"> </div><div class="stat-l">Bugün Randevu</div></div>
+        <div class="stat" style="cursor:pointer" data-nav="appointments"><div class="stat-accent" style="background:var(--amber)"></div><div class="stat-ic">📆</div><div class="stat-v stat-sk" id="ds-month" style="width:60px;border-radius:6px"> </div><div class="stat-l">Bu Ay Seans</div></div>
+        <div class="stat" style="cursor:pointer" data-nav="finance"><div class="stat-accent" style="background:var(--rose)"></div><div class="stat-ic">💰</div><div class="stat-v stat-sk" id="ds-rev" style="width:80px;border-radius:6px"> </div><div class="stat-l">Bu Ay Gelir</div></div>
+      </div>
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-h"><span class="card-t">☀️ Bugünün Randevuları</span><span class="dash-date" id="dash-date-lbl"></span></div>
+          <div class="card-body"><div id="dash-today"><div class="empty"><div class="empty-ic">⏳</div><div class="empty-t">Yükleniyor...</div></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="card-t">📅 Mini Takvim</span></div>
+          <div class="card-body"><div id="mini-cal"></div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="card-t">⚠️ Risk Takibi</span><span style="font-size:11px;color:var(--muted)">PHQ-9 ≥ 15</span></div>
+          <div class="card-body"><div id="dash-risks"><div class="empty"><div class="empty-ic">⏳</div><div class="empty-t">Yükleniyor...</div></div></div></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><span class="card-t">📈 Seans Trendi</span><span style="font-size:11px;color:var(--muted)">Son 6 ay</span></div>
+          <div class="card-body"><div class="chart-wrap"><canvas id="rev-chart"></canvas></div></div>
+        </div>
+        <div class="card full" id="gcal-dash-card" style="display:none">
+          <div class="card-h"><span class="card-t">📅 Google Takvim — Yaklaşan</span><button class="btn bo btn-sm" id="btn-gcal-refresh">↻ Güncelle</button></div>
+          <div class="card-body"><div id="gcal-events-list"><div class="empty"><div class="empty-t">Yükleniyor...</div></div></div></div>
+        </div>
+      </div>
+    </div>
+    <!-- ═ TAKVİM ═ -->
+    <div class="view" id="v-calendar">
+      <div class="ph">
+        <div style="display:flex;align-items:center;gap:10px">
+          <button class="btn bo btn-sm" id="cal-prev">‹</button>
+          <span style="font-family:var(--font-head);font-size:18px;font-style:italic" id="cal-label">—</span>
+          <button class="btn bo btn-sm" id="cal-next">›</button>
+          <button class="btn bo btn-sm" id="cal-today-btn">Bugün</button>
+        </div>
+        <div class="ph-ac">
+          <div id="gcal-status-badge"></div>
+          <button class="btn bp btn-sm" id="btn-cal-new-apt">+ Randevu</button>
+        </div>
+      </div>
+      <div class="cal-grid-7" id="cal-day-headers"></div>
+      <div style="height:6px"></div>
+      <div class="cal-grid-7" id="cal-grid"></div>
+    </div>
+
+    <!-- ═ RANDEVULAR ═ -->
+    <div class="view" id="v-appointments">
+      <div class="ph"><h2>Randevular</h2><div class="ph-ac"><button class="btn bp" id="btn-apt-new">+ Yeni Randevu</button></div></div>
+      <div class="srch-row">
+        <input class="srch wide" id="apt-srch" placeholder="🔍 Hasta adı ara...">
+        <input class="srch" type="date" id="apt-date-f">
+        <select class="sel" id="apt-status-f"><option value="">Tüm Durumlar</option><option value="scheduled">Planlandı</option><option value="completed">Tamamlandı</option><option value="cancelled">İptal</option></select>
+      </div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Hasta</th><th>Tarih & Saat</th><th>Süre</th><th>Terapi</th><th>Ortam</th><th>Durum</th><th>GCal</th><th></th></tr></thead>
+        <tbody id="apt-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ═ HASTALAR ═ -->
+    <div class="view" id="v-patients">
+      <div class="ph"><h2>Hastalar</h2><div class="ph-ac"><button class="btn bp" id="btn-pat-new">+ Yeni Hasta</button></div></div>
+      <div class="srch-row"><input class="srch wide" id="pat-srch" placeholder="🔍 Ad, telefon, terapi türü..."></div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Terapi</th><th>Seans</th><th>Kayıt</th><th>PHQ-9</th><th></th></tr></thead>
+        <tbody id="pat-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ═ NOTLAR ═ -->
+    <div class="view" id="v-notes">
+      <div class="ph"><h2>Seans Notları</h2>
+        <div class="ph-ac">
+          <select class="sel" id="notes-pat-sel"><option value="">— Hasta seçin —</option></select>
+          <button class="btn bp" id="btn-note-new" disabled>+ Yeni Not</button>
+        </div>
+      </div>
+      <div id="notes-list"><div class="empty"><div class="empty-ic">✍️</div><div class="empty-t">Bir hasta seçin</div></div></div>
+    </div>
+
+    <!-- ═ DEĞERLENDİRMELER ═ -->
+    <div class="view" id="v-scores">
+      <div class="ph"><h2>Değerlendirmeler</h2>
+        <div class="ph-ac">
+          <select class="sel" id="scores-pat-sel"><option value="">— Hasta seçin —</option></select>
+          <button class="btn bp" id="btn-score-new" disabled>+ Yeni Ölçek</button>
+        </div>
+      </div>
+      <div id="scores-list"><div class="empty"><div class="empty-ic">📊</div><div class="empty-t">Bir hasta seçin</div></div></div>
+    </div>
+
+    <!-- ═ AI ═ -->
+    <div class="view" id="v-ai">
+      <div class="ph"><h2>AI Araçlar</h2></div>
+      <div class="card">
+        <div class="card-body">
+          <div class="ai-grid" id="ai-tool-grid"></div>
+          <div class="fg"><label id="ai-lbl">Giriş</label>
+            <select class="sel" id="ai-pat-sel" style="margin-bottom:8px;display:none"><option value="">— Hasta bağlamı (opsiyonel) —</option></select>
+            <textarea id="ai-inp" rows="5" placeholder="Buraya yazın..."></textarea>
+          </div>
+          <div class="alert a-err" id="ai-err"></div>
+          <div class="ai-thinking" id="ai-thinking"><div>✦ AI düşünüyor</div><div class="dots"><span>.</span><span>.</span><span>.</span></div></div>
+          <div id="ai-footer" style="display:flex;gap:8px">
+            <button class="btn bp" id="btn-ai-run" disabled>✦ Oluştur</button>
+          </div>
+          <div class="ai-result-box" id="ai-result-box">
+            <div class="ai-result-txt" id="ai-result-txt"></div>
+            <div style="display:flex;gap:8px;margin-top:12px">
+              <button class="btn bo btn-sm" id="btn-ai-copy">📋 Kopyala</button>
+              <button class="btn bo btn-sm" id="btn-ai-new">↩ Yeni</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ PAKETLER ═ -->
+    <div class="view" id="v-packages">
+      <div class="ph"><h2>Paketler</h2><div class="ph-ac"><button class="btn bp" id="btn-pkg-new">+ Yeni Paket</button></div></div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>Hasta</th><th>Paket</th><th>Toplam</th><th>Kalan</th><th>Tutar</th><th>Başlangıç</th><th></th></tr></thead>
+        <tbody id="pkg-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ═ GELİR ANALİZİ ═ -->
+    <div class="view" id="v-finance">
+      <div class="ph">
+        <h2>Gelir Analizi</h2>
+        <div class="ph-ac">
+          <select class="sel" id="fin-year-sel" style="width:100px"></select>
+          <button class="btn bo btn-sm" id="btn-fin-export">⬇ CSV</button>
+        </div>
+      </div>
+      <!-- KPI kartlar -->
+      <div class="fin-kpi" id="fin-kpi-row">
+        <div class="fin-kpi-card accent"><div class="fin-kpi-lbl">Bu Ay Gelir</div><div class="fin-kpi-val" id="fk-month">₺—</div><div class="fin-kpi-sub" id="fk-growth">—</div></div>
+        <div class="fin-kpi-card"><div class="fin-kpi-lbl">Bu Yıl Toplam</div><div class="fin-kpi-val" id="fk-year">₺—</div><div class="fin-kpi-sub" id="fk-year-cnt">— fatura</div></div>
+        <div class="fin-kpi-card pending"><div class="fin-kpi-lbl">Bekleyen Tahsilat</div><div class="fin-kpi-val" id="fk-pending">₺—</div><div class="fin-kpi-sub" id="fk-pend-cnt">— fatura</div></div>
+        <div class="fin-kpi-card"><div class="fin-kpi-lbl">Ödenen Bu Ay</div><div class="fin-kpi-val" id="fk-paid">₺—</div><div class="fin-kpi-sub" id="fk-paid-cnt">— fatura</div></div>
+      </div>
+      <!-- Aylık trend -->
+      <div class="fin-chart">
+        <div class="fin-chart-h"><span>Aylık Gelir Trendi</span><span style="font-size:11px;color:var(--muted)" id="fin-chart-range">Son 12 ay</span></div>
+        <div class="fin-bars" id="fin-bars-wrap"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <!-- Hasta başına gelir -->
+        <div class="fin-section">
+          <div class="fin-section-h">Hasta Başına Gelir (Bu Yıl)</div>
+          <div id="fin-by-patient"><div class="empty" style="padding:8px 0"><div class="empty-t">Yükleniyor...</div></div></div>
+        </div>
+        <!-- Bekleyen faturalar -->
+        <div class="fin-section">
+          <div class="fin-section-h">Bekleyen Tahsilatlar</div>
+          <div id="fin-pending-list"><div class="empty" style="padding:8px 0"><div class="empty-t">Yükleniyor...</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ FATURALAR ═ -->
+    <div class="view" id="v-invoices">
+      <div class="ph"><h2>Faturalar</h2><div class="ph-ac"><button class="btn bp" id="btn-inv-new">+ Yeni Fatura</button></div></div>
+      <div class="srch-row">
+        <input class="srch" type="month" id="inv-month-f">
+        <select class="sel" id="inv-status-f"><option value="">Tümü</option><option value="paid">Ödendi</option><option value="pending">Bekliyor</option></select>
+      </div>
+      <div id="inv-stats-row" style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap"></div>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>#</th><th>Hasta</th><th>Açıklama</th><th>Tutar</th><th>KDV</th><th>Tarih</th><th>Durum</th><th></th></tr></thead>
+        <tbody id="inv-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ═ AYARLAR ═ -->
+    <div class="view" id="v-settings">
+      <div class="ph"><h2>Ayarlar</h2><div class="ph-ac"><button class="btn bp" id="btn-set-save">💾 Kaydet</button></div></div>
+      <div class="card">
+        <div class="card-body">
+          <div class="set-sec">
+            <div class="set-sec-t">Profil Bilgileri</div>
+            <div class="f2">
+              <div class="fg"><label>Ad Soyad</label><input id="set-name" type="text"></div>
+              <div class="fg"><label>Klinik Adı</label><input id="set-clinic" type="text"></div>
+            </div>
+            <div class="f2">
+              <div class="fg"><label>Klinik Adresi</label><input id="set-addr" type="text"></div>
+              <div class="fg"><label>Klinik Telefonu</label><input id="set-phone" type="tel"></div>
+            </div>
+          </div>
+          <div class="set-sec">
+            <div class="set-sec-t">Google Takvim Entegrasyonu</div>
+            <div id="gcal-settings-block"><div class="empty" style="padding:12px 0"><div class="empty-t">Yükleniyor...</div></div></div>
+          </div>
+          <div class="set-sec">
+            <div class="set-sec-t">Terapi Türleri</div>
+            <div id="th-tags" style="margin-bottom:8px;min-height:32px"></div>
+            <div style="display:flex;gap:8px">
+              <input class="srch" id="inp-th" placeholder="Yeni terapi türü ekle" style="flex:1">
+              <button class="btn bo" id="btn-th-add">+ Ekle</button>
+            </div>
+          </div>
+          <div class="set-sec">
+            <div class="set-sec-t">Şifre Değiştir</div>
+            <div class="f3">
+              <div class="fg"><label>Mevcut Şifre</label><input id="set-cur-pw" type="password" placeholder="••••••••"></div>
+              <div class="fg"><label>Yeni Şifre</label><input id="set-new-pw" type="password" placeholder="••••••••"></div>
+              <div class="fg"><label>Tekrar</label><input id="set-new-pw2" type="password" placeholder="••••••••"></div>
+            </div>
+            <button class="btn bo btn-sm" id="btn-pw-change">Şifreyi Güncelle</button>
+          </div>
+          <div class="alert a-err" id="set-err"></div>
+          <div class="alert a-ok" id="set-ok"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ KVKK ═ -->
+    <div class="view" id="v-kvkk">
+      <div class="ph"><h2>KVKK & Veri Yönetimi</h2></div>
+      <div class="card">
+        <div class="card-body">
+          <div class="set-sec">
+            <div class="set-sec-t">Veri İşlemleri</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn bo" id="btn-kvkk-exp">📥 Verileri İndir (JSON)</button>
+              <button class="btn bo" id="btn-legal-dl">📄 Hukuki Onay Belgesi</button>
+              <button class="btn br" id="btn-kvkk-anon">⚠️ Hesabı Sil</button>
+            </div>
+          </div>
+          <div class="set-sec">
+            <div class="set-sec-t">Denetim İzi</div>
+            <button class="btn bo btn-sm" id="btn-audit-rel" style="margin-bottom:10px">↻ Yenile</button>
+            <div id="audit-list" style="max-height:320px;overflow-y:auto"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ══ DRAWER ══ -->
+<div id="drawer-overlay"></div>
+<div id="drawer">
+  <div class="dr-head">
+    <div><div class="dr-name" id="dr-name">—</div><div class="dr-meta" id="dr-meta"></div></div>
+    <button class="dr-close" id="drawer-close">✕</button>
+  </div>
+  <div class="dr-body">
+    <div class="dr-sec"><div class="dr-sec-t">Klinik Bilgi</div><div id="dr-info"></div></div>
+    <div class="dr-sec"><div class="dr-sec-t">Son Ölçekler</div><div id="dr-scores"></div></div>
+    <div class="dr-acts">
+      <button class="btn bo btn-sm" id="dr-new-apt">+ Randevu</button>
+      <button class="btn bo btn-sm" id="dr-new-note">+ Not</button>
+      <button class="btn bo btn-sm" id="dr-new-score">+ Ölçek</button>
+      <button class="btn bo btn-sm" id="dr-ai">✦ Risk Analizi</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODALLER ══ -->
+
+<!-- RANDEVU -->
+<div class="mo" id="mo-apt">
+  <div class="mo-box">
+    <div class="mo-head"><span class="mo-title" id="mo-apt-t">Randevu</span><button class="mo-close" data-close="mo-apt">✕</button></div>
+    <div class="mo-body">
+      <div class="alert a-err" id="apt-err"></div>
+      <div class="f2">
+        <div class="fg"><label>Hasta *</label><select id="apt-pat"><option value="">Seçin</option></select></div>
+        <div class="fg"><label>Tarih & Saat *</label><input type="datetime-local" id="apt-dt"></div>
+      </div>
+      <div class="f3">
+        <div class="fg"><label>Süre (dk)</label><input type="number" id="apt-dur" value="50" min="15"></div>
+        <div class="fg"><label>Terapi Türü</label><select id="apt-type"></select></div>
+        <div class="fg"><label>Ortam</label><select id="apt-med"><option value="face">🏥 Yüz yüze</option><option value="online">💻 Online</option><option value="phone">📞 Telefon</option></select></div>
+      </div>
+      <div class="fg"><label>Notlar</label><textarea id="apt-notes" rows="2"></textarea></div>
+      <div class="fg" style="flex-direction:row;align-items:center;gap:8px">
+        <input type="checkbox" id="apt-gcal" style="width:auto;cursor:pointer">
+        <label for="apt-gcal" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--body);font-weight:400;cursor:pointer">Google Takvim'e ekle</label>
+      </div>
+      <div class="fg" style="flex-direction:row;align-items:center;gap:8px">
+        <input type="checkbox" id="apt-remind" style="width:auto;cursor:pointer">
+        <label for="apt-remind" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--body);font-weight:400;cursor:pointer">📧 Hastaya hatırlatıcı e-posta gönder</label>
+      </div>
+    </div>
+    <div class="mo-foot"><button class="btn bo" data-close="mo-apt">İptal</button><button class="btn bp" id="btn-apt-save">💾 Kaydet</button></div>
+  </div>
+</div>
+
+<!-- HASTA -->
+<div class="mo" id="mo-pat">
+  <div class="mo-box">
+    <div class="mo-head"><span class="mo-title" id="mo-pat-t">Hasta</span><button class="mo-close" data-close="mo-pat">✕</button></div>
+    <div class="mo-body">
+      <div class="alert a-err" id="pat-err"></div>
+      <div class="f2">
+        <div class="fg"><label>Ad *</label><input id="pat-fn" type="text"></div>
+        <div class="fg"><label>Soyad *</label><input id="pat-ln" type="text"></div>
+      </div>
+      <div class="f3">
+        <div class="fg"><label>Doğum Tarihi</label><input id="pat-dob" type="date"></div>
+        <div class="fg"><label>Cinsiyet</label><select id="pat-gender"><option value="">—</option><option value="K">Kadın</option><option value="E">Erkek</option><option value="D">Diğer</option></select></div>
+        <div class="fg"><label>Seans Ücreti ₺</label><input id="pat-price" type="number" min="0"></div>
+      </div>
+      <div class="f2">
+        <div class="fg"><label>Telefon</label><input id="pat-phone" type="tel"></div>
+        <div class="fg"><label>E-posta</label><input id="pat-email" type="email"></div>
+      </div>
+      <div class="fg"><label>Terapi Türü</label><select id="pat-therapy"></select></div>
+      <div class="fg"><label>Şikayet / Başvuru Nedeni</label><textarea id="pat-complaint" rows="2"></textarea></div>
+      <div class="fg"><label>Acil İletişim</label><input id="pat-emrg" type="text" placeholder="Ad — Telefon — Yakınlık"></div>
+    </div>
+    <div class="mo-foot"><button class="btn bo" data-close="mo-pat">İptal</button><button class="btn bp" id="btn-pat-save">💾 Kaydet</button></div>
+  </div>
+</div>
+
+<!-- NOT -->
+<div class="mo" id="mo-note">
+  <div class="mo-box wide">
+    <div class="mo-head"><span class="mo-title" id="mo-note-t">Seans Notu</span><button class="mo-close" data-close="mo-note">✕</button></div>
+    <div class="mo-body">
+      <div class="alert a-err" id="note-err"></div>
+      <div class="f3">
+        <div class="fg"><label>Tarih</label><input id="note-date" type="date"></div>
+        <div class="fg"><label>Terapi Türü</label><select id="note-therapy"></select></div>
+        <div class="fg"><label>Süre (dk)</label><input id="note-dur" type="number" value="50" min="15"></div>
+      </div>
+      <div class="fg"><label>Not İçeriği *</label><textarea id="note-body" rows="7" placeholder="Seans içeriği, gözlemler, hasta ifadeleri..."></textarea></div>
+      <div class="f2">
+        <div class="fg"><label>Duygu Durumu</label><select id="note-mood"><option value="neutral">Nötr</option><option value="positive">İyi</option><option value="negative">Zor</option><option value="mixed">Karışık</option></select></div>
+        <div class="fg"><label>Ödev / Ev Çalışması</label><input id="note-hw" type="text" placeholder="Bu seans verilen ödev..."></div>
+      </div>
+    </div>
+    <div class="mo-foot"><button class="btn bo" data-close="mo-note">İptal</button><button class="btn bp" id="btn-note-save">💾 Kaydet</button></div>
+  </div>
+</div>
+
+<!-- ÖLÇEK -->
+<div class="mo" id="mo-score">
+  <div class="mo-box wide">
+    <div class="mo-head"><span class="mo-title">Yeni Değerlendirme</span><button class="mo-close" data-close="mo-score">✕</button></div>
+    <div class="mo-body">
+      <div class="scale-tabs" id="scale-tabs"></div>
+      <div id="scale-body"></div>
+      <div class="sc-score" id="sc-score-box" style="display:none">
+        <div class="sc-score-v" id="sc-total">0</div>
+        <div class="sc-score-l" id="sc-info">—</div>
+      </div>
+      <div class="alert a-err" id="score-err"></div>
+    </div>
+    <div class="mo-foot"><button class="btn bo" data-close="mo-score">İptal</button><button class="btn bp" id="btn-score-save">💾 Kaydet</button></div>
+  </div>
+</div>
+
+<!-- PAKET -->
+<div class="mo" id="mo-pkg">
+  <div class="mo-box">
+    <div class="mo-head"><span class="mo-title">Yeni Paket</span><button class="mo-close" data-close="mo-pkg">✕</button></div>
+    <div class="mo-body">
+      <div class="alert a-err" id="pkg-err"></div>
+      <div class="fg"><label>Hasta *</label><select id="pkg-pat"><option value="">Seçin</option></select></div>
+      <div class="f2">
+        <div class="fg"><label>Paket Adı</label><input id="pkg-name" type="text" placeholder="10 Seans Paketi"></div>
+        <div class="fg"><label>Seans Sayısı *</label><input id="pkg-sess" type="number" min="1" value="10"></div>
+      </div>
+      <div class="fg"><label>Toplam Tutar ₺</label><input id="pkg-price" type="number" min="0"></div>
+    </div>
+    <div class="mo-foot"><button class="btn bo" data-close="mo-pkg">İptal</button><button class="btn bp" id="btn-pkg-save">💾 Kaydet</button></div>
+  </div>
+</div>
+
+<!-- FATURA -->
+<div class="mo" id="mo-inv">
+  <div class="mo-box">
+    <div class="mo-head"><span class="mo-title">Yeni Fatura</span><button class="mo-close" data-close="mo-inv">✕</button></div>
+    <div class="mo-body">
+      <div class="alert a-err" id="inv-err"></div>
+      <div class="fg"><label>Hasta *</label><select id="inv-pat"><option value="">Seçin</option></select></div>
+      <div class="fg"><label>Açıklama</label><input id="inv-desc" type="text" placeholder="Terapi Seansı"></div>
+      <div class="f2">
+        <div class="fg"><label>Tutar ₺ *</label><input id="inv-amt" type="number" min="0"></div>
+        <div class="fg"><label>KDV %</label><input id="inv-tax" type="number" min="0" value="0"></div>
+      </div>
+      <div class="fg"><label>Durum</label><select id="inv-status"><option value="paid">Ödendi</option><option value="pending">Bekliyor</option></select></div>
+    </div>
+    <div class="mo-foot"><button class="btn bo" data-close="mo-inv">İptal</button><button class="btn bp" id="btn-inv-save">💾 Kaydet</button></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+(function () {
+'use strict';
+
+/* ════════════════════════════════════════════
+   BACKEND BAĞLANTI KONTROLÜ
+   BACKEND_URL Script[1]'de tanımlandı.
+   Placeholder'sa tüm API çağrıları uyarı verir.
+════════════════════════════════════════════ */
+var _BE = (typeof BACKEND_URL !== 'undefined' &&
+           BACKEND_URL.indexOf('RAILWAY-URL-BURAYA') < 0 &&
+           BACKEND_URL.length > 10)
+          ? BACKEND_URL.replace(/\/$/, '')
+          : null;
+var API = _BE ? _BE + '/api' : null;
+
+/* ════ STATE ════ */
+var S = {
+  patients: [], apts: [], view: 'dashboard',
+  calY: new Date().getFullYear(),
+  calM: new Date().getMonth(),
+  gcalEvs: [],
+  editAptId: null, editPatId: null,
+  drawerPatId: null, charts: {},
+  scaleKey: 'PHQ9', scaleAns: {},
+  aiKey: null,
+  therapies: ['BDT','PSİKODİNAMİK','EMDR','SCHEMA','ÇÖZÜM ODAKLI','ÇİFT','GRUP','İLK GÖRÜŞME','ONLİNE'],
+};
+
+/* ════ ÖLÇEKLER — backend 'scale' field kullanır ════ */
+var SC = {
+  PHQ9:{n:'PHQ-9 Depresyon',max:27,
+    opts:[[0,'Hiç'],[1,'Birkaç gün'],[2,'Günlerin yarısı'],[3,'Neredeyse her gün']],
+    info:function(s){return s>=20?'Şiddetli (20-27)':s>=15?'Orta-Şiddetli (15-19)':s>=10?'Orta (10-14)':s>=5?'Hafif (5-9)':'Minimal (0-4)';},
+    qs:['İlgi/zevk duymama','Çökkün/umutsuz hissetme','Uyku sorunları','Yorgunluk','İştah değişikliği','Kendini başarısız hissetme','Konsantrasyon güçlüğü','Psikomotor değişimler','Kendine zarar verme düşünceleri']},
+  GAD7:{n:'GAD-7 Anksiyete',max:21,
+    opts:[[0,'Hiç'],[1,'Birkaç gün'],[2,'Günlerin yarısı'],[3,'Neredeyse her gün']],
+    info:function(s){return s>=15?'Şiddetli (15-21)':s>=10?'Orta (10-14)':s>=5?'Hafif (5-9)':'Minimal (0-4)';},
+    qs:['Gergin/endişeli hissetme','Endişeyi durduramama','Aşırı endişe','Rahatlamada güçlük','Huzursuzluk','Kolay sinirlenme','Kötü şey olacak korkusu']},
+  BAI:{n:'BAI Beck Anksiyete',max:63,
+    opts:[[0,'Hiç'],[1,'Hafif'],[2,'Orta'],[3,'Şiddetli']],
+    info:function(s){return s>=26?'Şiddetli (26-63)':s>=16?'Orta (16-25)':s>=8?'Hafif (8-15)':'Minimal (0-7)';},
+    qs:['Uyuşma/karıncalanma','Sıcaklık hissi','Bacak titremesi','Rahatlayamama','En kötü korku','Baş dönmesi','Kalp çarpıntısı','Denge kaybı','Donup kalma','Sinirlilik','Boğulma hissi','El titremesi','Kontrol kaybı korkusu','Ölüm korkusu','Panik','Karın rahatsızlığı','Felç hissi','Yüz kızarma','Terleme']},
+  BDIII:{n:'BDI-II Beck Depresyon',max:63,
+    opts:[[0,'Hiç'],[1,'Hafif'],[2,'Orta'],[3,'Şiddetli']],
+    info:function(s){return s>=29?'Şiddetli (29+)':s>=20?'Orta (20-28)':s>=14?'Hafif (14-19)':'Minimal (0-13)';},
+    qs:['Üzüntü','Karamsarlık','Geçmiş başarısızlıklar','Zevk kaybı','Suçluluk','Ceza beklentisi','Kendinden nefret','Öz eleştiri','İntihar düşüncesi','Ağlama','Ajitasyon','İlgi kaybı','Kararsızlık','Değersizlik','Enerji kaybı','Uyku değişikliği','Sinirlilik','İştah değişikliği','Konsantrasyon','Yorgunluk','Cinsel ilgi']},
+  PCL5:{n:'PCL-5 PTSD',max:80,
+    opts:[[0,'Hiç'],[1,'Biraz'],[2,'Orta'],[3,'Oldukça'],[4,'Aşırı']],
+    info:function(s){return s>=31?'Olası PTSD (≥31)':s>=20?'Belirgin belirti (20-30)':'Düşük risk (0-19)';},
+    qs:['Rahatsız edici anılar','Rahatsız edici rüyalar','Yeniden yaşama','İç rahatsızlık','Fizyolojik tepkiler','Düşünce kaçınması','Hatırlatıcı kaçınması','Hafıza boşlukları','Olumsuz inançlar','Suçlama','Olumsuz duygular','İlgi kaybı','Yabancılaşma','Olumlu duygu kısıtlaması','Sinirlilik','Kendine zarar','Aşırı teyakkuz','Aşırı irkilme','Konsantrasyon güçlüğü','Uyku bozukluğu']},
+  RSES:{n:'Rosenberg Özsaygı',max:40,
+    opts:[[1,'Kesinlikle Katılmıyorum'],[2,'Katılmıyorum'],[3,'Katılıyorum'],[4,'Kesinlikle Katılıyorum']],
+    info:function(s){return s<=15?'Düşük özsaygı (≤15)':s<=25?'Orta özsaygı (16-25)':'Yüksek özsaygı (26-40)';},
+    qs:['Kendimden genel olarak memnunum','Bazen hiçbir işe yaramadığımı düşünüyorum (*)','Birçok iyi özelliğim var','Başkaları kadar iyi işler yapabiliyorum','Gurur duyacak pek bir şeyim yok (*)','Bazen işe yaramaz hissediyorum (*)','Kendimi başkaları kadar değerli buluyorum','Daha pozitif tutum içinde olabilirdim (*)','Her şeye rağmen başarısız olduğumu düşünüyorum (*)','Kendime olumlu tutum içindeyim'],
+    rev:[1,4,5,7,8]},
+  CSSRS:{n:'C-SSRS İntihar',max:5,
+    info:function(s){return s>=4?'⛔ YÜKSEK RİSK — acil değerlendirme':s>=2?'⚠️ Orta risk — güvenlik planı':s>=1?'İzleme gerekli':'Risk saptanmadı';},
+    qs:[
+      {q:'Yaşamak istemediğini düşündü mü?',opts:[[0,'Hayır'],[1,'Evet']]},
+      {q:'Kendini öldürmeyi düşündü mü?',opts:[[0,'Hayır'],[1,'Evet']]},
+      {q:'Aktif intihar düşünceleri var mı?',opts:[[0,'Hayır'],[1,'Evet']]},
+      {q:'Planlı intihar düşünceleri var mı?',opts:[[0,'Hayır'],[1,'Evet']]},
+      {q:'Planı uygulamaya niyeti var mı?',opts:[[0,'Hayır'],[1,'Evet']]},
+    ]},
+};
+
+/* ════ AI TOOLS — endpoint: POST /api/ai/complete ════ */
+var AI_TOOLS = [
+  {k:'soap',  ic:'📋',t:'SOAP Özeti',    d:'DSM-5 uyumlu özet', ph:'Seans içeriği, hasta ifadeleri, gözlemler...',lbl:'Seans içeriği',
+   sys:'Klinik psikolog asistanısın. DSM-5 uyumlu SOAP formatında Türkçe klinik özet yaz:\nS (Subjektif): Hastanın ifadeleri\nO (Objektif): Klinisyen gözlemleri\nA (Değerlendirme): Klinik değerlendirme\nP (Plan): Sonraki adımlar ve ödevler'},
+  {k:'note',  ic:'✍️',t:'Not Asistanı',  d:'Ham notları yapılandırır', ph:'Düzensiz notlar, anahtar kelimeler...',lbl:'Ham notlar',
+   sys:'Klinik psikolog asistanısın. Ham notları düzenli seans notuna dönüştür. Profesyonel klinik Türkçe.'},
+  {k:'hw',    ic:'📚',t:'Ödev Önerisi',  d:'Terapötik ödevler', ph:'Yaş, şikayet, terapi türü, haftalık hedef...',lbl:'Hasta profili',
+   sys:'Klinik psikolog asistanısın. Hastaya uygun 2-3 terapötik ödev/egzersiz öner. Her ödev: başlık, amaç, talimat, süre. Türkçe.'},
+  {k:'form',  ic:'🧩',t:'Vaka Formülasyonu',d:'BDT vaka analizi', ph:'Şikayet, geçmiş, tetikleyiciler...',lbl:'Hasta bilgileri',
+   sys:'Klinik psikolog asistanısın. BDT vaka formülasyonu:\n1. Tetikleyiciler\n2. Ara inançlar\n3. Temel inançlar/şemalar\n4. Telafi stratejileri\n5. Otomatik düşünceler\n6. Duygusal/davranışsal sonuçlar\nTürkçe.'},
+  {k:'risk',  ic:'⚠️',t:'Risk Değerlendirmesi',d:'Klinik risk analizi', ph:'Son değişiklikler, risk ve koruyucu faktörler...',lbl:'Klinik bilgi',
+   sys:'Klinik psikolog asistanısın. Risk değerlendirmesi:\n1. Koruyucu faktörler\n2. Risk faktörleri\n3. Risk düzeyi (düşük/orta/yüksek)\n4. Önerilen adımlar\nTürkçe.'},
+  {k:'crisis',ic:'🚨',t:'Kriz Planı',    d:'Güvenlik planı', ph:'Kriz geçmişi, tetikleyiciler, destek...',lbl:'Hasta bilgileri',
+   sys:'Klinik psikolog asistanısın. Kriz müdahale planı:\n1. Uyarı işaretleri\n2. Başa çıkma stratejileri\n3. Destek kişiler\n4. Kriz hatları: 182 ALO Psikiyatri\n5. Güvenlik adımları\nTürkçe.'},
+  {k:'prog',  ic:'📈',t:'İlerleme Raporu',d:'Tedavi süreci analizi', ph:'Başlangıç, hedefler, tamamlanan seanslar...',lbl:'Tedavi bilgisi',
+   sys:'Klinik psikolog asistanısın. Tedavi ilerleme raporu:\n1. Mevcut durum\n2. Hedeflere ulaşma\n3. Başarılar\n4. Güçlükler\n5. Sonraki adımlar\nTürkçe.'},
+  {k:'interp',ic:'📊',t:'Ölçek Yorumu', d:'Puanları yorumlar', ph:'PHQ-9: 1.ay=18, 2.ay=14...',lbl:'Ölçek puanları',
+   sys:'Klinik psikolog asistanısın. Ölçek puanlarını yorumla:\n1. Her puanın klinik anlamı\n2. Trend analizi\n3. Dikkat gerektiren maddeler\n4. Klinik öneriler\nTürkçe.'},
+];
+
+/* ════ YARDIMCI ════ */
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function getTok(){return sessionStorage.getItem('ts_token');}
+
+function toast(msg, type){
+  var ic={ok:'✅',err:'❌',info:'ℹ️',warn:'⚠️'};
+  var el=document.createElement('div');
+  el.className='toast'; el.textContent=(ic[type]||'ℹ️')+' '+msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(function(){el.classList.add('out');},3500);
+  setTimeout(function(){el.parentNode&&el.parentNode.removeChild(el);},3800);
+}
+
+function al(id,msg,type){
+  var el=document.getElementById(id);if(!el)return;
+  el.textContent=msg;
+  el.className='alert '+(type==='ok'?'a-ok':type==='warn'?'a-warn':'a-err')+' show';
+}
+function hideAl(id){var el=document.getElementById(id);if(el){el.className='alert a-err';el.textContent='';}}
+function busy(id,on){
+  var b=document.getElementById(id);if(!b)return;
+  b.disabled=on;
+  if(on){b._orig=b.innerHTML;b.innerHTML='⏳ Bekleyin...';}
+  else if(b._orig!=null){b.innerHTML=b._orig;}
+}
+function openMo(id){var m=document.getElementById(id);if(m)m.classList.add('open');}
+function closeMo(id){var m=document.getElementById(id);if(m)m.classList.remove('open');}
+
+function fmtDT(s){
+  if(!s)return '—';
+  try{
+    var d=new Date(s);
+    return d.toLocaleDateString('tr-TR',{day:'numeric',month:'short',year:'numeric'})+
+           ' '+d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){return s.slice(0,16);}
+}
+function fmtTime(s){
+  if(!s)return '';
+  try{return new Date(s).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});}catch(e){return '';}
+}
+
+/* ════ API ════ */
+function apiFetch(method,path,body){
+  if(!API){
+    showCfgBanner();
+    return Promise.reject(new Error('Backend URL ayarlanmamış — app.html 11. satırı güncelleyin'));
+  }
+  var opts={method:method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+getTok()}};
+  if(body!=null) opts.body=JSON.stringify(body);
+  return fetch(API+path,opts)
+    .then(function(res){
+      if(res.status===401){doLogout();return Promise.reject(new Error('Oturum süresi doldu'));}
+      return res.json().then(function(d){
+        if(!res.ok)return Promise.reject(new Error(d.error||'HTTP '+res.status));
+        return d;
+      }).catch(function(parseErr){
+        if(parseErr.message&&(parseErr.message.startsWith('HTTP')||parseErr.message==='Oturum süresi doldu'))return Promise.reject(parseErr);
+        return Promise.reject(new Error('Yanıt okunamadı ('+res.status+')'));
+      });
+    })
+    .catch(function(e){
+      if(e.message==='Failed to fetch'||e.message.includes('NetworkError')||e.message.includes('ERR_NAME_NOT_RESOLVED')){
+        showCfgBanner();
+        return Promise.reject(new Error('Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.'));
+      }
+      return Promise.reject(e);
+    });
+}
+
+function showCfgBanner(){
+  var b=document.getElementById('cfg-banner');
+  if(b)b.classList.add('show');
+}
+
+/* ════ LOGOUT ════ */
+function doLogout(){sessionStorage.clear();location.href='giris.html';}
+
+/* ════ NAV ════ */
+var VIEW_TITLES={dashboard:'Gösterge Paneli',calendar:'Takvim',appointments:'Randevular',patients:'Hastalar',notes:'Seans Notları',scores:'Değerlendirmeler',ai:'AI Araçlar',packages:'Paketler',invoices:'Faturalar',finance:'Gelir Analizi',settings:'Ayarlar',kvkk:'KVKK & Veri'};
+function nav(v){
+  S.view=v;
+  document.querySelectorAll('.view').forEach(function(el){el.classList.remove('on');});
+  var vEl=document.getElementById('v-'+v);if(vEl)vEl.classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(function(el){el.classList.toggle('on',el.dataset.v===v);});
+  var t=document.getElementById('topbar-title');if(t)t.textContent=VIEW_TITLES[v]||v;
+  if(v==='invoices')loadInvoices();
+  if(v==='finance')loadFinance();
+  if(v==='packages')loadPackages();
+  if(v==='settings')loadSettings();
+  if(v==='kvkk')loadAudit();
+  if(v==='calendar')renderCal();
+}
+
+/* ════ INIT ════ */
+function init(){
+  if(!getTok()){location.href='giris.html';return;}
+  if(!_BE)showCfgBanner();
+
+  setupListeners();
+  buildAIGrid();
+  buildScaleTabs();
+
+  apiFetch('GET','/auth/me')
+    .then(function(u){
+      sessionStorage.setItem('ts_user',JSON.stringify(u));
+      if(u.therapies&&u.therapies.length)S.therapies=u.therapies;
+      document.getElementById('sb-user-text').textContent=u.name+(u.clinicName?' · '+u.clinicName:'');
+      if(u.plan==='trial'&&u.trialEnds){
+        var days=Math.ceil((new Date(u.trialEnds)-new Date())/86400000);
+        var t=document.getElementById('sb-trial');
+        if(t){t.style.display='inline';t.textContent=days>0?'Deneme: '+days+' gün':'Deneme Bitti';}
+      }
+      return Promise.all([loadPatients(),loadApts()]);
+    })
+    .then(function(){populateSels();loadDashboard();})
+    .catch(function(e){
+      toast('Giriş hatası: '+e.message,'err');
+      // Hata olsa da dashboard'u göster (boş olarak)
+      loadDashboard();
+    });
+
+  // GCal OAuth callback
+  var p=new URLSearchParams(location.search);
+  if(p.get('gcal')==='success'){toast('Google Takvim bağlandı','ok');history.replaceState(null,'',location.pathname);}
+  if(p.get('gcal')==='error'){toast('Google Takvim bağlanamadı: '+(p.get('msg')||'Hata'),'err');history.replaceState(null,'',location.pathname);}
+}
+
+/* ════ LISTENERS ════ */
+function setupListeners(){
+  // Sidebar nav
+  document.querySelectorAll('.sb-item').forEach(function(el){el.addEventListener('click',function(){nav(el.dataset.v);});});
+  // Dashboard hızlı aksiyonlar
+  document.getElementById('btn-dash-new-apt').addEventListener('click',function(){openAptModal();});
+  document.getElementById('btn-dash-new-pat').addEventListener('click',function(){openPatModal();});
+  document.getElementById('btn-dash-new-note').addEventListener('click',function(){nav('notes');setTimeout(function(){openNoteModal();},150);});
+  document.getElementById('btn-dash-new-inv').addEventListener('click',function(){nav('invoices');setTimeout(function(){openInvModal();},150);});
+  // KPI stat tıklamaları
+  document.querySelectorAll('.stat[data-nav]').forEach(function(el){el.addEventListener('click',function(){nav(el.dataset.nav);});});
+  document.getElementById('logout-btn').addEventListener('click',doLogout);
+  // Modal kapat
+  document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',function(){closeMo(b.dataset.close);});});
+  document.querySelectorAll('.mo').forEach(function(mo){mo.addEventListener('click',function(e){if(e.target===mo)mo.classList.remove('open');});});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){document.querySelectorAll('.mo.open').forEach(function(m){m.classList.remove('open');});closeDrawer();}});
+  // Takvim nav
+  document.getElementById('cal-prev').addEventListener('click',function(){S.calM--;if(S.calM<0){S.calM=11;S.calY--;}renderCal();});
+  document.getElementById('cal-next').addEventListener('click',function(){S.calM++;if(S.calM>11){S.calM=0;S.calY++;}renderCal();});
+  document.getElementById('cal-today-btn').addEventListener('click',function(){S.calY=new Date().getFullYear();S.calM=new Date().getMonth();renderCal();});
+  document.getElementById('btn-gcal-refresh').addEventListener('click',loadGcalEvents);
+  document.getElementById('btn-cal-new-apt').addEventListener('click',function(){openAptModal();});
+  // Randevular
+  document.getElementById('btn-apt-new').addEventListener('click',function(){openAptModal();});
+  document.getElementById('apt-srch').addEventListener('input',filterApts);
+  document.getElementById('apt-date-f').addEventListener('change',filterApts);
+  document.getElementById('apt-status-f').addEventListener('change',filterApts);
+  document.getElementById('btn-apt-save').addEventListener('click',saveApt);
+  // Hastalar
+  document.getElementById('btn-pat-new').addEventListener('click',function(){openPatModal();});
+  document.getElementById('pat-srch').addEventListener('input',filterPats);
+  document.getElementById('btn-pat-save').addEventListener('click',savePat);
+  // Notlar
+  document.getElementById('notes-pat-sel').addEventListener('change',function(){document.getElementById('btn-note-new').disabled=!this.value;if(this.value)loadNotes();});
+  document.getElementById('btn-note-new').addEventListener('click',function(){openNoteModal();});
+  document.getElementById('btn-note-save').addEventListener('click',saveNote);
+  // Ölçekler
+  document.getElementById('scores-pat-sel').addEventListener('change',function(){document.getElementById('btn-score-new').disabled=!this.value;if(this.value)loadScores();});
+  document.getElementById('btn-score-new').addEventListener('click',openScoreModal);
+  document.getElementById('btn-score-save').addEventListener('click',saveScore);
+  // AI
+  document.getElementById('btn-ai-run').addEventListener('click',runAI);
+  document.getElementById('btn-ai-copy').addEventListener('click',function(){var el=document.getElementById('ai-result-txt');navigator.clipboard&&navigator.clipboard.writeText(el.innerText||'').then(function(){toast('Kopyalandı','ok');});});
+  document.getElementById('btn-ai-new').addEventListener('click',function(){var n1=document.getElementById('ai-result-box');if(n1)n1.style.display='none';var n2=document.getElementById('ai-footer');if(n2)n2.style.display='flex';document.getElementById('ai-err').className='alert a-err';document.getElementById('ai-inp').value='';});
+  // Paket / Fatura
+  document.getElementById('btn-pkg-new').addEventListener('click',openPkgModal);
+  document.getElementById('btn-pkg-save').addEventListener('click',savePkg);
+  document.getElementById('btn-inv-new').addEventListener('click',openInvModal);
+  document.getElementById('btn-inv-save').addEventListener('click',saveInv);
+  document.getElementById('inv-month-f').addEventListener('change',loadInvoices);
+  document.getElementById('inv-status-f').addEventListener('change',loadInvoices);
+  // Ayarlar
+  document.getElementById('btn-set-save').addEventListener('click',saveSettings);
+  document.getElementById('btn-pw-change').addEventListener('click',changePw);
+  document.getElementById('btn-th-add').addEventListener('click',addTherapy);
+  document.getElementById('inp-th').addEventListener('keydown',function(e){if(e.key==='Enter')addTherapy();});
+  // KVKK
+  document.getElementById('btn-kvkk-exp').addEventListener('click',kvkkExport);
+  document.getElementById('btn-legal-dl').addEventListener('click',legalProof);
+  document.getElementById('btn-kvkk-anon').addEventListener('click',kvkkAnon);
+  document.getElementById('btn-audit-rel').addEventListener('click',loadAudit);
+  // Finans
+  var finExp=document.getElementById('btn-fin-export');
+  if(finExp)finExp.addEventListener('click',exportFinanceCsv);
+  // Drawer
+  document.getElementById('drawer-close').addEventListener('click',closeDrawer);
+  document.getElementById('drawer-overlay').addEventListener('click',closeDrawer);
+  document.getElementById('dr-new-apt').addEventListener('click',function(){closeDrawer();openAptModal(null,S.drawerPatId);});
+  document.getElementById('dr-new-note').addEventListener('click',function(){closeDrawer();nav('notes');setTimeout(function(){document.getElementById('notes-pat-sel').value=S.drawerPatId;document.getElementById('btn-note-new').disabled=false;openNoteModal();},200);});
+  document.getElementById('dr-new-score').addEventListener('click',function(){closeDrawer();nav('scores');setTimeout(function(){document.getElementById('scores-pat-sel').value=S.drawerPatId;document.getElementById('btn-score-new').disabled=false;openScoreModal();},200);});
+  document.getElementById('dr-ai').addEventListener('click',function(){closeDrawer();openAI('risk');});
+}
+
+/* ════════════════ DASHBOARD ════════════════ */
+function loadDashboard(){
+  buildMiniCal();
+
+  // Bugünün tarihi
+  var dl=document.getElementById('dash-date-lbl');
+  if(dl)dl.textContent=new Date().toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long'});
+
+  // Skeleton göster
+  ['ds-total','ds-today','ds-month','ds-rev'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el){el.className='stat-v stat-sk';el.style.width='60px';el.style.height='32px';el.style.borderRadius='6px';el.innerHTML='';}
+  });
+  ['dash-today','dash-risks'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.innerHTML='<div class="empty"><div class="empty-ic">⏳</div><div class="empty-t">Yükleniyor...</div></div>';
+  });
+
+  if(!_BE){
+    ['ds-total','ds-today','ds-month','ds-rev'].forEach(function(id){setStat(id,'—');});
+    document.getElementById('dash-today').innerHTML='<div class="empty"><div class="empty-ic">⚠️</div><div class="empty-t">Backend URL gerekli</div><div class="empty-s">11. satırı güncelleyin</div></div>';
+    document.getElementById('dash-risks').innerHTML='<div class="empty"><div class="empty-t">Backend URL gerekli</div></div>';
+    return;
+  }
+
+  Promise.all([
+    apiFetch('GET','/settings/dashboard').catch(function(e){console.warn('dashboard API:',e.message);return null;}),
+    apiFetch('GET','/invoices/stats').catch(function(e){console.warn('inv stats:',e.message);return null;}),
+    apiFetch('GET','/appointments/today').catch(function(e){console.warn('today:',e.message);return [];}),
+    apiFetch('GET','/calendar/status').catch(function(){return {connected:false};}),
+  ]).then(function(r){
+    var dash=r[0], inv=r[1], today=r[2]||[], gcal=r[3]||{};
+
+    setStat('ds-total', dash?dash.totalPatients:S.patients.length);
+    setStat('ds-today', today.length>0?today.length:(dash?dash.todayCount:0));
+    setStat('ds-month', dash?(dash.monthSessions||0):'—');
+    setStat('ds-rev', '₺'+((inv&&inv.monthRevenue||0)).toLocaleString('tr-TR'));
+
+    // Bugün badge
+    if(today.length){var b=document.getElementById('badge-today');if(b){b.textContent=today.length;b.style.display='inline';}}
+
+    // Bugünkü randevular — zengin kart
+    var todayEl=document.getElementById('dash-today');
+    if(today.length){
+      var stMap={completed:'<span class="badge bg-g">✓ Tamamlandı</span>',cancelled:'<span class="badge bg-r">İptal</span>',scheduled:'<span class="badge bg-m">Planlandı</span>'};
+      var medMap={online:'💻 Online',phone:'📞 Telefon',face:'🏥 Yüz yüze'};
+      todayEl.innerHTML=today.map(function(a){
+        var name=a.fn&&a.ln?esc(a.fn+' '+a.ln):(S.patients.find(function(x){return x.id===a.patient_id;})||{fn:'?',ln:'?'});
+        if(typeof name==='object')name=esc(name.fn+' '+(name.ln||''));
+        var st=(a.status||'scheduled').toLowerCase();
+        var stBadge=stMap[st]||stMap.scheduled;
+        return '<div class="sched-item sched-item-full" data-dp="'+esc(a.patient_id||'')+'" style="cursor:pointer">'+
+          '<div class="sched-time-col">'+
+            '<div class="sched-time">'+fmtTime(a.at_time)+'</div>'+
+            '<div class="sched-dur">'+(a.duration||50)+' dk</div>'+
+          '</div>'+
+          '<div class="sched-body">'+
+            '<div class="sched-name">'+name+'</div>'+
+            '<div class="sched-meta">'+(medMap[a.medium]||'🏥 Yüz yüze')+(a.therapy_type?' · '+esc(a.therapy_type):'')+'</div>'+
+          '</div>'+
+          '<div class="sched-right">'+stBadge+
+            (st!=='completed'?'<button class="btn ba btn-xs sched-done-btn" data-ac="'+esc(a.id)+'" style="margin-top:4px">✓ Tamamla</button>':'')+
+          '</div>'+
+        '</div>';
+      }).join('');
+      todayEl.querySelectorAll('[data-dp]').forEach(function(el){el.addEventListener('click',function(e){if(!e.target.closest('button')&&el.dataset.dp)openDrawer(el.dataset.dp);});});
+      todayEl.querySelectorAll('[data-ac]').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();completeApt(el.dataset.ac);});});
+    }else{
+      todayEl.innerHTML='<div class="empty"><div class="empty-ic">☀️</div><div class="empty-t">Bugün randevu yok</div><div class="empty-s"><button class="btn bo btn-sm" onclick="openAptModal()">+ Randevu Ekle</button></div></div>';
+    }
+
+    // Risk takibi
+    var rEl=document.getElementById('dash-risks');
+    if(dash&&dash.riskPatients&&dash.riskPatients.length){
+      rEl.innerHTML=dash.riskPatients.slice(0,6).map(function(r){
+        var s=r.last_phq9||0;
+        var c=s>=20?'var(--rose)':s>=10?'var(--amber)':'var(--sage3)';
+        return '<div class="risk-row" style="cursor:pointer" data-dp="'+esc(r.id)+'">'+
+          '<div style="display:flex;align-items:center"><span class="risk-dot" style="background:'+c+'"></span>'+esc(r.fn+' '+r.ln)+'</div>'+
+          '<span class="badge '+(s>=20?'bg-r':s>=10?'bg-a':'bg-g')+'">PHQ-9: '+s+'</span></div>';
+      }).join('');
+      rEl.querySelectorAll('[data-dp]').forEach(function(el){el.addEventListener('click',function(){openDrawer(el.dataset.dp);});});
+    }else{
+      rEl.innerHTML='<div class="empty"><div class="empty-ic">✅</div><div class="empty-t">Risk bayrağı yok</div></div>';
+    }
+
+    renderTrendChart(dash,inv);
+
+    if(gcal.connected){
+      var gcd=document.getElementById('gcal-dash-card');if(gcd)gcd.style.display='block';
+      loadGcalEvents();
+    }
+  }).catch(function(e){
+    console.error('loadDashboard error:',e);
+    ['ds-total','ds-today','ds-month','ds-rev'].forEach(function(id){setStat(id,'—');});
+    toast('Dashboard yüklenemedi: '+e.message,'err');
+  });
+}
+
+function setStat(id,val){
+  var el=document.getElementById(id);if(!el)return;
+  el.className='stat-v';el.style.width='';el.style.height='';el.style.borderRadius='';
+  el.textContent=String(val);
+}
+
+function renderTrendChart(dash,inv){
+  if(typeof Chart==='undefined')return;
+  var ctx=document.getElementById('rev-chart');if(!ctx)return;
+  var c2d=ctx.getContext('2d');if(!c2d)return;
+  if(S.charts.rev){try{S.charts.rev.destroy();}catch(e){}S.charts.rev=null;}
+  var M=['Oca','Şub','Mar','Nis','May','Haz','Tem','Ağu','Eyl','Eki','Kas','Ara'];
+  var now=new Date();var labels=[],data=[];
+  // backend trend: [{m:'2024-01',cnt:5}]
+  var trend=dash&&dash.trend||[];
+  for(var i=5;i>=0;i--){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    labels.push(M[d.getMonth()]);
+    var mStr=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+    var tr=trend.find(function(t){return t.m===mStr;});
+    data.push(tr?tr.cnt:0);
+  }
+  try{
+    S.charts.rev=new Chart(c2d,{
+      type:'bar',
+      data:{labels:labels,datasets:[{data:data,backgroundColor:'rgba(45,90,61,.12)',borderColor:'var(--sage3)',borderWidth:1.5,borderRadius:5,borderSkipped:false}]},
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.raw+' seans';}}}},scales:{y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'},ticks:{maxTicksLimit:4,stepSize:1}},x:{grid:{display:false}}}}
+    });
+  }catch(e){console.error('chart:',e);}
+}
+
+/* ════ MINI CAL ════ */
+function buildMiniCal(){
+  var el=document.getElementById('mini-cal');if(!el)return;
+  var months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  var wdays=['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+  var y=S.calY,m=S.calM;
+  var first=(new Date(y,m,1).getDay()+6)%7;
+  var dim=new Date(y,m+1,0).getDate();
+  var todayStr=new Date().toISOString().slice(0,10);
+  var aptDs={};S.apts.forEach(function(a){if(a.at_time)aptDs[a.at_time.slice(0,10)]=true;});
+  var h='<div class="mc-head"><button class="mc-nav" id="mcp-p">‹</button><span class="mc-label">'+months[m]+' '+y+'</span><button class="mc-nav" id="mcp-n">›</button></div><div class="mc-grid">';
+  wdays.forEach(function(d){h+='<div class="mc-dh">'+d+'</div>';});
+  for(var i=0;i<first;i++)h+='<div class="mc-day other"></div>';
+  for(var d=1;d<=dim;d++){
+    var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    h+='<div class="mc-day'+(ds===todayStr?' today':'')+(aptDs[ds]?' has-apt':'')+'" data-date="'+ds+'">'+d+'</div>';
+  }
+  h+='</div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-date]').forEach(function(d){d.addEventListener('click',function(){nav('calendar');});});
+  document.getElementById('mcp-p').addEventListener('click',function(){S.calM--;if(S.calM<0){S.calM=11;S.calY--;}buildMiniCal();});
+  document.getElementById('mcp-n').addEventListener('click',function(){S.calM++;if(S.calM>11){S.calM=0;S.calY++;}buildMiniCal();});
+}
+
+/* ════ CALENDAR VIEW ════ */
+function renderCal(){
+  var months=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
+  var wdays=['Pt','Sa','Ça','Pe','Cu','Ct','Pz'];
+  document.getElementById('cal-label').textContent=months[S.calM]+' '+S.calY;
+  var y=S.calY,m=S.calM;
+  var first=(new Date(y,m,1).getDay()+6)%7;
+  var dim=new Date(y,m+1,0).getDate();
+  var todayStr=new Date().toISOString().slice(0,10);
+
+  var aptMap={};
+  S.apts.forEach(function(a){
+    if(!a.at_time)return;
+    var ds=a.at_time.slice(0,10);
+    if(!aptMap[ds])aptMap[ds]=[];
+    var nm=a.fn&&a.ln?a.fn+' '+a.ln:(S.patients.find(function(x){return x.id===a.patient_id;})||{fn:'?',ln:''});
+    if(typeof nm==='object')nm=nm.fn+' '+(nm.ln||'');
+    aptMap[ds].push(nm+' '+fmtTime(a.at_time));
+  });
+  var gcMap={};
+  S.gcalEvs.forEach(function(ev){
+    var ds=ev.start&&(ev.start.dateTime||ev.start.date);
+    if(ds){ds=ds.slice(0,10);if(!gcMap[ds])gcMap[ds]=[];gcMap[ds].push(ev.summary||'Etkinlik');}
+  });
+
+  // Header
+  var dh=document.getElementById('cal-day-headers');
+  dh.innerHTML=wdays.map(function(d){return '<div class="cal-dh">'+d+'</div>';}).join('');
+
+  var h='';
+  for(var i=0;i<first;i++)h+='<div class="cal-cell other"></div>';
+  for(var d=1;d<=dim;d++){
+    var ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    h+='<div class="cal-cell'+(ds===todayStr?' today':'')+'" data-date="'+ds+'">'+
+      '<div class="cal-num">'+d+'</div>'+
+      (aptMap[ds]||[]).slice(0,2).map(function(t){return '<div class="cal-apt-pill">'+esc(t)+'</div>';}).join('')+
+      (gcMap[ds]||[]).slice(0,1).map(function(t){return '<div class="cal-gcal-pill">'+esc(t)+'</div>';}).join('')+
+      '</div>';
+  }
+
+  var grid=document.getElementById('cal-grid');
+  grid.innerHTML=h;
+  grid.querySelectorAll('[data-date]').forEach(function(cell){
+    cell.addEventListener('click',function(){openAptModal(null,null,cell.dataset.date+'T09:00');});
+  });
+
+  // GCal durum badge
+  apiFetch('GET','/calendar/status').then(function(s){
+    var badge=document.getElementById('gcal-status-badge');if(!badge)return;
+    if(s&&s.connected){
+      badge.innerHTML='<span class="badge bg-g">📅 GCal Bağlı</span>';
+      if(!S.gcalEvs.length)loadGcalEvents();
+    }else{
+      badge.innerHTML='<button class="btn bb btn-sm" id="btn-gcal-conn-cal">📅 Google Takvim Bağla</button>';
+      var cb=document.getElementById('btn-gcal-conn-cal');
+      if(cb)cb.addEventListener('click',connectGcal);
+    }
+  }).catch(function(){});
+}
+
+function connectGcal(){
+  apiFetch('GET','/calendar/connect').then(function(d){
+    if(d&&d.url)location.href=d.url;
+    else toast('Google Calendar yapılandırılmamış — Railway\'de GOOGLE_CLIENT_ID gerekli','warn');
+  }).catch(function(e){toast(e.message,'err');});
+}
+
+function loadGcalEvents(){
+  var el=document.getElementById('gcal-events-list');if(!el)return;
+  el.innerHTML='<div class="empty"><div class="empty-t">Yükleniyor...</div></div>';
+  apiFetch('GET','/calendar/upcoming?days=14').then(function(evs){
+    S.gcalEvs=evs||[];
+    if(!evs||!evs.length){el.innerHTML='<div class="empty"><div class="empty-ic">📅</div><div class="empty-t">Yaklaşan etkinlik yok</div></div>';return;}
+    el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">'+
+      evs.slice(0,12).map(function(ev){
+        var dt=ev.start&&ev.start.dateTime?new Date(ev.start.dateTime):null;
+        var dtStr=dt?dt.toLocaleDateString('tr-TR',{day:'numeric',month:'short'})+' '+dt.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'}):(ev.start&&ev.start.date||'');
+        return '<div class="gcal-ev"><div class="gcal-dot"></div><div><div class="gcal-title">'+esc(ev.summary||'Etkinlik')+'</div><div class="gcal-time">'+dtStr+'</div></div></div>';
+      }).join('')+'</div>';
+    if(S.view==='calendar')renderCal();
+  }).catch(function(){el.innerHTML='<div class="empty"><div class="empty-t">Etkinlikler alınamadı</div></div>';});
+}
+
+/* ════ PATIENTS ════ */
+function loadPatients(){
+  return apiFetch('GET','/patients').then(function(d){S.patients=d||[];renderPats(S.patients);return d;}).catch(function(e){console.warn('patients:',e.message);return[];});
+}
+function renderPats(list){
+  var tb=document.getElementById('pat-tbody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><div class="empty-ic">◉</div><div class="empty-t">Henüz hasta yok</div><div class="empty-s">+ Yeni Hasta butonunu kullanın</div></div></td></tr>';return;}
+  tb.innerHTML=list.map(function(p){
+    var phq=p.last_phq9!=null?'<span class="badge '+(p.last_phq9>=15?'bg-r':p.last_phq9>=10?'bg-a':'bg-g')+'">'+p.last_phq9+'</span>':'<span class="badge bg-m">—</span>';
+    return '<tr>'+
+      '<td><div class="td-name" data-dp="'+esc(p.id)+'">'+esc(p.fn+' '+p.ln)+'</div><div style="font-size:11px;color:var(--muted)">'+esc(p.email||'')+'</div></td>'+
+      '<td>'+esc(p.phone||'—')+'</td>'+
+      '<td>'+(p.therapy_type?'<span class="badge bg-ink">'+esc(p.therapy_type)+'</span>':'—')+'</td>'+
+      '<td>'+(p.session_count||0)+'</td>'+
+      '<td style="font-size:11.5px;color:var(--muted)">'+(p.created_at?p.created_at.slice(0,10):'')+'</td>'+
+      '<td>'+phq+'</td>'+
+      '<td><div class="td-ac">'+
+        '<button class="btn bo btn-xs" data-pe="'+esc(p.id)+'">Düzenle</button>'+
+        '<button class="btn bo btn-xs" data-pn="'+esc(p.id)+'">Notlar</button>'+
+        '<button class="btn br btn-xs" data-pd="'+esc(p.id)+'" data-pname="'+esc(p.fn+' '+p.ln)+'">Sil</button>'+
+      '</div></td></tr>';
+  }).join('');
+  tb.querySelectorAll('[data-dp]').forEach(function(e){e.addEventListener('click',function(){openDrawer(e.dataset.dp);});});
+  tb.querySelectorAll('[data-pe]').forEach(function(e){e.addEventListener('click',function(){openPatModal(e.dataset.pe);});});
+  tb.querySelectorAll('[data-pn]').forEach(function(e){e.addEventListener('click',function(){nav('notes');document.getElementById('notes-pat-sel').value=e.dataset.pn;document.getElementById('btn-note-new').disabled=false;loadNotes();});});
+  tb.querySelectorAll('[data-pd]').forEach(function(e){e.addEventListener('click',function(){deletePat(e.dataset.pd,e.dataset.pname);});});
+}
+function filterPats(){
+  var q=document.getElementById('pat-srch').value.toLowerCase();
+  renderPats(S.patients.filter(function(p){return(p.fn+' '+p.ln).toLowerCase().includes(q)||(p.phone||'').includes(q)||(p.therapy_type||'').toLowerCase().includes(q);}));
+}
+function openPatModal(id){
+  S.editPatId=id||null;
+  document.getElementById('mo-pat-t').textContent=id?'Hasta Düzenle':'Yeni Hasta';
+  hideAl('pat-err');fillThSel('pat-therapy');
+  if(id){
+    var p=S.patients.find(function(x){return x.id===id;});
+    if(p){
+      document.getElementById('pat-fn').value=p.fn||'';
+      document.getElementById('pat-ln').value=p.ln||'';
+      document.getElementById('pat-dob').value=p.dob||'';
+      document.getElementById('pat-gender').value=p.gender||'';
+      document.getElementById('pat-phone').value=p.phone||'';
+      document.getElementById('pat-email').value=p.email||'';
+      document.getElementById('pat-therapy').value=p.therapy_type||'';
+      document.getElementById('pat-price').value=p.price||'';
+      document.getElementById('pat-complaint').value=p.complaint||'';
+      document.getElementById('pat-emrg').value=p.emergency_contact||'';
+    }
+  }else{
+    ['fn','ln','dob','phone','email','complaint','emrg'].forEach(function(k){var el=document.getElementById('pat-'+k);if(el)el.value='';});
+    document.getElementById('pat-gender').value='';
+    document.getElementById('pat-price').value='';
+    document.getElementById('pat-therapy').value='';
+  }
+  openMo('mo-pat');
+}
+function savePat(){
+  var fn=(document.getElementById('pat-fn').value||'').trim();
+  var ln=(document.getElementById('pat-ln').value||'').trim();
+  if(!fn||!ln){al('pat-err','Ad ve soyad zorunludur.','err');return;}
+  var payload={fn:fn,ln:ln,dob:document.getElementById('pat-dob').value,gender:document.getElementById('pat-gender').value,
+    phone:(document.getElementById('pat-phone').value||'').trim(),email:(document.getElementById('pat-email').value||'').trim(),
+    therapy_type:document.getElementById('pat-therapy').value,
+    price:parseFloat(document.getElementById('pat-price').value)||0,
+    complaint:(document.getElementById('pat-complaint').value||'').trim(),
+    emergency_contact:(document.getElementById('pat-emrg').value||'').trim()};
+  busy('btn-pat-save',true);
+  (S.editPatId?apiFetch('PUT','/patients/'+S.editPatId,payload):apiFetch('POST','/patients',payload))
+    .then(function(){toast(S.editPatId?'Hasta güncellendi':'Hasta eklendi','ok');closeMo('mo-pat');return loadPatients();})
+    .then(function(){populateSels();loadDashboard();})
+    .catch(function(e){al('pat-err',e.message,'err');})
+    .finally(function(){busy('btn-pat-save',false);});
+}
+function deletePat(id,name){
+  if(!confirm((name||'Bu hasta')+' silinecek. Tüm randevu ve notlar da silinir. Emin misiniz?'))return;
+  apiFetch('DELETE','/patients/'+id).then(function(){toast('Hasta silindi','ok');loadPatients();populateSels();loadDashboard();}).catch(function(e){toast(e.message,'err');});
+}
+
+/* ════ APPOINTMENTS ════ */
+function loadApts(){
+  return apiFetch('GET','/appointments').then(function(d){S.apts=d||[];renderApts(S.apts);return d;}).catch(function(e){console.warn('apts:',e.message);return[];});
+}
+function renderApts(list){
+  var tb=document.getElementById('apt-tbody');
+  if(!list.length){tb.innerHTML='<tr><td colspan="8"><div class="empty"><div class="empty-ic">🕐</div><div class="empty-t">Randevu yok</div></div></td></tr>';return;}
+  var sMap={'scheduled':'<span class="badge bg-b">Planlandı</span>','completed':'<span class="badge bg-g">Tamamlandı</span>','cancelled':'<span class="badge bg-r">İptal</span>'};
+  var mMap={face:'🏥 Yüz yüze',online:'💻 Online',phone:'📞 Telefon'};
+  tb.innerHTML=list.map(function(a){
+    // backend fmt(): at_time, fn, ln, patient_id, therapy_type, duration, medium, status, gcal_synced
+    var pName=a.fn&&a.ln?esc(a.fn+' '+a.ln):(function(){var p=S.patients.find(function(x){return x.id===a.patient_id;});return p?esc(p.fn+' '+p.ln):'?';})();
+    return '<tr>'+
+      '<td><div class="td-name" data-dp="'+esc(a.patient_id||'')+'">'+pName+'</div></td>'+
+      '<td style="font-size:12px;white-space:nowrap">'+fmtDT(a.at_time)+'</td>'+
+      '<td>'+(a.duration||50)+' dk</td>'+
+      '<td>'+esc(a.therapy_type||'—')+'</td>'+
+      '<td>'+(mMap[a.medium]||a.medium||'—')+'</td>'+
+      '<td>'+(sMap[(a.status||'').toLowerCase()]||esc(a.status||'—'))+'</td>'+
+      '<td>'+(a.gcal_synced?'<span class="badge bg-g">✓</span>':'<span class="badge bg-m">—</span>')+'</td>'+
+      '<td><div class="td-ac">'+
+        '<button class="btn bo btn-xs" data-ae="'+esc(a.id)+'">Düzenle</button>'+
+        (a.status!=='completed'?'<button class="btn ba btn-xs" data-ac="'+esc(a.id)+'">✓ Tamamla</button>':'')+
+        '<button class="reminder-btn" data-ar="'+esc(a.id)+'" title="Hastaya hatırlatıcı e-posta gönder">📧</button>'+
+        '<button class="btn br btn-xs" data-ad="'+esc(a.id)+'">Sil</button>'+
+      '</div></td></tr>';
+  }).join('');
+  tb.querySelectorAll('[data-dp]').forEach(function(e){e.addEventListener('click',function(){if(e.dataset.dp)openDrawer(e.dataset.dp);});});
+  tb.querySelectorAll('[data-ae]').forEach(function(e){e.addEventListener('click',function(){openAptModal(e.dataset.ae);});});
+  tb.querySelectorAll('[data-ac]').forEach(function(e){e.addEventListener('click',function(){completeApt(e.dataset.ac);});});
+  tb.querySelectorAll('[data-ad]').forEach(function(e){e.addEventListener('click',function(){deleteApt(e.dataset.ad);});});
+  tb.querySelectorAll('[data-ar]').forEach(function(e){e.addEventListener('click',function(){sendReminder(e.dataset.ar);});});
+}
+function filterApts(){
+  var q=(document.getElementById('apt-srch').value||'').toLowerCase();
+  var df=document.getElementById('apt-date-f').value;
+  var sf=document.getElementById('apt-status-f').value;
+  renderApts(S.apts.filter(function(a){
+    var nm=(a.fn&&a.ln?a.fn+' '+a.ln:(S.patients.find(function(x){return x.id===a.patient_id;})||{fn:'',ln:''}).fn+'').toLowerCase();
+    return(!q||nm.includes(q))&&(!df||!a.at_time||a.at_time.slice(0,10)===df)&&(!sf||a.status===sf);
+  }));
+}
+function openAptModal(id,patId,dt){
+  S.editAptId=id||null;
+  document.getElementById('mo-apt-t').textContent=id?'Randevu Düzenle':'Yeni Randevu';
+  hideAl('apt-err');fillThSel('apt-type');populateSels();
+  if(id){
+    var a=S.apts.find(function(x){return x.id===id;});
+    if(a){
+      document.getElementById('apt-pat').value=a.patient_id||'';
+      document.getElementById('apt-dt').value=a.at_time?a.at_time.slice(0,16):'';
+      document.getElementById('apt-dur').value=a.duration||50;
+      document.getElementById('apt-type').value=a.therapy_type||'';
+      document.getElementById('apt-med').value=a.medium||'face';
+      document.getElementById('apt-notes').value=a.notes||'';
+    }
+  }else{
+    document.getElementById('apt-pat').value=patId||'';
+    document.getElementById('apt-dt').value=dt||'';
+    document.getElementById('apt-dur').value=50;
+    document.getElementById('apt-type').value='';
+    document.getElementById('apt-med').value='face';
+    document.getElementById('apt-notes').value='';
+    document.getElementById('apt-gcal').checked=false;
+    document.getElementById('apt-remind').checked=false;
+  }
+  openMo('mo-apt');
+}
+function saveApt(){
+  var patId=document.getElementById('apt-pat').value;
+  var dt=document.getElementById('apt-dt').value;
+  if(!patId||!dt){al('apt-err','Hasta ve tarih/saat zorunludur.','err');return;}
+  var sendRemind=document.getElementById('apt-remind').checked;
+  var payload={patient_id:patId,at_time:dt,
+    duration:parseInt(document.getElementById('apt-dur').value)||50,
+    therapy_type:document.getElementById('apt-type').value,
+    medium:document.getElementById('apt-med').value,
+    notes:(document.getElementById('apt-notes').value||'').trim(),
+    sync_gcal:document.getElementById('apt-gcal').checked};
+  busy('btn-apt-save',true);
+  (S.editAptId?apiFetch('PUT','/appointments/'+S.editAptId,payload):apiFetch('POST','/appointments',payload))
+    .then(function(res){
+      toast(S.editAptId?'Randevu güncellendi':'Randevu eklendi','ok');
+      // Hatırlatıcı gönder (yeni randevularda)
+      if(sendRemind&&!S.editAptId&&res&&res.id){
+        apiFetch('POST','/reminders/appointment/'+res.id)
+          .then(function(){toast('Hatırlatıcı e-posta gönderildi 📧','ok');})
+          .catch(function(e){toast('Hatırlatıcı gönderilemedi: '+e.message,'warn');});
+      }
+      closeMo('mo-apt');return loadApts();
+    })
+    .then(function(){buildMiniCal();loadDashboard();if(S.view==='calendar')renderCal();})
+    .catch(function(e){al('apt-err',e.message,'err');})
+    .finally(function(){busy('btn-apt-save',false);});
+}
+function completeApt(id){
+  apiFetch('PUT','/appointments/'+id,{status:'completed'}).then(function(){toast('Seans tamamlandı ✅','ok');loadApts();loadDashboard();}).catch(function(e){toast(e.message,'err');});
+}
+function deleteApt(id){
+  if(!confirm('Bu randevu silinecek?'))return;
+  apiFetch('DELETE','/appointments/'+id).then(function(){toast('Randevu silindi','ok');loadApts();loadDashboard();}).catch(function(e){toast(e.message,'err');});
+}
+
+/* ════ NOTES ════
+   POST /api/notes — backend BEKLER: {patient_id, content_enc, session_date, therapy_type, mood, homework, duration}
+   GET  /api/notes — backend DÖNER:  {id, patient_id, session_no, session_date, therapy_type, content_enc, mood, homework, duration}
+════ */
+function loadNotes(){
+  var patId=document.getElementById('notes-pat-sel').value;if(!patId)return;
+  var el=document.getElementById('notes-list');
+  el.innerHTML='<div class="empty"><div class="empty-t">Yükleniyor...</div></div>';
+  apiFetch('GET','/notes?patient_id='+patId).then(function(notes){
+    if(!notes||!notes.length){el.innerHTML='<div class="empty"><div class="empty-ic">✍️</div><div class="empty-t">Henüz not yok</div></div>';return;}
+    el.innerHTML=notes.map(function(n){
+      var hw=n.homework?'<div class="note-hw">📚 Ödev: '+esc(n.homework)+'</div>':'';
+      var moodIc={positive:'😊',negative:'😔',mixed:'😐',neutral:'😶'}[n.mood]||'';
+      return '<div class="note-card">'+
+        '<div class="note-meta">'+
+          '<span>'+(n.session_date||n.created_at||'').slice(0,10)+'</span>'+
+          (n.session_no?'<span>Seans #'+n.session_no+'</span>':'')+
+          (n.therapy_type?'<span>'+esc(n.therapy_type)+'</span>':'')+
+          (n.duration?'<span>'+n.duration+' dk</span>':'')+
+          (moodIc?'<span>'+moodIc+'</span>':'')+
+        '</div>'+
+        '<div class="note-body">'+esc(n.content_enc||'')+'</div>'+
+        hw+
+        '<div class="note-foot"><button class="btn br btn-xs" data-nd="'+esc(n.id)+'">Sil</button></div>'+
+      '</div>';
+    }).join('');
+    el.querySelectorAll('[data-nd]').forEach(function(b){b.addEventListener('click',function(){deleteNote(b.dataset.nd);});});
+  }).catch(function(e){el.innerHTML='<div class="empty"><div class="empty-t">Hata: '+esc(e.message)+'</div></div>';});
+}
+function openNoteModal(){
+  hideAl('note-err');fillThSel('note-therapy');
+  document.getElementById('note-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('note-body').value='';
+  document.getElementById('note-mood').value='neutral';
+  document.getElementById('note-dur').value='50';
+  document.getElementById('note-hw').value='';
+  document.getElementById('note-therapy').value='';
+  openMo('mo-note');
+}
+function saveNote(){
+  var patId=document.getElementById('notes-pat-sel').value;
+  var body=(document.getElementById('note-body').value||'').trim();
+  if(!patId){al('note-err','Hasta seçin.','err');return;}
+  if(!body){al('note-err','Not içeriği zorunludur.','err');return;}
+  busy('btn-note-save',true);
+  apiFetch('POST','/notes',{
+    patient_id: patId,
+    content_enc: body,                                              // ✓ backend: content_enc
+    session_date: document.getElementById('note-date').value,      // ✓ backend: session_date
+    therapy_type: document.getElementById('note-therapy').value,   // ✓ backend: therapy_type
+    mood: document.getElementById('note-mood').value,              // ✓ backend: mood
+    duration: parseInt(document.getElementById('note-dur').value)||50, // ✓ backend: duration
+    homework: (document.getElementById('note-hw').value||'').trim(),   // ✓ backend: homework
+  }).then(function(){toast('Not kaydedildi','ok');closeMo('mo-note');loadNotes();})
+  .catch(function(e){al('note-err',e.message,'err');})
+  .finally(function(){busy('btn-note-save',false);});
+}
+function deleteNote(id){
+  if(!confirm('Bu not silinecek?'))return;
+  apiFetch('DELETE','/notes/'+id).then(function(){toast('Not silindi','ok');loadNotes();}).catch(function(e){toast(e.message,'err');});
+}
+
+/* ════ SCORES ════
+   POST /api/scores — backend BEKLER: {patient_id, scale, total_score, answers}
+   GET  /api/scores — backend DÖNER:  {id, patient_id, scale, total_score, answers, date}
+════ */
+function loadScores(){
+  var patId=document.getElementById('scores-pat-sel').value;if(!patId)return;
+  var el=document.getElementById('scores-list');
+  el.innerHTML='<div class="empty"><div class="empty-t">Yükleniyor...</div></div>';
+  apiFetch('GET','/scores?patient_id='+patId).then(function(scores){
+    if(!scores||!scores.length){el.innerHTML='<div class="empty"><div class="empty-ic">📊</div><div class="empty-t">Henüz ölçek yok</div></div>';return;}
+    el.innerHTML='<div class="tbl-wrap"><table><thead><tr><th>Ölçek</th><th>Puan</th><th>Düzey</th><th>Tarih</th><th></th></tr></thead><tbody>'+
+      scores.map(function(sc){
+        var scale=SC[sc.scale];  // backend 'scale' field döner
+        var info=scale?scale.info(sc.total_score):'—';
+        var max=scale?'/'+scale.max:'';
+        var lvl=(scale&&sc.total_score>=(scale.max*0.6))?'bg-r':(scale&&sc.total_score>=(scale.max*0.35))?'bg-a':'bg-g';
+        return '<tr>'+
+          '<td>'+(scale?scale.n:esc(sc.scale))+'</td>'+
+          '<td><strong>'+sc.total_score+'</strong>'+max+'</td>'+
+          '<td><span class="badge '+lvl+'">'+esc(info)+'</span></td>'+
+          '<td style="font-size:11.5px;color:var(--muted)">'+(sc.date||sc.created_at||'').slice(0,10)+'</td>'+
+          '<td><button class="btn br btn-xs" data-sd="'+esc(sc.id)+'">Sil</button></td></tr>';
+      }).join('')+'</tbody></table></div>';
+    el.querySelectorAll('[data-sd]').forEach(function(b){b.addEventListener('click',function(){deleteScore(b.dataset.sd);});});
+  }).catch(function(e){el.innerHTML='<div class="empty"><div class="empty-t">Hata: '+esc(e.message)+'</div></div>';});
+}
+function buildScaleTabs(){
+  var wrap=document.getElementById('scale-tabs');if(!wrap)return;
+  wrap.innerHTML=Object.keys(SC).map(function(k){
+    return '<button class="sc-tab'+(k===S.scaleKey?' on':'')+'" data-sk="'+k+'">'+SC[k].n.split(' ').slice(0,2).join(' ')+'</button>';
+  }).join('');
+  wrap.querySelectorAll('[data-sk]').forEach(function(b){
+    b.addEventListener('click',function(){S.scaleKey=b.dataset.sk;S.scaleAns={};wrap.querySelectorAll('.sc-tab').forEach(function(x){x.classList.toggle('on',x.dataset.sk===S.scaleKey);});renderScaleBody();});
+  });
+}
+function renderScaleBody(){
+  var sc=SC[S.scaleKey];var el=document.getElementById('scale-body');
+  if(!sc||!el){if(el)el.innerHTML='';return;}
+  el.innerHTML=sc.qs.map(function(q,i){
+    var txt=typeof q==='string'?q:q.q;
+    var opts=typeof q==='string'?sc.opts:q.opts;
+    return '<div class="sc-q"><div class="sc-q-txt">'+(i+1)+'. '+esc(txt)+'</div>'+
+      '<div class="sc-opts">'+opts.map(function(o){
+        return '<button class="sc-opt'+(S.scaleAns[i]===o[0]?' on':'')+'" data-qi="'+i+'" data-v="'+o[0]+'">'+esc(String(o[1]))+'</button>';
+      }).join('')+'</div></div>';
+  }).join('');
+  el.querySelectorAll('.sc-opt').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      S.scaleAns[parseInt(btn.dataset.qi)]=parseFloat(btn.dataset.v);
+      el.querySelectorAll('[data-qi="'+btn.dataset.qi+'"]').forEach(function(b){b.classList.toggle('on',b===btn);});
+      updateScoreBox();
+    });
+  });
+  updateScoreBox();
+}
+function calcTotal(){
+  var sc=SC[S.scaleKey];if(!sc)return 0;
+  var tot=0;
+  Object.keys(S.scaleAns).forEach(function(i){
+    var v=S.scaleAns[i];
+    tot+=sc.rev&&sc.rev.indexOf(parseInt(i))>=0?(5-v):v;
+  });
+  return Math.round(tot);
+}
+function updateScoreBox(){
+  var sc=SC[S.scaleKey];var box=document.getElementById('sc-score-box');if(!sc||!box)return;
+  if(!Object.keys(S.scaleAns).length){box.style.display='none';return;}
+  var tot=calcTotal();
+  box.style.display='block';
+  document.getElementById('sc-total').textContent=tot+(sc.max?'/'+sc.max:'');
+  document.getElementById('sc-info').textContent=sc.info(tot);
+}
+function openScoreModal(){S.scaleAns={};hideAl('score-err');buildScaleTabs();renderScaleBody();openMo('mo-score');}
+function saveScore(){
+  var patId=document.getElementById('scores-pat-sel').value;
+  var sc=SC[S.scaleKey];
+  if(!patId){al('score-err','Hasta seçin.','err');return;}
+  if(Object.keys(S.scaleAns).length<sc.qs.length){al('score-err','Tüm soruları yanıtlayın.','err');return;}
+  var tot=calcTotal();
+  busy('btn-score-save',true);
+  apiFetch('POST','/scores',{
+    patient_id: patId,
+    scale: S.scaleKey,                               // ✓ backend: 'scale' field
+    total_score: tot,                                // ✓ backend: total_score
+    answers: JSON.stringify(S.scaleAns),             // ✓ backend: answers
+  }).then(function(){toast('Ölçek kaydedildi','ok');closeMo('mo-score');loadScores();})
+  .catch(function(e){al('score-err',e.message,'err');})
+  .finally(function(){busy('btn-score-save',false);});
+}
+function deleteScore(id){
+  if(!confirm('Bu ölçek sonucu silinecek?'))return;
+  apiFetch('DELETE','/scores/'+id).then(function(){toast('Silindi','ok');loadScores();}).catch(function(e){toast(e.message,'err');});
+}
+
+/* ════ AI ════
+   POST /api/ai/complete — backend BEKLER: {prompt, systemPrompt, tool}
+   backend DÖNER: {text, usage}
+════ */
+function buildAIGrid(){
+  var grid=document.getElementById('ai-tool-grid');if(!grid)return;
+  grid.innerHTML=AI_TOOLS.map(function(t){
+    return '<div class="ai-card" data-ak="'+t.k+'"><div class="ai-card-ic">'+t.ic+'</div><div class="ai-card-t">'+t.t+'</div><div class="ai-card-d">'+t.d+'</div></div>';
+  }).join('');
+  grid.querySelectorAll('.ai-card').forEach(function(c){c.addEventListener('click',function(){openAI(c.dataset.ak);});});
+}
+function openAI(key){
+  S.aiKey=key;
+  var t=AI_TOOLS.find(function(x){return x.k===key;});if(!t)return;
+  document.querySelectorAll('.ai-card').forEach(function(c){c.classList.toggle('on',c.dataset.ak===key);});
+  document.getElementById('ai-lbl').textContent=t.lbl||'Giriş';
+  document.getElementById('ai-inp').placeholder=t.ph||'';
+  document.getElementById('ai-inp').value='';
+  var aps=document.getElementById('ai-pat-sel');if(aps)aps.style.display='block';
+  var arb=document.getElementById('ai-result-box');if(arb)arb.style.display='none';
+  var aff=document.getElementById('ai-footer');if(aff)aff.style.display='flex';
+  document.getElementById('ai-err').className='alert a-err';
+  document.getElementById('btn-ai-run').disabled=false;
+  if(!document.getElementById('v-ai').classList.contains('on'))nav('ai');
+}
+function runAI(){
+  var t=AI_TOOLS.find(function(x){return x.k===S.aiKey;});
+  if(!t){toast('Bir araç seçin','warn');return;}
+  var inp=(document.getElementById('ai-inp').value||'').trim();
+  if(!inp){toast('Metin girin','warn');return;}
+  var patId=document.getElementById('ai-pat-sel').value;
+  var prompt=inp;
+  if(patId){
+    var p=S.patients.find(function(x){return x.id===patId;});
+    if(p)prompt='Hasta: '+p.fn+' '+p.ln+(p.therapy_type?' | '+p.therapy_type:'')+(p.complaint?' | '+p.complaint:'')+'\n\n'+inp;
+  }
+  var _af=document.getElementById('ai-footer');if(_af)_af.style.display='none';
+  var _arb=document.getElementById('ai-result-box');if(_arb)_arb.style.display='none';
+  var _ae=document.getElementById('ai-err');if(_ae)_ae.className='alert a-err';
+  var _ath=document.getElementById('ai-thinking');if(_ath)_ath.style.display='block';
+  // ✓ Doğru endpoint: /ai/complete
+  apiFetch('POST','/ai/complete',{prompt:prompt,systemPrompt:t.sys,tool:t.k})
+    .then(function(d){
+      var th1=document.getElementById('ai-thinking');if(th1)th1.style.display='none';
+      var rt=document.getElementById('ai-result-txt');if(rt)rt.textContent=d.text||d.result||'';
+      var rb=document.getElementById('ai-result-box');if(rb)rb.style.display='block';
+    })
+    .catch(function(e){
+      var th2=document.getElementById('ai-thinking');if(th2)th2.style.display='none';
+      var af2=document.getElementById('ai-footer');if(af2)af2.style.display='flex';
+      al('ai-err',e.message,'err');
+    });
+}
+
+/* ════ PACKAGES ════ */
+function loadPackages(){
+  apiFetch('GET','/packages').then(function(pks){
+    var tb=document.getElementById('pkg-tbody');
+    if(!pks||!pks.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><div class="empty-ic">📦</div><div class="empty-t">Paket yok</div></div></td></tr>';return;}
+    tb.innerHTML=pks.map(function(pk){
+      return '<tr>'+
+        '<td><div class="td-name" data-dp="'+esc(pk.patient_id)+'">'+esc(pk.fn+' '+pk.ln)+'</div></td>'+
+        '<td>'+esc(pk.name)+'</td>'+
+        '<td>'+pk.sessions_total+'</td>'+
+        '<td><span class="badge '+(pk.remaining<=0?'bg-r':pk.remaining<=2?'bg-a':'bg-g')+'">'+pk.remaining+' kaldı</span></td>'+
+        '<td>₺'+Number(pk.price||0).toLocaleString('tr-TR')+'</td>'+
+        '<td style="font-size:11.5px;color:var(--muted)">'+(pk.start_date||'').slice(0,10)+'</td>'+
+        '<td><div class="td-ac">'+
+          (pk.remaining>0?'<button class="btn ba btn-xs" data-pu="'+esc(pk.id)+'">+1 Kullan</button>':'')+
+          '<button class="btn br btn-xs" data-pd="'+esc(pk.id)+'">Sil</button>'+
+        '</div></td></tr>';
+    }).join('');
+    tb.querySelectorAll('[data-dp]').forEach(function(e){e.addEventListener('click',function(){openDrawer(e.dataset.dp);});});
+    tb.querySelectorAll('[data-pu]').forEach(function(e){e.addEventListener('click',function(){usePkg(e.dataset.pu);});});
+    tb.querySelectorAll('[data-pd]').forEach(function(e){e.addEventListener('click',function(){deletePkg(e.dataset.pd);});});
+  }).catch(function(){});
+}
+function openPkgModal(){
+  hideAl('pkg-err');
+  document.getElementById('pkg-name').value='';
+  document.getElementById('pkg-sess').value='10';
+  document.getElementById('pkg-price').value='';
+  populateSels();document.getElementById('pkg-pat').value='';
+  openMo('mo-pkg');
+}
+function savePkg(){
+  var patId=document.getElementById('pkg-pat').value;
+  var sess=document.getElementById('pkg-sess').value;
+  if(!patId||!sess){al('pkg-err','Hasta ve seans sayısı zorunludur.','err');return;}
+  busy('btn-pkg-save',true);
+  apiFetch('POST','/packages',{patient_id:patId,name:(document.getElementById('pkg-name').value||'').trim(),sessions_total:parseInt(sess),price:parseFloat(document.getElementById('pkg-price').value)||0})
+    .then(function(){toast('Paket oluşturuldu','ok');closeMo('mo-pkg');loadPackages();})
+    .catch(function(e){al('pkg-err',e.message,'err');})
+    .finally(function(){busy('btn-pkg-save',false);});
+}
+function usePkg(id){apiFetch('PUT','/packages/'+id+'/use',{}).then(function(){toast('Seans kullanıldı','ok');loadPackages();}).catch(function(e){toast(e.message,'err');}); }
+function deletePkg(id){if(!confirm('Paket silinecek?'))return;apiFetch('DELETE','/packages/'+id).then(function(){toast('Silindi','ok');loadPackages();}).catch(function(e){toast(e.message,'err');});}
+
+/* ════ INVOICES ════ */
+function loadInvoices(){
+  var month=document.getElementById('inv-month-f').value;
+  var status=document.getElementById('inv-status-f').value;
+  var q='/invoices?_=1';
+  if(month)q+='&from='+month+'-01&to='+month+'-31';
+  if(status)q+='&status='+status;
+  Promise.all([
+    apiFetch('GET',q).catch(function(){return[];}),
+    apiFetch('GET','/invoices/stats'+(month?'?month='+month:'')).catch(function(){return null;}),
+  ]).then(function(r){
+    var invs=r[0],stats=r[1];
+    var sr=document.getElementById('inv-stats-row');
+    if(stats&&sr){
+      sr.innerHTML='<div class="stat amber" style="flex:1;max-width:160px;padding:10px 14px"><div class="stat-v" style="font-size:18px">₺'+Number(stats.monthRevenue||0).toLocaleString('tr-TR')+'</div><div class="stat-l">Bu Ay Gelir</div></div>'+
+        '<div class="stat" style="flex:1;max-width:160px;padding:10px 14px"><div class="stat-v" style="font-size:18px">'+(stats.monthCount||0)+'</div><div class="stat-l">Fatura Sayısı</div></div>'+
+        '<div class="stat rose" style="flex:1;max-width:160px;padding:10px 14px"><div class="stat-v" style="font-size:18px">'+(stats.unpaidCount||0)+'</div><div class="stat-l">Bekleyen</div></div>';
+    }
+    var tb=document.getElementById('inv-tbody');
+    if(!invs||!invs.length){tb.innerHTML='<tr><td colspan="8"><div class="empty"><div class="empty-ic">🧾</div><div class="empty-t">Fatura yok</div></div></td></tr>';return;}
+    tb.innerHTML=invs.map(function(inv){
+      return '<tr>'+
+        '<td><span class="badge bg-m">'+esc(inv.number||'—')+'</span></td>'+
+        '<td><div class="td-name" data-dp="'+esc(inv.patient_id)+'">'+esc((inv.fn||'')+' '+(inv.ln||''))+'</div></td>'+
+        '<td>'+esc(inv.description||'—')+'</td>'+
+        '<td>₺'+Number(inv.amount||0).toLocaleString('tr-TR')+'</td>'+
+        '<td>'+(inv.tax_rate||0)+'%</td>'+
+        '<td style="font-size:11.5px;color:var(--muted)">'+(inv.date||'').slice(0,10)+'</td>'+
+        '<td>'+(inv.status==='paid'?'<span class="badge bg-g">Ödendi</span>':'<span class="badge bg-a">Bekliyor</span>')+'</td>'+
+        '<td><div class="td-ac">'+
+          (inv.status!=='paid'?'<button class="btn ba btn-xs" data-ip="'+esc(inv.id)+'">Ödendi</button>':'')+
+          '<button class="btn br btn-xs" data-id="'+esc(inv.id)+'">Sil</button>'+
+        '</div></td></tr>';
+    }).join('');
+    tb.querySelectorAll('[data-dp]').forEach(function(e){e.addEventListener('click',function(){openDrawer(e.dataset.dp);});});
+    tb.querySelectorAll('[data-ip]').forEach(function(e){e.addEventListener('click',function(){markPaid(e.dataset.ip);});});
+    tb.querySelectorAll('[data-id]').forEach(function(e){e.addEventListener('click',function(){deleteInv(e.dataset.id);});});
+  });
+}
+function openInvModal(){
+  hideAl('inv-err');
+  document.getElementById('inv-desc').value='Terapi Seansı';
+  document.getElementById('inv-amt').value='';
+  document.getElementById('inv-tax').value='0';
+  document.getElementById('inv-status').value='paid';
+  populateSels();document.getElementById('inv-pat').value='';
+  openMo('mo-inv');
+}
+function saveInv(){
+  var patId=document.getElementById('inv-pat').value;
+  var amt=document.getElementById('inv-amt').value;
+  if(!patId||!amt){al('inv-err','Hasta ve tutar zorunludur.','err');return;}
+  busy('btn-inv-save',true);
+  apiFetch('POST','/invoices',{patient_id:patId,description:(document.getElementById('inv-desc').value||'').trim()||'Terapi Seansı',amount:parseFloat(amt),tax_rate:parseFloat(document.getElementById('inv-tax').value)||0,status:document.getElementById('inv-status').value})
+    .then(function(){toast('Fatura oluşturuldu','ok');closeMo('mo-inv');loadInvoices();})
+    .catch(function(e){al('inv-err',e.message,'err');})
+    .finally(function(){busy('btn-inv-save',false);});
+}
+function markPaid(id){apiFetch('PUT','/invoices/'+id,{status:'paid'}).then(function(){toast('Ödendi işaretlendi','ok');loadInvoices();}).catch(function(e){toast(e.message,'err');});}
+function deleteInv(id){if(!confirm('Fatura silinecek?'))return;apiFetch('DELETE','/invoices/'+id).then(function(){toast('Silindi','ok');loadInvoices();}).catch(function(e){toast(e.message,'err');});}
+
+/* ════ FİNANS ANALİZİ ════ */
+function loadFinance(){
+  var yearSel=document.getElementById('fin-year-sel');
+  if(yearSel&&!yearSel.options.length){
+    var now=new Date().getFullYear();
+    for(var y=now;y>=now-3;y--){var o=document.createElement('option');o.value=y;o.textContent=y;yearSel.appendChild(o);}
+    yearSel.addEventListener('change',loadFinance);
+  }
+  var year=yearSel?yearSel.value:new Date().getFullYear();
+  apiFetch('GET','/finance/summary?year='+year).then(function(d){
+    // KPI
+    var fmt=function(v){return'₺'+Number(v||0).toLocaleString('tr-TR');};
+    var m=d.thisMonth||{};
+    var g=d.growth;
+    document.getElementById('fk-month').textContent=fmt(m.paid);
+    document.getElementById('fk-growth').textContent=g!==null?(g>=0?'▲ %'+g+' geçen aya göre':'▼ %'+Math.abs(g)+' geçen aya göre'):'İlk ay';
+    document.getElementById('fk-year').textContent=fmt(d.yearStats&&d.yearStats.paid);
+    document.getElementById('fk-year-cnt').textContent=(d.yearStats&&d.yearStats.count||0)+' fatura';
+    document.getElementById('fk-pending').textContent=fmt(m.pending);
+    document.getElementById('fk-pend-cnt').textContent=(d.pending&&d.pending.length||0)+' bekleyen';
+    document.getElementById('fk-paid').textContent=fmt(m.paid);
+    document.getElementById('fk-paid-cnt').textContent=(m.count||0)+' fatura';
+
+    // Bar chart
+    var bars=document.getElementById('fin-bars-wrap');
+    if(bars&&d.monthly&&d.monthly.length){
+      var maxV=Math.max.apply(null,d.monthly.map(function(x){return x.paid||0;}));
+      if(maxV<1)maxV=1;
+      var curMon=new Date().toISOString().slice(0,7);
+      bars.innerHTML=d.monthly.map(function(x){
+        var h=Math.max(4,Math.round((x.paid||0)/maxV*80));
+        var mon=x.month;
+        var short=mon.slice(5,7);
+        var months={
+          '01':'Oca','02':'Şub','03':'Mar','04':'Nis','05':'May','06':'Haz',
+          '07':'Tem','08':'Ağu','09':'Eyl','10':'Eki','11':'Kas','12':'Ara'
+        };
+        var isCur=mon===curMon;
+        var amtK=(x.paid||0)>=1000?Math.round((x.paid||0)/1000)+'K':Math.round(x.paid||0).toString();
+        return '<div class="fin-bar-wrap">'+
+          '<div class="fin-bar'+(isCur?' cur':'') +'" style="height:'+h+'px" title="'+x.month+': ₺'+Number(x.paid||0).toLocaleString('tr-TR')+'"></div>'+
+          '<div class="fin-bar-lbl">'+(months[short]||short)+'</div>'+
+          '</div>';
+      }).join('');
+    }else if(bars){bars.innerHTML='<div style="color:var(--muted);font-size:12px">Henüz veri yok</div>';}
+
+    // Hasta başına
+    var pp=document.getElementById('fin-by-patient');
+    if(pp){
+      if(!d.byPatient||!d.byPatient.length){pp.innerHTML='<div class="empty" style="padding:8px 0"><div class="empty-t">Veri yok</div></div>';
+      }else{
+        var topV=d.byPatient[0].total||1;
+        pp.innerHTML=d.byPatient.map(function(p){
+          var pct=Math.round((p.total||0)/topV*100);
+          return '<div class="fin-patient-row">'+
+            '<div class="fin-pat-name">'+esc(p.name)+'</div>'+
+            '<div class="fin-pat-bar-wrap"><div class="fin-pat-bar" style="width:'+pct+'%"></div></div>'+
+            '<div class="fin-pat-amt">₺'+Number(p.total||0).toLocaleString('tr-TR')+'</div>'+
+          '</div>';
+        }).join('');
+      }
+    }
+
+    // Bekleyen
+    var pl=document.getElementById('fin-pending-list');
+    if(pl){
+      if(!d.pending||!d.pending.length){pl.innerHTML='<div class="empty" style="padding:8px 0"><div class="empty-ic">✅</div><div class="empty-t">Bekleyen tahsilat yok</div></div>';
+      }else{
+        pl.innerHTML=d.pending.map(function(p){
+          return '<div class="fin-pending-row">'+
+            '<div class="fin-pend-name">'+esc(p.patient_name||'—')+'</div>'+
+            '<div class="fin-pend-date">'+esc((p.date||'').slice(0,10))+'</div>'+
+            '<div class="fin-pend-amt">₺'+Number(p.amount||0).toLocaleString('tr-TR')+'</div>'+
+            '<button class="btn ba btn-xs" style="margin-left:6px" data-pid="'+esc(p.id)+'">Ödendi</button>'+
+          '</div>';
+        }).join('');
+        pl.querySelectorAll('[data-pid]').forEach(function(b){
+          b.addEventListener('click',function(){
+            apiFetch('PUT','/invoices/'+b.dataset.pid,{status:'paid'})
+              .then(function(){toast('Ödendi işaretlendi','ok');loadFinance();})
+              .catch(function(e){toast(e.message,'err');});
+          });
+        });
+      }
+    }
+  }).catch(function(e){toast('Finans verisi alınamadı: '+e.message,'err');});
+}
+
+function exportFinanceCsv(){
+  var year=document.getElementById('fin-year-sel')?document.getElementById('fin-year-sel').value:new Date().getFullYear();
+  apiFetch('GET','/invoices?from='+year+'-01-01&to='+year+'-12-31').then(function(invs){
+    if(!invs||!invs.length){toast('Dışa aktarılacak fatura yok','info');return;}
+    var rows=[['#','Hasta','Açıklama','Tutar','KDV','Tarih','Durum']];
+    invs.forEach(function(i){
+      rows.push([i.number||'',((i.fn||'')+' '+(i.ln||'')).trim(),i.description||'Terapi Seansı',i.amount||0,i.tax_rate||0,(i.date||'').slice(0,10),i.status==='paid'?'Ödendi':'Bekliyor']);
+    });
+    var csv=rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+    var a=document.createElement('a');
+    a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+    a.download='terapiseansim-faturalar-'+year+'.csv';
+    a.click();
+  });
+}
+
+/* ════ HATIRLATICI ════ */
+function sendReminder(aptId){
+  apiFetch('POST','/reminders/appointment/'+aptId).then(function(){
+    toast('Hatırlatıcı e-posta gönderildi 📧','ok');
+  }).catch(function(e){toast('Hatırlatıcı gönderilemedi: '+e.message,'err');});
+}
+
+/* ════ SETTINGS ════ */
+function loadSettings(){
+  apiFetch('GET','/settings').then(function(u){
+    document.getElementById('set-name').value=u.name||'';
+    document.getElementById('set-clinic').value=u.clinicName||'';
+    document.getElementById('set-addr').value=u.clinicAddr||'';
+    document.getElementById('set-phone').value=u.clinicPhone||'';
+    if(u.therapies&&u.therapies.length)S.therapies=u.therapies;
+    renderThTags();
+    return apiFetch('GET','/calendar/status').catch(function(){return{connected:false};});
+  }).then(function(gcal){
+    var el=document.getElementById('gcal-settings-block');if(!el)return;
+    if(gcal&&gcal.connected){
+      el.innerHTML='<div class="alert a-ok show">✅ Google Takvim bağlı'+(gcal.calendarId?' — '+esc(gcal.calendarId):'')+'</div>'+
+        '<button class="btn br btn-sm" id="btn-gcal-disc">Bağlantıyı Kes</button>';
+      document.getElementById('btn-gcal-disc').addEventListener('click',function(){
+        if(!confirm('Google Takvim bağlantısı kesilecek?'))return;
+        apiFetch('DELETE','/calendar/disconnect').then(function(){toast('Bağlantı kesildi','ok');loadSettings();}).catch(function(e){toast(e.message,'err');});
+      });
+    }else{
+      el.innerHTML='<div class="alert a-warn show">📅 Google Takvim bağlı değil</div>'+
+        '<button class="btn bb btn-sm" id="btn-gcal-conn-set">📅 Google Takvim Bağla</button>'+
+        (gcal.configured===false?'<div class="gcal-guide" style="margin-top:12px"><h4>⚙️ Kurulum Gerekli</h4><p>Railway ortam değişkenlerini ekleyin:</p><ol><li><code>GOOGLE_CLIENT_ID</code> — Google Cloud Console\'dan</li><li><code>GOOGLE_CLIENT_SECRET</code> — Google Cloud Console\'dan</li><li><code>GOOGLE_REDIRECT_URI</code> = <code>https://RAILWAY-URL.railway.app/api/calendar/callback</code></li></ol><p style="margin-top:8px;font-size:12px;color:var(--muted)">Google Cloud Console → APIs &amp; Services → Credentials → OAuth 2.0 Client → Authorized redirect URIs</p></div>':'');
+      var cb=document.getElementById('btn-gcal-conn-set');
+      if(cb)cb.addEventListener('click',connectGcal);
+    }
+  }).catch(function(){});
+}
+function renderThTags(){
+  var el=document.getElementById('th-tags');if(!el)return;
+  el.innerHTML=S.therapies.map(function(t){
+    return '<span class="th-tag">'+esc(t)+'<button class="th-tag-rm" data-th="'+esc(t)+'">✕</button></span>';
+  }).join('');
+  el.querySelectorAll('.th-tag-rm').forEach(function(b){b.addEventListener('click',function(){S.therapies=S.therapies.filter(function(x){return x!==b.dataset.th;});renderThTags();});});
+}
+function addTherapy(){
+  var inp=document.getElementById('inp-th');
+  var v=(inp.value||'').trim().toUpperCase();
+  if(!v||S.therapies.includes(v))return;
+  S.therapies.push(v);inp.value='';renderThTags();
+}
+function fillThSel(id){
+  var el=document.getElementById(id);if(!el)return;
+  el.innerHTML='<option value="">Seçin</option>'+S.therapies.map(function(t){return '<option value="'+esc(t)+'">'+esc(t)+'</option>';}).join('');
+}
+function saveSettings(){
+  busy('btn-set-save',true);hideAl('set-err');hideAl('set-ok');
+  apiFetch('PUT','/settings',{name:(document.getElementById('set-name').value||'').trim(),clinicName:(document.getElementById('set-clinic').value||'').trim(),clinicAddr:(document.getElementById('set-addr').value||'').trim(),clinicPhone:(document.getElementById('set-phone').value||'').trim(),therapies:S.therapies})
+    .then(function(u){sessionStorage.setItem('ts_user',JSON.stringify(u));al('set-ok','Ayarlar kaydedildi.','ok');document.getElementById('sb-user-text').textContent=u.name+(u.clinicName?' · '+u.clinicName:'');})
+    .catch(function(e){al('set-err',e.message,'err');})
+    .finally(function(){busy('btn-set-save',false);});
+}
+function changePw(){
+  var cur=document.getElementById('set-cur-pw').value;
+  var nw=document.getElementById('set-new-pw').value;
+  var nw2=document.getElementById('set-new-pw2').value;
+  if(!cur||!nw){al('set-err','Mevcut ve yeni şifre zorunludur.','err');return;}
+  if(nw!==nw2){al('set-err','Şifreler eşleşmiyor.','err');return;}
+  if(nw.length<8){al('set-err','Şifre en az 8 karakter olmalıdır.','err');return;}
+  apiFetch('PUT','/auth/password',{currentPassword:cur,newPassword:nw})
+    .then(function(){al('set-ok','Şifre güncellendi.','ok');['set-cur-pw','set-new-pw','set-new-pw2'].forEach(function(id){document.getElementById(id).value='';});})
+    .catch(function(e){al('set-err',e.message,'err');});
+}
+
+/* ════ KVKK ════ */
+function kvkkExport(){
+  var blob=new Blob([JSON.stringify({exportDate:new Date().toISOString(),patients:S.patients},null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='terapiseansim-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  toast('Veriler indirildi','ok');
+}
+function legalProof(){
+  // ✓ Doğru endpoint: /auth/legal-proof
+  apiFetch('GET','/auth/legal-proof').then(function(d){
+    var blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hukuki-onay-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+    toast('Belge indirildi','ok');
+  }).catch(function(e){toast('Belge alınamadı: '+e.message,'err');});
+}
+function kvkkAnon(){
+  var conf=prompt('Hesabınız kalıcı olarak silinecek. Onaylamak için "SİL" yazın:');
+  if(conf!=='SİL')return;
+  // patient anonymize endpoint
+  if(S.patients.length){
+    apiFetch('POST','/patients/'+S.patients[0].id+'/anonymize',{}).then(function(){toast('Anonimleştirme başlatıldı','ok');}).catch(function(e){toast(e.message,'err');});
+  }else{
+    toast('Silinecek hasta verisi yok','info');
+  }
+}
+function loadAudit(){
+  var el=document.getElementById('audit-list');if(!el)return;
+  apiFetch('GET','/settings/audit?limit=50').then(function(logs){
+    if(!logs||!logs.length){el.innerHTML='<div class="empty"><div class="empty-t">Kayıt yok</div></div>';return;}
+    el.innerHTML='<table style="width:100%;font-size:12px;border-collapse:collapse">'+
+      logs.map(function(l){return '<tr style="border-bottom:1px solid var(--bdr)"><td style="padding:5px 8px;color:var(--muted);white-space:nowrap">'+(l.created_at||'').slice(0,16)+'</td><td style="padding:5px 8px">'+esc(l.action)+'</td></tr>';}).join('')+
+      '</table>';
+  }).catch(function(){});
+}
+
+/* ════ DRAWER ════ */
+function openDrawer(id){
+  if(!id||id==='undefined')return;
+  var p=S.patients.find(function(x){return x.id===id;});if(!p)return;
+  S.drawerPatId=id;
+  document.getElementById('dr-name').textContent=p.fn+' '+p.ln;
+  var age=p.dob?Math.floor((Date.now()-new Date(p.dob))/(365.25*86400000))+'y':'';
+  document.getElementById('dr-meta').textContent=[p.therapy_type,age?age+' yaş':''].filter(Boolean).join(' · ');
+  var rows=[['Şikayet',p.complaint],['Telefon',p.phone],['E-posta',p.email],['Acil',p.emergency_contact],['Ücret',p.price?'₺'+p.price:null]];
+  document.getElementById('dr-info').innerHTML=rows.filter(function(r){return r[1];}).map(function(r){
+    return '<div class="dr-row"><span class="dr-row-l">'+r[0]+'</span><span class="dr-row-v">'+esc(String(r[1]))+'</span></div>';
+  }).join('')||'<div style="font-size:12px;color:var(--muted)">Kayıt yok</div>';
+  apiFetch('GET','/scores?patient_id='+id).then(function(scores){
+    var drsc=document.getElementById('dr-scores');
+    if(!scores||!scores.length){drsc.innerHTML='<div style="font-size:12px;color:var(--muted)">Ölçek yok</div>';return;}
+    var latest={};
+    scores.forEach(function(sc){if(!latest[sc.scale]||sc.created_at>latest[sc.scale].created_at)latest[sc.scale]=sc;});
+    drsc.innerHTML=Object.values(latest).map(function(sc){
+      var scale=SC[sc.scale];
+      var lvl=(scale&&sc.total_score>=(scale.max*0.6))?'bg-r':(scale&&sc.total_score>=(scale.max*0.35))?'bg-a':'bg-g';
+      return '<div class="dr-row"><span class="dr-row-l">'+(scale?scale.n:sc.scale)+'</span><span class="badge '+lvl+'">'+sc.total_score+(scale?'/'+scale.max:'')+'</span></div>';
+    }).join('');
+  }).catch(function(){});
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+}
+
+/* ════ YARDIMCI ════ */
+function populateSels(){
+  ['apt-pat','pkg-pat','inv-pat','ai-pat-sel','notes-pat-sel','scores-pat-sel'].forEach(function(id){
+    var sel=document.getElementById(id);if(!sel)return;
+    var cur=sel.value;
+    var isNote=(id==='notes-pat-sel'||id==='scores-pat-sel');
+    sel.innerHTML=(isNote?'<option value="">— Hasta seçin —</option>':'<option value="">Seçin</option>')+
+      S.patients.map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.fn+' '+p.ln)+'</option>';}).join('');
+    if(cur)sel.value=cur;
+  });
+}
+
+/* ════ BAŞLAT ════ */
+document.addEventListener('DOMContentLoaded', init);
+
+})();
+</script>
+</body>
+</html>

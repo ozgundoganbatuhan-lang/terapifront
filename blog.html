@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blog — Psikolog Rehberi | TerapiSeansım</title>
+<meta name="description" content="Psikologlar için pratik rehberler: SOAP notu, KVKK uyumu, AI araçları, ölçek yorumlama ve verimli klinik yönetim.">
+<meta name="keywords" content="psikolog yazılımı, SOAP notu, PHQ-9, GAD-7, KVKK, klinik yönetim, terapi notu">
+<meta property="og:title" content="Blog — Psikolog Rehberi | TerapiSeansım">
+<meta property="og:type" content="website">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://asansor.servisim.com/blog.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g900:#0C1F14;--g500:#317A4A;--g400:#3D9B5E;--g300:#55C27A;
+  --g100:rgba(49,122,74,.09);
+  --ink:#1C2B22;--ink2:#2C3D33;--mid:#4E6556;--muted:#7A9280;
+  --bg:#F7F5F0;--card:#FFF;--bdr:rgba(28,43,34,.1);--bdr2:rgba(28,43,34,.06);
+  --sh:0 4px 18px rgba(0,0,0,.09);
+  --D:'Fraunces',Georgia,serif;--B:'DM Sans',system-ui,sans-serif;
+}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{font-family:var(--B);background:var(--bg);color:var(--ink);line-height:1.6}
+nav{position:sticky;top:0;z-index:500;background:rgba(247,245,240,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--bdr)}
+.nw{max-width:1140px;margin:0 auto;display:flex;align-items:center;height:56px;gap:20px;padding:0 40px}
+.nlogo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
+.nlm{width:30px;height:30px;background:var(--g900);border-radius:8px;display:grid;place-items:center;font-family:var(--D);font-size:13px;font-style:italic;font-weight:700;color:#fff}
+.nlt{font-family:var(--D);font-size:16px;font-weight:600;color:var(--ink);letter-spacing:-.02em}
+.nblog{font-size:11.5px;color:var(--muted);padding:2px 8px;background:var(--g100);border-radius:99px;font-weight:500}
+.nlinks{display:flex;align-items:center;gap:18px;margin-left:auto;font-size:13.5px}
+.nlinks a{color:var(--mid);text-decoration:none;transition:color .15s}
+.nlinks a:hover{color:var(--g500)}
+.ncta{background:var(--g900)!important;color:#fff!important;padding:7px 16px;border-radius:99px;font-size:12.5px!important;font-weight:500!important}
+.ncta:hover{background:var(--g500)!important}
+.hero{max-width:1140px;margin:0 auto;padding:72px 40px 36px}
+.hero-ey{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--g400);margin-bottom:14px}
+.hero-h{font-family:var(--D);font-size:clamp(32px,4vw,54px);font-weight:600;letter-spacing:-.03em;color:var(--ink);line-height:1.08;margin-bottom:16px}
+.hero-h em{font-style:italic;color:var(--g500)}
+.hero-p{font-size:15px;color:var(--mid);max-width:480px;line-height:1.75}
+.tags{max-width:1140px;margin:0 auto;padding:24px 40px 26px;display:flex;gap:8px;flex-wrap:wrap}
+.tag{padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:500;cursor:pointer;border:1.5px solid var(--bdr);background:var(--card);color:var(--mid);transition:all .15s;user-select:none}
+.tag:hover,.tag.on{background:var(--g900);color:#fff;border-color:var(--g900)}
+.grid{max-width:1140px;margin:0 auto;padding:0 40px 88px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.bcard{background:var(--card);border:1px solid var(--bdr);border-radius:16px;overflow:hidden;transition:transform .2s,box-shadow .2s;cursor:pointer;display:flex;flex-direction:column}
+.bcard:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+.bcard.feat{grid-column:span 2}
+.bcard-top{padding:24px 24px 0;flex:1;position:relative}
+.bcard-cat{display:inline-block;font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--g500);background:var(--g100);border-radius:99px;padding:3px 10px;margin-bottom:12px}
+.bcard-h{font-family:var(--D);font-size:18px;font-weight:600;color:var(--ink);line-height:1.28;letter-spacing:-.02em;margin-bottom:10px}
+.bcard.feat .bcard-h{font-size:24px}
+.bcard-p{font-size:13.5px;color:var(--mid);line-height:1.66;padding-bottom:14px}
+.bcard.feat .bcard-p{font-size:14.5px}
+.bcard-badge{position:absolute;top:18px;right:18px;background:linear-gradient(135deg,var(--g400),var(--g900));color:#fff;font-size:10px;font-weight:600;padding:3px 9px;border-radius:99px}
+.bcard-foot{padding:14px 24px;border-top:1px solid var(--bdr2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.bcard-meta{font-size:11.5px;color:var(--muted)}
+.bcard-arr{font-size:12px;font-weight:500;color:var(--g500)}
+.art{display:none;max-width:740px;margin:0 auto;padding:48px 40px 100px}
+.art.on{display:block}
+.art-back{display:inline-flex;align-items:center;gap:6px;color:var(--mid);font-size:13.5px;text-decoration:none;margin-bottom:32px;transition:color .15s;cursor:pointer}
+.art-back:hover{color:var(--g500)}
+.art-cat{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--g400);margin-bottom:12px}
+.art-h{font-family:var(--D);font-size:clamp(28px,3.8vw,42px);font-weight:600;color:var(--ink);line-height:1.12;letter-spacing:-.03em;margin-bottom:14px}
+.art-meta{font-size:13px;color:var(--muted);margin-bottom:34px;padding-bottom:30px;border-bottom:1px solid var(--bdr)}
+.art-body{font-size:16px;line-height:1.84;color:var(--ink2)}
+.art-body h2{font-family:var(--D);font-size:23px;font-weight:600;color:var(--ink);margin:38px 0 14px;letter-spacing:-.02em}
+.art-body h3{font-size:16.5px;font-weight:600;color:var(--ink);margin:24px 0 10px}
+.art-body p{margin-bottom:18px}
+.art-body ul,.art-body ol{padding-left:22px;margin-bottom:18px}
+.art-body li{margin-bottom:8px}
+.art-body strong{color:var(--ink);font-weight:600}
+.art-body blockquote{border-left:3px solid var(--g400);padding:14px 20px;background:var(--g100);border-radius:0 10px 10px 0;margin:26px 0;font-style:italic;color:var(--mid);font-size:15px}
+.art-body .tip{background:#F0F8F3;border:1px solid rgba(49,122,74,.2);border-radius:11px;padding:16px 20px;margin:26px 0}
+.art-body .tip strong{color:var(--g500)}
+.art-cta{background:var(--g900);border-radius:16px;padding:32px 36px;margin-top:52px;text-align:center}
+.art-cta h3{font-family:var(--D);font-size:22px;font-weight:600;color:#fff;margin-bottom:8px}
+.art-cta p{font-size:13.5px;color:rgba(255,255,255,.5);margin-bottom:22px;line-height:1.6}
+.art-cta a{display:inline-block;background:#fff;color:var(--g900);font-weight:600;font-size:14px;padding:12px 28px;border-radius:10px;text-decoration:none;transition:all .18s;font-family:var(--B)}
+.art-cta a:hover{background:var(--g300)}
+footer{background:var(--g900);padding:44px 40px}
+.fw{max-width:1140px;margin:0 auto;text-align:center}
+.flinks{display:flex;justify-content:center;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+.flinks a{color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;padding:4px 10px;border-radius:6px;transition:color .15s}
+.flinks a:hover{color:#fff}
+.fcopy{font-size:12px;color:rgba(255,255,255,.25)}
+@media(max-width:900px){
+  .grid{grid-template-columns:1fr 1fr}
+  .bcard.feat{grid-column:span 1}
+  .nw,.hero,.tags,.grid{padding-left:20px;padding-right:20px}
+}
+@media(max-width:580px){
+  .grid{grid-template-columns:1fr}
+  .art{padding:32px 20px 64px}
+  .nlinks a:not(.ncta){display:none}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nw">
+    <a href="index.html" class="nlogo">
+      <div class="nlm">Ts</div>
+      <span class="nlt">TerapiSeansım</span>
+    </a>
+    <span class="nblog">Blog</span>
+    <div class="nlinks">
+      <a href="index.html#platform">Platform</a>
+      <a href="index.html#fiyat">Fiyatlar</a>
+      <a href="giris.html">Giriş Yap</a>
+      <a href="giris.html" class="ncta">Ücretsiz Başla</a>
+    </div>
+  </div>
+</nav>
+
+<div id="list-view">
+  <div class="hero">
+    <div class="hero-ey">Bilgi Merkezi</div>
+    <h1 class="hero-h">Psikologlar için<br><em>pratik rehberler.</em></h1>
+    <p class="hero-p">Klinik yönetim, not tutma, KVKK uyumu ve AI araçları hakkında gerçek dünya rehberleri.</p>
+  </div>
+  <div class="tags">
+    <span class="tag on" data-cat="all">Tümü</span>
+    <span class="tag" data-cat="not">Not Tutma</span>
+    <span class="tag" data-cat="kvkk">KVKK &amp; Hukuk</span>
+    <span class="tag" data-cat="ai">AI Araçlar</span>
+    <span class="tag" data-cat="yonetim">Klinik Yönetim</span>
+    <span class="tag" data-cat="verimlilik">Verimlilik</span>
+  </div>
+  <div class="grid" id="grid">
+
+    <div class="bcard feat" data-post="soap" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-badge">Öne Çıkan</div>
+        <div class="bcard-cat">Not Tutma</div>
+        <div class="bcard-h">SOAP Notu Nedir? Psikologlar İçin Adım Adım Rehber</div>
+        <div class="bcard-p">Subjektif, Objektif, Değerlendirme, Plan formatında yapılandırılmış seans notlarını nasıl yazarsınız? DSM-5 uyumlu şablonlarla eksiksiz kılavuz.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">8 dk okuma · Klinik Pratik</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="kvkk" data-cat="kvkk">
+      <div class="bcard-top">
+        <div class="bcard-cat">KVKK &amp; Hukuk</div>
+        <div class="bcard-h">Psikologlar İçin KVKK Uyum Rehberi 2025</div>
+        <div class="bcard-p">Hasta verilerini KVKK kapsamında nasıl saklarsınız? Zorunlu belgeler ve pratik kontrol listesi.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">6 dk okuma · Hukuk</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="phq9" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-cat">Klinik Araçlar</div>
+        <div class="bcard-h">PHQ-9 ve GAD-7 Puanlama: Klinisyen Referans Kartı</div>
+        <div class="bcard-p">Eşik değerler, klinik karar noktaları ve grafikle trend takibi. Depresyon ve anksiyete ölçeklerini doğru yorumlama.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">4 dk okuma · Ölçekler</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="ai" data-cat="ai">
+      <div class="bcard-top">
+        <div class="bcard-cat">AI Araçlar</div>
+        <div class="bcard-h">AI Seans Özeti: 20 Dakikayı Nasıl Geri Kazanırsınız?</div>
+        <div class="bcard-p">Yapay zeka ile SOAP özeti oluşturmanın etik sınırları, gizlilik kuralları ve pratik kullanımı.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">7 dk okuma · AI &amp; Etik</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="dijital" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-cat">Not Tutma</div>
+        <div class="bcard-h">Kağıttan Dijitale: Seans Notlarını Dijitalleştirmenin 5 Faydası</div>
+        <div class="bcard-p">Şifreli dijital notlar hem güvenli hem verimli. Kağıt notları bırakmanın somut avantajları.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">5 dk okuma · Dijital Dönüşüm</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="sistem" data-cat="yonetim">
+      <div class="bcard-top">
+        <div class="bcard-cat">Klinik Yönetim</div>
+        <div class="bcard-h">Psikolog Pratiğinizi Düzenlemek İçin 7 Sistem</div>
+        <div class="bcard-p">Randevu takibi, hasta hatırlatıcılar, fatura sistemi — serbest psikologlar için temel klinik süreçler.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">6 dk okuma · Organizasyon</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="emdr" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-cat">Terapi Notları</div>
+        <div class="bcard-h">EMDR Seansı İçin Not Tutma: BOİ, BİS ve Protokol Belgesi</div>
+        <div class="bcard-p">Travma seanslarında hedef anı, BİS/BOİ puanları ve bilişsel örüntü takibini nasıl belgeleyeceksiniz?</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">5 dk okuma · EMDR</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="gelir" data-cat="yonetim">
+      <div class="bcard-top">
+        <div class="bcard-cat">Klinik Yönetim</div>
+        <div class="bcard-h">Serbest Psikolog Olarak Gelirinizi Takip Etmek</div>
+        <div class="bcard-p">Seans paketi, fatura ve tahsilat yönetimi. Pratiğinizin finansal sağlığını kolayca izleyin.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">5 dk okuma · Finans</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="tukenmis" data-cat="verimlilik">
+      <div class="bcard-top">
+        <div class="bcard-cat">Verimlilik</div>
+        <div class="bcard-h">Tükenmişliği Önlemek İçin Klinik İş Akışı Tasarımı</div>
+        <div class="bcard-p">Seanslar arasındaki idari yükü azaltın. Psikologların zaman tasarrufu için kanıtlanmış yöntemler.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">6 dk okuma · Öz Bakım</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="schema" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-cat">Terapi Notları</div>
+        <div class="bcard-h">Şema Terapi Notları: Mod ve Şema Takibi Nasıl Yapılır?</div>
+        <div class="bcard-p">Erken dönem uyumsuz şemalar, mod haritası ve şema terapi seanslarını belgelemenin pratik yolu.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">5 dk okuma · Schema Terapi</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="online" data-cat="yonetim">
+      <div class="bcard-top">
+        <div class="bcard-cat">Klinik Yönetim</div>
+        <div class="bcard-h">Online Terapi: Yasal Çerçeve, Etik Sınırlar ve Pratik Kurulum</div>
+        <div class="bcard-p">Türkiye'de online psikolojik danışmanlık için nelere dikkat etmeli? KVKK, rıza formu ve teknik kurulum.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">7 dk okuma · Online Terapi</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="ucret" data-cat="yonetim">
+      <div class="bcard-top">
+        <div class="bcard-cat">Klinik Yönetim</div>
+        <div class="bcard-h">Seans Ücreti Nasıl Belirlenir? Psikolog Fiyatlandırma Rehberi</div>
+        <div class="bcard-p">Deneyim, uzmanlık ve piyasa koşullarına göre seans ücretini belirlerken neleri göz önünde bulundurmalısınız?</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">5 dk okuma · Kariyer</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="supvizyon" data-cat="verimlilik">
+      <div class="bcard-top">
+        <div class="bcard-cat">Mesleki Gelişim</div>
+        <div class="bcard-h">Süpervizyon Notları Nasıl Tutulur? Yapı ve Örnekler</div>
+        <div class="bcard-p">Süpervizyon sürecinden maksimum verim almak için ne tür notlar tutmalısınız? Vaka sunumu şablonu dahil.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">4 dk okuma · Süpervizyon</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="kriz" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-cat">Klinik Araçlar</div>
+        <div class="bcard-h">Kriz Müdahalesi Sonrası Dokümantasyon: C-SSRS ve Güvenlik Planı</div>
+        <div class="bcard-p">İntihar riski değerlendirmesi sonrası ne yazmalısınız? C-SSRS belgeleme rehberi ve güvenlik planı şablonu.</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">6 dk okuma · Kriz</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+    <div class="bcard" data-post="cocuk" data-cat="not">
+      <div class="bcard-top">
+        <div class="bcard-cat">Terapi Notları</div>
+        <div class="bcard-h">Çocuk ve Ergen Seanslarında Not Tutma: Ebeveyn, Okul, Yasal Boyut</div>
+        <div class="bcard-p">Gizlilik sınırları, ebeveyn paylaşımı ve zorunlu ihbar yükümlülükleri nasıl belgelenir?</div>
+      </div>
+      <div class="bcard-foot"><span class="bcard-meta">6 dk okuma · Çocuk Terapisi</span><span class="bcard-arr">Okumaya devam →</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div id="art-view" class="art">
+  <span class="art-back" id="art-back">← Tüm yazılar</span>
+  <div id="art-content"></div>
+  <div class="art-cta">
+    <h3>14 gün ücretsiz deneyin</h3>
+    <p>Bu rehberdeki her şey TerapiSeansım'da hazır — kurulum yok, kredi kartı gerekmez.</p>
+    <a href="giris.html">Ücretsiz Hesap Oluştur →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="fw">
+    <div class="flinks">
+      <a href="index.html">Ana Sayfa</a>
+      <a href="blog.html">Blog</a>
+      <a href="index.html#platform">Platform</a>
+      <a href="index.html#fiyat">Fiyatlar</a>
+      <a href="giris.html">Giriş Yap</a>
+      <a href="mailto:destek@terapiseansim.com">İletişim</a>
+    </div>
+    <p class="fcopy">© 2025 TerapiSeansım · Psikologlara özel klinik yönetim platformu · KVKK Uyumlu</p>
+  </div>
+</footer>
+
+<script>
+var P={
+  soap:{cat:'Not Tutma',title:'SOAP Notu Nedir? Psikologlar İçin Adım Adım Rehber',meta:'8 dk okuma · Klinik Pratik',body:'<h2>SOAP Notu Nedir?</h2><p>SOAP, <strong>Subjektif</strong>, <strong>Objektif</strong>, <strong>Assessment</strong> ve <strong>Plan</strong> bölümlerinin kısaltmasıdır. Tıbbi kökenli bu format, psikoterapide altın standart belgeleme yöntemi olarak kabul görmektedir.</p><blockquote>Seans notunuzu SOAP formatında yazmak hem yasal belgelemenizi güçlendirir hem de süpervizyon süreçlerinde tutarlı bir kayıt sağlar.</blockquote><h2>S — Subjektif Bölüm</h2><p>Hastanın kendi ifade ettiği şikayetler ve duygular. Mümkün olduğunda doğrudan alıntı kullanın.</p><p><strong>Örnek:</strong> "Hasta bu hafta uyku düzeninin bozulduğunu, sabahları yataktan çıkamadığını aktardı. 'Hiçbir şeyin anlamı yok gibi hissediyorum' dedi."</p><div class="tip"><strong>💡 İpucu:</strong> Yorum eklemeden, hastanın kendi kelimelerini koruyun. "Depresif görünüyordu" yerine "kendini boş hissettiğini belirtti" yazın.</div><h2>O — Objektif Bölüm</h2><p>Gözlemlenebilir, ölçülebilir veriler: ölçek puanları, görünüm, sözel olmayan ipuçları.</p><p><strong>Örnek:</strong> "PHQ-9: 18 (orta-şiddetli). Göz teması azalmış. Konuşma hızı yavaş. Giysi bakımı gerilemiş."</p><h2>A — Assessment (Değerlendirme)</h2><p>Nesnel ve öznel verileri birleştirerek varılan klinik formülasyon. DSM-5 kodu burada belirtilebilir.</p><p><strong>Örnek:</strong> "F32.1 Majör Depresif Bozukluk, Orta şiddet. Bilişsel çarpıtmalarda artış. İntihar riski yok."</p><h2>P — Plan</h2><p>Müdahaleler, ödevler, sevkler ve sonraki seans tarihi.</p><p><strong>Örnek:</strong> "Kanıt sorgulama tekniği tanıtıldı. Ödev: Günde 1 kez düşünce kaydı. Sonraki seans: 2 hafta."</p><h2>TerapiSeansım\'da AI ile SOAP</h2><p>Ham notunuzu yapıştırdığınızda AI aracı saniyeler içinde yapılandırılmış SOAP özeti üretir — DSM-5 uyumlu terminoloji, önceki seanstan süreklilik.</p>'},
+  kvkk:{cat:'KVKK & Hukuk',title:'Psikologlar İçin KVKK Uyum Rehberi 2025',meta:'6 dk okuma · Hukuk',body:'<h2>Neden Özel Nitelikli Veri?</h2><p>Hasta kayıtları ve psikolojik değerlendirme sonuçları KVKK Madde 6 kapsamında <strong>özel nitelikli kişisel veri</strong> sayılır. Standart verilerden çok daha sıkı koruma yükümlülükleri uygulanır.</p><blockquote>İhlal hem disiplin cezasına hem de idari para cezasına yol açabilir.</blockquote><h2>Zorunlu Belgeler</h2><ul><li><strong>Aydınlatma Metni</strong> — her hastaya teslim edilmeli</li><li><strong>Açık Rıza Formu</strong> — özel nitelikli veri için yazılı rıza zorunlu</li><li><strong>Saklama ve İmha Politikası</strong></li><li><strong>İhlal Bildirimi Prosedürü</strong> — 72 saat içinde KVKK Kurumu bildirimi</li></ul><h2>Saklama Süreleri</h2><ul><li><strong>Erişkin hasta:</strong> 5 yıl (tedavi sonrası)</li><li><strong>Çocuk/ergen:</strong> 18 yaşa kadar + 5 yıl</li><li><strong>Fatura:</strong> 10 yıl</li></ul><div class="tip"><strong>💡 TerapiSeansım\'da:</strong> KVKK export ve anonimleştirme tek tuşla. Tüm notlar AES-256-GCM şifreli.</div>'},
+  phq9:{cat:'Klinik Araçlar',title:'PHQ-9 ve GAD-7 Puanlama: Klinisyen Referans Kartı',meta:'4 dk okuma · Ölçekler',body:'<h2>PHQ-9 Puanlama</h2><p>0-27 puan aralığında depresyon şiddetini ölçer.</p><ul><li><strong>0–4:</strong> Minimal — izlem yeterli</li><li><strong>5–9:</strong> Hafif — watchful waiting</li><li><strong>10–14:</strong> Orta — terapi planı başlat</li><li><strong>15–19:</strong> Orta-şiddetli — aktif müdahale + psikiyatri değerlendirmesi</li><li><strong>20–27:</strong> Şiddetli — acil değerlendirme</li></ul><blockquote>Madde 9 (intihar düşüncesi) için herhangi bir puan, mutlaka klinik risk değerlendirmesi gerektirir.</blockquote><h2>GAD-7 Puanlama</h2><p>0-21 puan aralığında anksiyete şiddetini ölçer.</p><ul><li><strong>0–4:</strong> Minimal</li><li><strong>5–9:</strong> Hafif</li><li><strong>10–14:</strong> Orta</li><li><strong>15–21:</strong> Şiddetli</li></ul><h2>Trend Takibinin Önemi</h2><p>Tek puan yerine seanslar arası değişim daha anlamlıdır. Üç seans üst üste düşüş gösteren hasta, müdahalenin işe yaradığını sayısal olarak görür.</p><div class="tip"><strong>💡 TerapiSeansım\'da:</strong> PHQ-9, GAD-7, BAI, BDI-II, PCL-5 otomatik puanlanır ve grafikle gösterilir.</div>'},
+  ai:{cat:'AI Araçlar',title:'AI Seans Özeti: 20 Dakikayı Nasıl Geri Kazanırsınız?',meta:'7 dk okuma · AI & Etik',body:'<h2>Nasıl Çalışır?</h2><p>Ham notlarınızı yazarsınız — akış bozuk, anahtar kelimeler dağınık olabilir. AI bu notu DSM-5 uyumlu, yapılandırılmış SOAP formatına dönüştürür.</p><blockquote>"AI SOAP özeti seanstan sonra 20 dakikamı geri verdi. O zamanı artık bir sonraki hastama ya da kendime ayırıyorum."</blockquote><h2>Etik Sınırlar</h2><ul><li><strong>Kimlik bilgisi göndermeyin:</strong> Ad, TC, iletişim bilgisi AI sorgusuna eklenmemeli</li><li><strong>Çıktıyı mutlaka gözden geçirin:</strong> AI belgeleme yükünü azaltır, klinik kararı almaz</li><li><strong>Yurt dışı aktarım rızası:</strong> AI yurt dışı sunucu kullanıyorsa hasta açık rızası gerekir (KVKK Md. 9)</li></ul><h2>TerapiSeansım\'daki 8 AI Aracı</h2><ul><li>🔵 <strong>SOAP Özeti</strong></li><li>🔴 <strong>Risk Değerlendirmesi</strong> — C-SSRS odaklı</li><li>🟢 <strong>Vaka Formülasyonu</strong></li><li>📋 <strong>Not Asistanı</strong> — dağınık notu formata dök</li><li>📝 <strong>Terapi Planı</strong></li><li>📚 <strong>Psikoeğitim Materyali</strong></li><li>🏠 <strong>Ev Ödevi</strong></li><li>🛡️ <strong>Kriz Planı</strong></li></ul>'},
+  dijital:{cat:'Not Tutma',title:'Kağıttan Dijitale: Seans Notlarını Dijitalleştirmenin 5 Faydası',meta:'5 dk okuma · Dijital Dönüşüm',body:'<h2>Kağıt Notların Gizli Maliyeti</h2><p>Haftada 20 seans yapıyorsanız, kağıt not ve düzenleme için <strong>haftada yaklaşık 3-4 saat</strong> harcıyorsunuz demektir. Yılda 160-200 saate karşılık gelir.</p><h2>1. Zaman Tasarrufu</h2><p>Önceki seans özeti, ölçek sonuçları ve hasta profili tek ekranda. Seansa girmeden önce 30 saniyede hastanızı hatırlarsınız.</p><h2>2. Yasal Güvenlik</h2><p>Kağıt notlar kaybolabilir, zarar görebilir. Dijital notlar zaman damgalı, otomatik yedekli. Olası bir soruşturmada kritik kanıt.</p><h2>3. Ölçek Entegrasyonu</h2><p>PHQ-9, GAD-7 puanlarını her seans kaydedin; grafikte takip edin. Hastanın iyileşme seyrini sayısal görmek her iki taraf için güçlendiricidir.</p><h2>4. KVKK Uyumu</h2><p>AES-256 şifreli dijital sistem, KVKK\'nın veri güvenliği yükümlülüklerini otomatik karşılar. Export ve anonimleştirme tek tuşla.</p><h2>5. Uzaktan Erişim</h2><p>Online seans yapıyorsanız notlarınıza her yerden ulaşabilirsiniz. Klinik, ev veya uzaktan — fark etmez.</p>'},
+  sistem:{cat:'Klinik Yönetim',title:'Psikolog Pratiğinizi Düzenlemek İçin 7 Sistem',meta:'6 dk okuma · Organizasyon',body:'<h2>İdari Yük Neden Önemli?</h2><p>İyi klinisyen olmak tek başına yeterli değildir. Randevu kaçırma, kayıp faturalar ve dağınık notlar kaliteyi düşürür.</p><h2>1. Randevu Takvimi</h2><p>Hasta bilgileriyle entegre sistem kullanın. Otomatik hatırlatıcılar no-show oranını ortalama %35 azaltır.</p><h2>2. Hasta Kayıt Sistemi</h2><p>Her hasta için: iletişim, başvuru nedeni, aktif tanı, tedavi planı, ilerleme notu.</p><h2>3. Not Standardı</h2><p>SOAP, DAP veya kendi formatınızda tutarlı not tutun. Tutarsız notlar hem klinik kaliteyi hem yasal güvenceyi zayıflatır.</p><h2>4. Ölçek Takibi</h2><p>Her 4-6 seansta bir PHQ-9 veya GAD-7 uygulayın.</p><h2>5. Paket ve Fatura</h2><p>Paket dolduğunda otomatik fatura. Ödenmemiş faturaları takip edin.</p><h2>6. Hatırlatıcı Sistemi</h2><p>Seanstan 24 saat önce otomatik e-posta gönderimi.</p><h2>7. Süpervizyon Takvimi</h2><p>Ayda en az 1-2 süpervizyon oturumu sisteminize ekleyin.</p>'},
+  emdr:{cat:'Terapi Notları',title:'EMDR Seansı İçin Not Tutma: BOİ, BİS ve Protokol Belgesi',meta:'5 dk okuma · EMDR',body:'<h2>EMDR Notları Neden Farklı?</h2><p>Standart SOAP formatının ötesinde, EMDR protokolüne özgü bileşenler belgelenmesi gerekir.</p><h2>Kaydedilmesi Gerekenler</h2><ul><li><strong>Hedef anı:</strong> Tarih ve kısa tanım</li><li><strong>Olumsuz biliş:</strong> "Ben..." ile başlayan mevcut inanç (ör. "Güvende değilim")</li><li><strong>Olumlu biliş:</strong> Hedeflenen inanç</li><li><strong>BOİ başlangıç / bitiş:</strong> 0-10 ölçeği</li><li><strong>BİS başlangıç / bitiş:</strong> 1-7 ölçeği</li><li><strong>Vücut duyumu:</strong> Rahatsızlığın lokalizasyonu</li></ul><div class="tip"><strong>💡 Standart:</strong> EMDR International Association her seans için BOİ ve BİS değerlerinin kaydedilmesini önermektedir.</div><h2>Örnek Seans Notu</h2><p><strong>Hedef anı:</strong> 2018 iş kazası<br><strong>Olumsuz biliş:</strong> "Değersizim" → <strong>Olumlu biliş:</strong> "Yeterince değerliyim"<br><strong>BOİ:</strong> 8 → 3 &nbsp; <strong>BİS:</strong> 2 → 5<br>İlk set sonrası ek anı bildirdi, yüzer süreç protokolü uygulandı. Kapatma eksiksiz tamamlandı.</p>'},
+  gelir:{cat:'Klinik Yönetim',title:'Serbest Psikolog Olarak Gelirinizi Takip Etmek',meta:'5 dk okuma · Finans',body:'<h2>Finansal Kör Noktalar</h2><p>Çoğu serbest psikolog gelir takibini ya hiç yapmaz ya da düzensiz tutulmuş bir tabloya bırakır. Bu hem vergi döneminde strese hem de stratejik kararlar alamama sorununa yol açar.</p><h2>5 Kritik Metrik</h2><ul><li><strong>Bu ay gelir:</strong> Tahsil edilen faturalar</li><li><strong>Bekleyen tahsilat:</strong> Kesilmiş ama ödenmemiş faturalar</li><li><strong>Hasta başına ortalama gelir</strong></li><li><strong>No-show kayıpları</strong></li><li><strong>Aylık büyüme trendi</strong></li></ul><h2>Seans Paketi Sistemi</h2><p>Paket alan hasta daha az iptal eder. Nakit akışını önceden tahmin edersiniz.</p><div class="tip"><strong>💡 TerapiSeansım\'da:</strong> Gelir analizi paneli ve hasta bazlı gelir raporu hazır.</div>'},
+  tukenmis:{cat:'Verimlilik',title:'Tükenmişliği Önlemek İçin Klinik İş Akışı Tasarımı',meta:'6 dk okuma · Öz Bakım',body:'<h2>Gizli Neden: İdari Yük</h2><p>Psikolog tükenmişliğinin büyük bölümü yalnızca duygusal yükten değil, <strong>idari yükten</strong> kaynaklanır. Seans sonrası not yazımı, düzensiz faturalama ve dağınık randevu takibi birikerek tükenmişliğe zemin hazırlar.</p><blockquote>İdari yük azaltıldığında klinisyenler o zamanı ya hastalarına ya da kendilerine ayırabilir.</blockquote><h2>Seans Öncesi (15 dk)</h2><ul><li>Hasta profilini ve önceki notu gözden geçir</li><li>Son ölçek puanlarını kontrol et</li><li>Terapi planı hedeflerini hatırla</li></ul><h2>Seans Sırası</h2><p>Ham kısa notlar alın — format değil içerik öncelikli. AI asistanla biçimlendirin.</p><h2>Seans Sonrası (10 dk)</h2><ul><li>Notu tamamla ve kaydet</li><li>Ödev/plan güncellemesi</li><li>Gerekirse fatura/paket güncelle</li></ul><div class="tip"><strong>💡 Kural:</strong> Seans notu o gün yazılmalı — yarına erteleme kaliteyi düşürür.</div>'},
+  schema:{cat:'Terapi Notları',title:'Şema Terapi Notları: Mod ve Şema Takibi Nasıl Yapılır?',meta:'5 dk okuma · Schema Terapi',body:'<h2>Şema Terapide Belgeleme</h2><p>Young\'un geliştirdiği şema terapi, özellikle karakter bozuklukları ve kronik depresyon için etkilidir. Daha karmaşık kavramsal çerçevesi nedeniyle seans notlarının yapılandırılması kritik önem taşır.</p><h2>Her Seansta Belgelenmesi Gereken 3 Boyut</h2><ul><li><strong>Aktif Şema:</strong> Hangi erken dönem uyumsuz şema tetiklendi? (ör. Terk Edilme, Yetersizlik, Güvensizlik)</li><li><strong>Aktif Mod:</strong> Kırılgan Çocuk, Öfkeli Çocuk, Ayrıştırıcı Koruyucu, Sağlıklı Yetişkin</li><li><strong>Başa Çıkma Biçimi:</strong> Teslim olma, kaçınma, aşırı telafi</li></ul><div class="tip"><strong>💡 Pratik:</strong> Her seansın başında "Bugün hangi mod ile geldiler?" sorusuyla açın.</div><h2>Örnek Not</h2><p><strong>Aktif şema:</strong> Duygusal Yoksunluk + Terk Edilme<br><strong>Gözlemlenen mod:</strong> Kırılgan Çocuk → Ayrıştırıcı Koruyucu (seans ortasında geçiş)<br><strong>Tetikleyici:</strong> Eşle tartışma, "kimse beni görmüyor" ifadesi<br><strong>Müdahale:</strong> Sınırlı yeniden ebeveynlik, mod diyaloğu başlatıldı<br><strong>Ödev:</strong> Mod günlüğü — günde 2x tetiklenme anını not et</p><h2>Mod Haritası</h2><p>Her 6-8 seansta bir haritayı güncelleyin ve zaman damgalı kaydedin. Bu, tedavi seyrinin en güçlü belgesidir.</p>'},
+  online:{cat:'Klinik Yönetim',title:'Online Terapi: Yasal Çerçeve, Etik Sınırlar ve Pratik Kurulum',meta:'7 dk okuma · Online Terapi',body:'<h2>Türkiye\'de Online Terapi</h2><p>Türk Psikologlar Derneği uzaktan psikolojik danışmanlığı belirli koşullarda kabul etmektedir. Ancak dikkat edilmesi gereken sınırlar vardır.</p><blockquote>Online terapi, yüz yüze terapinin yerini almaz; uygun vakalarda tamamlayıcı format olarak kullanılmalıdır.</blockquote><h2>Uygun Olmayan Durumlar</h2><ul><li>Aktif psikoz veya mani epizodu</li><li>Yüksek intihar/kendine zarar verme riski</li><li>Madde bağımlılığı detoks süreci</li><li>Güvenli fiziksel ortamı olmayan hastalar</li></ul><h2>Zorunlu Belgeler</h2><ul><li><strong>Online Terapi Rıza Formu</strong></li><li><strong>KVKK Ek Maddesi</strong> — platform veri işleme koşulları</li><li><strong>Acil Durum Protokolü</strong> — kriz anında yerel acil hat</li></ul><div class="tip"><strong>💡 Kritik:</strong> İlk seanstan önce hastanın fiziksel konumunu ve yakınındaki psikiyatri acil servisini kaydedin.</div><h2>Teknik Kurulum</h2><ul><li>✅ Sessiz, gizli oda</li><li>✅ Stabil internet — kablolu tercih</li><li>✅ Kulaklık — ses gizliliği için zorunlu</li><li>✅ İkincil iletişim kanalı planı</li></ul>'},
+  ucret:{cat:'Klinik Yönetim',title:'Seans Ücreti Nasıl Belirlenir? Psikolog Fiyatlandırma Rehberi',meta:'5 dk okuma · Kariyer',body:'<h2>Sezgisel Değil, Sistematik</h2><p>Çoğu psikolog ücretini ya meslektaşlarından duyduğu rakamlara ya da sezgiye göre belirler. Sürdürülebilir bir pratik için sistematik hesaplama şarttır.</p><h2>Maliyet Bazlı Hesaplama</h2><p>Aylık sabit giderlerinizi toplayın: kira, sigorta, süpervizyon, yazılım, eğitim. Bu toplamı hedef seans sayısına bölün — çıkan rakam <strong>minimum eşiğiniz</strong>dir.</p><p><strong>Örnek:</strong> Aylık gider 12.000 ₺, aylık 60 seans → minimum 200 ₺/seans. Buna kişisel geçim ve tasarruf hedefini ekleyin.</p><h2>Kayan Ölçek</h2><p>Gelir düzeyi düşük hastalara indirimli ücret etik ve pratiktir. Pratiğinizin en fazla %20-25\'i indirimli olsun; aşıldığında kendi sürdürülebilirliğiniz tehlikeye girer.</p><h2>Ücret Artışı</h2><p>Yıllık enflasyona ve deneyiminize paralel artış yapın. Mevcut hastalarınıza 1-2 ay önceden yazılı bildirim gönderin.</p><div class="tip"><strong>💡 TerapiSeansım\'da:</strong> Her hasta için farklı seans ücreti tanımlayın — fatura kesilirken otomatik doldurulur.</div>'},
+  supvizyon:{cat:'Mesleki Gelişim',title:'Süpervizyon Notları Nasıl Tutulur? Yapı ve Örnekler',meta:'4 dk okuma · Süpervizyon',body:'<h2>Neden Süpervizyon Notu?</h2><p>Çoğu klinisyen süpervizyon seanslarını not almadan geçirir. Yapılandırılmış not, öğrenilen içgörülerin gerçekten pratiğe entegre olmasını sağlar.</p><h2>6 Bölümlü Süpervizyon Notu</h2><ul><li><strong>Sunulan vaka / konu</strong></li><li><strong>Soru / zorluk:</strong> Takıldığınız yer</li><li><strong>Süpervizör görüşü</strong></li><li><strong>Klinik içgörü:</strong> "Ah-ha" anı</li><li><strong>Uygulama adımı:</strong> Bir sonraki seansta deneyeceğiniz somut şey</li><li><strong>Öz-farkındalık:</strong> Karşı-aktarım veya kişisel tetiklenme</li></ul><div class="tip"><strong>💡 Kural:</strong> Süpervizyon biter bitmez (en geç 24 saat içinde) not yazın — hafıza hızla solar.</div><h2>Vaka Sunumu Şablonu</h2><p><strong>Demografik:</strong> Yaş, cinsiyet, başvuru nedeni (anonim)<br><strong>Güncel sorun:</strong> Bu haftaki öne çıkan mesele<br><strong>Tepkim / karşı-aktarım:</strong> Bu vakada nasıl hissediyorum?<br><strong>Sorum:</strong> Yardım istediğim spesifik alan</p>'},
+  kriz:{cat:'Klinik Araçlar',title:'Kriz Müdahalesi Sonrası Dokümantasyon: C-SSRS ve Güvenlik Planı',meta:'6 dk okuma · Kriz',body:'<h2>Neden Bu Kadar Önemli?</h2><p>İntihar riski değerlendirmesi yapıldıktan sonra yazdığınız not, olası bir yasal süreçte en kritik belge haline gelir.</p><blockquote>Belgelenmemiş bir risk değerlendirmesi, yapılmamış bir değerlendirme kadar zayıf yasal güvencedir.</blockquote><h2>C-SSRS ile Belgeleme</h2><ul><li><strong>İdeation yoğunluğu (0-5):</strong> Pasif istek → aktif plan → niyet</li><li><strong>Davranış geçmişi:</strong> Önceki girişim, kendine zarar verme</li><li><strong>Koruyucu faktörler:</strong> Sosyal destek, inanç sistemi, gelecek planları</li><li><strong>Risk düzeyi:</strong> Düşük / Orta / Yüksek / Acil</li></ul><h2>Güvenlik Planı</h2><ul><li>Uyarı işaretleri (kişiye özgü)</li><li>Başa çıkma stratejileri</li><li>Ulaşılacak kişiler (isim + telefon)</li><li>Acil hatlar: <strong>182 (ALO Psikiyatri)</strong>, 112</li></ul><div class="tip"><strong>💡 Kritik:</strong> Güvenlik planını hastanın cep telefonuna kaydetmesini isteyin — kağıt kriz anında erişilemeyebilir.</div><h2>Örnek Kriz Notu</h2><p>"C-SSRS uygulandı. Pasif ölüm isteği mevcut (skor: 2), aktif plan/niyet yok. Koruyucu: küçük çocuk, dini inanç. Risk: Orta. Güvenlik planı hastanın telefonuna kaydedildi. Takip: 1 hafta."</p>'},
+  cocuk:{cat:'Terapi Notları',title:'Çocuk ve Ergen Seanslarında Not Tutma: Ebeveyn, Okul, Yasal Boyut',meta:'6 dk okuma · Çocuk Terapisi',body:'<h2>Farklı Etik ve Yasal Boyutlar</h2><p>Çocuk ve ergen terapisinde not tutma, yetişkin seanslarından farklı sorumluluklar içerir: ebeveyn hakları, gizlilik sınırları ve zorunlu ihbar yükümlülükleri.</p><h2>Rıza Belgeleme</h2><ul><li>Kimin rıza verdiği (anne, baba, ortak vasi)</li><li>Rızanın tarihi ve kapsamı</li><li>Ebeveyne paylaşılacak bilgi sınırları (mutabakat)</li></ul><h2>Ergen Gizliliği</h2><p>Başlangıçta netleştirin ve belgeleyin: seans içeriği paylaşılmaz; genel durum paylaşılır; risk durumunda ebeveyn bilgilendirilir. Bunu ayrı bir "Gizlilik Sınırları Formu" ile resmîleştirin.</p><h2>Zorunlu İhbar (TCK 280)</h2><p>Fiziksel/cinsel istismar şüphesinde ihbar zorunludur. Nota ekleyin:</p><ul><li>Şüphe oluşturan gözlem veya ifade (birebir alıntı)</li><li>İhbar yapıldıysa: tarih, yetkili birim, referans numarası</li><li>Yapılmadıysa: gerekçesi ve kararın tarihi</li></ul><div class="tip"><strong>💡 Pratik:</strong> Zorunlu ihbar prosedürünü bir kez yazıp çalışma alanınıza asın. Kriz anında ayrıntıları hatırlamak güçleşir.</div>'}
+};
+
+var listEl=document.getElementById('list-view');
+var artEl=document.getElementById('art-view');
+var artContent=document.getElementById('art-content');
+
+document.querySelectorAll('.tag').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tag').forEach(function(x){x.classList.remove('on');});
+    t.classList.add('on');
+    var cat=t.dataset.cat;
+    document.querySelectorAll('#grid .bcard').forEach(function(c){
+      c.style.display=(cat==='all'||c.dataset.cat===cat)?'flex':'none';
+    });
+  });
+});
+
+document.querySelectorAll('#grid .bcard').forEach(function(c){
+  c.addEventListener('click',function(){open(c.dataset.post);});
+});
+
+function open(slug){
+  var post=P[slug]; if(!post)return;
+  listEl.style.display='none';
+  artEl.classList.add('on');
+  window.scrollTo(0,0);
+  artContent.innerHTML='<div class="art-cat">'+post.cat+'</div><h1 class="art-h">'+post.title+'</h1><div class="art-meta">'+post.meta+'</div><div class="art-body">'+post.body+'</div>';
+  history.pushState({slug:slug},'',location.pathname+'?p='+slug);
+  document.title=post.title+' | TerapiSeansım Blog';
+}
+
+document.getElementById('art-back').addEventListener('click',function(){
+  artEl.classList.remove('on');
+  listEl.style.display='block';
+  window.scrollTo(0,0);
+  history.pushState(null,'',location.pathname);
+  document.title='Blog — Psikolog Rehberi | TerapiSeansım';
+});
+
+(function(){var p=new URLSearchParams(location.search).get('p');if(p&&P[p])open(p);})();
+window.addEventListener('popstate',function(e){
+  if(e.state&&e.state.slug){open(e.state.slug);}
+  else{artEl.classList.remove('on');listEl.style.display='block';window.scrollTo(0,0);}
+});
+</script>
+</body>
+</html>

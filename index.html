@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TerapiSeansım — Psikologlara Özel Klinik Yönetim Platformu</title>
+<meta name="description" content="Randevudan faturaya tüm pratiğiniz tek platformda. Türkiye'nin psikologlara özel yazılımı.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600;1,9..144,700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Warm clinical palette — Linear-inspired light theme */
+  --g900:#0C1F14;--g800:#183524;--g700:#214A30;--g600:#2A613C;
+  --g500:#317A4A;--g400:#3D9B5E;--g300:#55C27A;--g200:#91DAAC;
+  --g100:rgba(49,122,74,.09);--g50:rgba(49,122,74,.04);
+  --glow:rgba(49,122,74,.24);--glow2:rgba(49,122,74,.12);
+
+  --amber:#B8811E;--amber-xs:rgba(184,129,30,.07);
+  --rose:#B04458;
+
+  /* Light neutrals */
+  --ink:#111B15;--ink2:#263B2C;--mid:#4E6A55;--muted:#8A9E8F;--pale:#C4D4C8;
+
+  /* Backgrounds — warm off-white */
+  --page:#F6F4EF;--white:#FFFFFF;--s2:#F0EDE6;--s3:#E8E3DA;
+  --dark:#0C1F14;
+
+  --bdr:rgba(17,27,21,.08);--bdr2:rgba(17,27,21,.04);
+  --bdr-d:rgba(255,255,255,.09);
+
+  --sh:0 1px 8px rgba(0,0,0,.06);
+  --sh-md:0 4px 24px rgba(0,0,0,.09);
+  --sh-lg:0 16px 64px rgba(0,0,0,.12);
+
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  --D:"Fraunces",Georgia,serif;
+  --B:"Inter",-apple-system,sans-serif;
+}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+body{font-family:var(--B);background:var(--page);color:var(--ink);overflow-x:hidden;line-height:1.6}
+
+/* ── GRAIN ─── */
+body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.015;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 48px;transition:all .35s var(--ease)}
+nav.up{background:rgba(246,244,239,.93);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--bdr)}
+.nw{max-width:1140px;margin:0 auto;display:flex;align-items:center;height:60px}
+.nlogo{display:flex;align-items:center;gap:9px;text-decoration:none;margin-right:auto}
+.nmark{width:30px;height:30px;border-radius:8px;
+  background:linear-gradient(145deg,var(--g500),var(--g800));
+  display:grid;place-items:center;font-family:var(--D);font-size:14px;font-weight:700;font-style:italic;color:#fff;
+  box-shadow:0 2px 8px var(--glow);transition:transform .22s var(--ease)}
+.nlogo:hover .nmark{transform:rotate(-7deg) scale(1.08)}
+.nname{font-family:var(--D);font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.02em}
+.nlinks{display:flex;align-items:center;gap:20px}
+.nlinks a{font-size:13.5px;color:var(--mid);text-decoration:none;transition:color .15s}
+.nlinks a:hover{color:var(--ink)}
+.ncta{background:var(--g800)!important;color:#fff!important;
+  padding:8px 18px;border-radius:99px;font-size:13px!important;font-weight:500!important;
+  transition:all .2s var(--ease)!important;box-shadow:0 3px 10px var(--glow)}
+.ncta:hover{background:var(--g500)!important;transform:translateY(-1px);box-shadow:0 6px 18px var(--glow)!important}
+
+/* ── HERO ─── */
+.hero{
+  min-height:100vh;background:var(--white);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:120px 48px 80px;position:relative;overflow:hidden;
+}
+/* Subtle radial bg */
+.hero::before{content:"";position:absolute;top:-10%;left:50%;transform:translateX(-50%);
+  width:900px;height:600px;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 30%,rgba(49,122,74,.07) 0%,transparent 60%)}
+/* Dot grid */
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle,rgba(17,27,21,.055) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 70% 70% at 50% 40%,black,transparent)}
+
+/* Decorative blob */
+.hero-blob{position:absolute;top:-80px;right:-120px;width:480px;height:480px;border-radius:50%;
+  background:radial-gradient(circle,rgba(49,122,74,.055),transparent 65%);pointer-events:none;z-index:0}
+
+.hw{position:relative;z-index:2;max-width:780px;text-align:center}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;
+  background:var(--g100);border:1px solid rgba(49,122,74,.28);
+  border-radius:99px;padding:5px 16px;
+  font-size:11.5px;font-weight:500;color:var(--g500);
+  letter-spacing:.06em;text-transform:uppercase;
+  animation:rise .6s .05s both
+}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--g400);animation:blink 2.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(1.8)}}
+
+h1{
+  font-family:var(--D);
+  font-size:clamp(46px,6.5vw,88px);
+  font-weight:600;line-height:.96;letter-spacing:-.04em;
+  color:var(--ink);margin-bottom:24px;
+  animation:rise .75s .12s both
+}
+h1 .em{font-style:italic;color:var(--g500)}
+h1 .br{display:block}
+
+.hero-p{
+  font-size:clamp(16px,1.8vw,19px);font-weight:300;color:var(--mid);
+  line-height:1.78;max-width:540px;margin:0 auto 40px;
+  animation:rise .75s .22s both
+}
+.hero-p strong{color:var(--ink);font-weight:500}
+
+.hero-btns{
+  display:flex;align-items:center;justify-content:center;
+  gap:11px;flex-wrap:wrap;animation:rise .75s .3s both
+}
+.btn-p{display:inline-flex;align-items:center;gap:8px;
+  background:var(--g800);color:#fff;
+  padding:13px 26px;border-radius:11px;font-size:14.5px;font-weight:500;text-decoration:none;
+  transition:all .22s var(--ease);box-shadow:0 4px 16px var(--glow)}
+.btn-p:hover{background:var(--g500);transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
+.btn-p .arr{display:inline-block;transition:transform .18s var(--ease)}
+.btn-p:hover .arr{transform:translateX(4px)}
+.btn-s{display:inline-flex;align-items:center;gap:7px;
+  color:var(--mid);padding:13px 20px;border-radius:11px;font-size:14.5px;text-decoration:none;
+  border:1.5px solid var(--bdr);transition:all .2s var(--ease)}
+.btn-s:hover{color:var(--ink);border-color:rgba(49,122,74,.4)}
+
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:40px;animation:rise .75s .42s both}
+.pavs{display:flex}
+.pav{width:28px;height:28px;border-radius:50%;border:2px solid var(--white);
+  display:grid;place-items:center;font-family:var(--D);font-style:italic;font-size:11px;font-weight:600;color:#fff;margin-left:-6px}
+.pav:first-child{margin-left:0}
+.av1{background:linear-gradient(135deg,#7B5EA7,#5440A0)}
+.av2{background:linear-gradient(135deg,var(--g400),var(--g700))}
+.av3{background:linear-gradient(135deg,#C05070,#983A58)}
+.av4{background:linear-gradient(135deg,#5B82C0,#4060A8)}
+.proof-txt{font-size:13px;color:var(--muted)}
+.proof-txt b{color:var(--ink2);font-weight:500}
+
+/* App preview strip */
+.hero-app{
+  position:relative;z-index:2;width:100%;max-width:900px;margin:64px auto 0;
+  animation:riseApp .9s .5s both
+}
+@keyframes riseApp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.app-wrap{
+  background:var(--s2);border:1px solid var(--bdr);border-radius:16px;
+  overflow:hidden;box-shadow:var(--sh-lg),0 0 0 1px var(--bdr)
+}
+.ap-bar{background:var(--g900);padding:11px 16px;display:flex;align-items:center;gap:7px}
+.ap-dot{width:10px;height:10px;border-radius:50%}
+.ap-logo{margin-left:9px;width:20px;height:20px;border-radius:6px;
+  background:linear-gradient(135deg,var(--g400),var(--g700));
+  display:grid;place-items:center;font-family:var(--D);font-size:9px;font-weight:700;font-style:italic;color:#fff}
+.ap-title{font-size:11.5px;color:rgba(255,255,255,.35)}
+.ap-body{display:grid;grid-template-columns:128px 1fr;height:240px}
+.ap-side{background:var(--g800);border-right:1px solid rgba(255,255,255,.07);padding:8px 0}
+.ap-nav{padding:7px 12px;font-size:10px;color:rgba(255,255,255,.28);display:flex;align-items:center;gap:6px}
+.ap-nav.on{color:#fff;background:rgba(255,255,255,.08);border-left:2px solid var(--g300)}
+.ap-main{padding:14px;background:var(--white)}
+.ap-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:10px}
+.ap-st{background:var(--page);border:1px solid var(--bdr);border-radius:8px;padding:10px 12px}
+.ap-sn{font-family:var(--D);font-size:20px;font-weight:700;color:var(--ink);line-height:1;margin-bottom:2px}
+.ap-sl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.ap-card{background:var(--page);border:1px solid var(--bdr);border-radius:8px;padding:11px 13px}
+.ap-ch{font-size:9.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.ap-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--bdr2);font-size:10px}
+.ap-row:last-child{border:none}
+.ap-tm{color:var(--g500);font-weight:600;width:28px;flex-shrink:0}
+.ap-nm{color:var(--ink);font-weight:500;flex:1}
+.ap-tp{color:var(--muted)}
+.ap-badge{background:var(--g100);color:var(--g600);border-radius:4px;padding:2px 6px;font-size:8px;font-weight:600}
+
+/* Float cards */
+.flt{position:absolute;background:var(--white);border:1px solid var(--bdr);border-radius:10px;padding:10px 14px;box-shadow:var(--sh-md)}
+.flt1{top:-14px;right:-16px;animation:fl 4s ease-in-out infinite}
+.flt2{bottom:22px;left:-18px;animation:fl 4s ease-in-out infinite 2s}
+@keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.flt-l{font-size:9.5px;color:var(--muted);margin-bottom:3px}
+.flt-v{font-size:14px;font-weight:600;color:var(--ink)}
+.flt-g{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--g500)}
+.flt-dot{width:5px;height:5px;border-radius:50%;background:var(--g400)}
+
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+/* ── BAND ─── */
+.band{overflow:hidden;background:var(--g900);padding:0;border-top:1px solid rgba(255,255,255,.04)}
+.band-track{display:flex;white-space:nowrap;animation:marq 26s linear infinite}
+.band-item{display:inline-flex;align-items:center;gap:8px;padding:16px 26px;font-size:12.5px;color:rgba(255,255,255,.35);flex-shrink:0}
+.band-item::after{content:"·";margin-left:26px;color:rgba(255,255,255,.12)}
+@keyframes marq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── SHARED ─── */
+section{padding:96px 48px}
+.w{max-width:1140px;margin:0 auto}
+.ey{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:var(--g500);margin-bottom:12px}
+.sh{font-family:var(--D);font-size:clamp(32px,3.8vw,54px);font-weight:600;line-height:1.03;letter-spacing:-.03em;color:var(--ink);margin-bottom:16px}
+.sh em{font-style:italic;color:var(--g500)}
+.sp{font-size:17px;font-weight:300;color:var(--mid);line-height:1.8;max-width:520px}
+.rv{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.vis{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+.d4{transition-delay:.32s}.d5{transition-delay:.4s}.d6{transition-delay:.48s}
+
+/* ── PILLARS ─── */
+.pillars{background:var(--white)}
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:52px;border:1px solid var(--bdr);border-radius:16px;overflow:hidden}
+.pillar{background:var(--s2);padding:36px 30px;transition:background .22s var(--ease)}
+.pillar:hover{background:var(--white)}
+.pillar-n{font-family:var(--D);font-style:italic;font-size:48px;font-weight:700;color:rgba(17,27,21,.05);line-height:1;margin-bottom:18px}
+.pillar-ico{font-size:26px;margin-bottom:14px}
+.pillar-h{font-family:var(--D);font-size:21px;font-weight:600;color:var(--ink);letter-spacing:-.02em;margin-bottom:10px;line-height:1.15}
+.pillar-p{font-size:14px;color:var(--mid);line-height:1.76}
+.pillar-tag{display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:11.5px;font-weight:600;color:var(--g500);letter-spacing:.05em;text-transform:uppercase}
+.pillar-tag::before{content:"";width:14px;height:1.5px;background:var(--g400)}
+
+/* ── MODULES ─── */
+.mods{background:var(--page)}
+.mhead{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:end;margin-bottom:52px}
+.mlist{display:flex;flex-direction:column;gap:2px}
+.mod{background:var(--white);border:1px solid var(--bdr);border-radius:13px;
+  display:grid;grid-template-columns:58px 1fr 54px;align-items:center;overflow:hidden;
+  transition:box-shadow .22s var(--ease),transform .22s var(--ease)}
+.mod:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
+.mod-n{background:var(--ink);height:100%;display:grid;place-items:center;
+  font-family:var(--D);font-style:italic;font-size:18px;font-weight:600;color:rgba(255,255,255,.16);min-height:90px}
+.mod-body{padding:20px 22px}
+.mod-h{font-family:var(--D);font-size:18px;font-weight:600;color:var(--ink);letter-spacing:-.015em;margin-bottom:5px}
+.mod-p{font-size:13.5px;color:var(--mid);line-height:1.72}
+.mod-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.mod-tag{font-size:11px;font-weight:500;color:var(--g600);background:rgba(49,122,74,.08);border-radius:99px;padding:2px 9px}
+.mod-ico{font-size:24px;text-align:center}
+
+/* ── NUMBERS ─── */
+.nums{background:var(--g900);padding:96px 48px;position:relative;overflow:hidden}
+.nums::before{content:"";position:absolute;top:-200px;right:-100px;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(49,122,74,.1),transparent 65%);pointer-events:none}
+.nums .ey{color:rgba(85,194,122,.7)}
+.nums .sh{color:#fff}.nums .sh em{color:var(--g300)}
+.nums .sp{color:rgba(255,255,255,.38)}
+.ngrid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:52px;
+  border:1px solid var(--bdr-d);border-radius:14px;overflow:hidden}
+.nb{padding:32px 26px;transition:background .2s}
+.nb:hover{background:rgba(255,255,255,.04)}
+.nb-n{font-family:var(--D);font-size:50px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.04em;margin-bottom:8px}
+.nb-n em{font-style:italic;color:var(--g300)}
+.nb-l{font-size:13px;color:rgba(255,255,255,.42);line-height:1.55}
+.nb-d{margin-top:7px;font-size:11.5px;color:rgba(255,255,255,.2);font-style:italic}
+
+/* ── AI ─── */
+.ai{background:var(--white)}
+.ai-layout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.ai-tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+.ai-tool-card{background:var(--s2);border:1px solid var(--bdr);border-radius:14px;padding:20px;transition:all .22s var(--ease)}
+.ai-tool-card:hover{background:var(--white);border-color:rgba(49,122,74,.3);box-shadow:0 6px 24px rgba(49,122,74,.1);transform:translateY(-2px)}
+.ai-tc-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:11px}
+.ai-tc-ico{font-size:24px;flex-shrink:0;margin-top:1px}
+.ai-tc-t{font-size:14px;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:2px}
+.ai-tc-save{font-size:11px;color:var(--g500);font-weight:500}
+.ai-tc-p{font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:11px}
+.ai-tc-tags{display:flex;flex-wrap:wrap;gap:4px}
+.ai-tc-tags span{font-size:10.5px;font-weight:500;color:var(--g600);background:rgba(49,122,74,.09);border-radius:99px;padding:2px 8px}
+.ai-demo-strip{display:grid;grid-template-columns:1fr 280px;gap:28px;align-items:start}
+.ai-demo-stat{display:flex;flex-direction:column;gap:2px}
+.ads-item{padding:18px 20px;background:var(--s2);border:1px solid var(--bdr);border-radius:12px}
+.ads-n{font-family:var(--D);font-size:38px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.03em;margin-bottom:4px}
+.ads-l{font-size:12px;color:var(--muted)}
+.ai-list{margin-top:30px;display:flex;flex-direction:column;gap:10px}
+.ai-item{display:flex;align-items:flex-start;gap:14px;padding:15px 17px;
+  background:var(--page);border:1px solid var(--bdr);border-radius:12px;transition:all .2s var(--ease)}
+.ai-item:hover{background:var(--white);border-color:rgba(49,122,74,.3);box-shadow:var(--sh)}
+.ai-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.ai-h{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.ai-p{font-size:13px;color:var(--mid);line-height:1.65}
+.ai-demo{background:var(--s2);border:1px solid var(--bdr);border-radius:16px;padding:24px;box-shadow:var(--sh-md)}
+.demo-lbl{font-size:10px;font-weight:600;color:var(--g500);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.demo-in{background:var(--white);border:1px solid var(--bdr);border-radius:9px;padding:12px 14px;font-size:13px;color:var(--mid);line-height:1.65;margin-bottom:14px;font-style:italic}
+.demo-out{border-left:2.5px solid var(--g400);padding-left:13px;font-size:13px;color:var(--ink2);line-height:1.78}
+.demo-out strong{color:var(--ink);font-weight:600}
+.demo-note{margin-top:13px;padding:10px 12px;background:var(--g100);border:1px solid rgba(49,122,74,.15);border-radius:9px;font-size:12px;color:var(--g600);line-height:1.6;display:flex;gap:8px}
+
+/* ── TRUST ─── */
+.trust{background:var(--s2)}
+.tlayout{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+.titems{margin-top:30px;display:flex;flex-direction:column}
+.ti{display:flex;gap:15px;padding:18px 0;border-bottom:1px solid var(--bdr)}
+.ti:last-child{border:none}
+.ti-ico{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-size:17px;flex-shrink:0}
+.ti-g{background:var(--g100)}
+.ti-h{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:3px}
+.ti-p{font-size:13px;color:var(--mid);line-height:1.7}
+.spec{background:var(--white);border:1px solid var(--bdr);border-radius:16px;padding:26px;box-shadow:var(--sh);position:sticky;top:80px}
+.spec-h{font-family:var(--D);font-size:20px;font-weight:600;color:var(--ink);letter-spacing:-.02em;margin-bottom:18px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--bdr2);font-size:13px}
+.srow:last-child{border:none}
+.sk{color:var(--mid)}.sv{font-weight:600;color:var(--ink)}.sv-ok{color:var(--g500)}
+.sb{background:var(--g100);color:var(--g600);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600}
+
+/* ── PRICING ─── */
+.pricing{background:var(--page);text-align:center}
+.tog{display:inline-flex;align-items:center;gap:11px;background:var(--white);border:1px solid var(--bdr);border-radius:99px;padding:5px 16px 5px 5px;margin-bottom:44px}
+.tog-tr{width:40px;height:22px;background:var(--g500);border-radius:99px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tog-th{position:absolute;top:2px;left:2px;width:18px;height:18px;background:#fff;border-radius:50%;transition:transform .22s var(--ease);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.tog-tr.on .tog-th{transform:translateX(18px)}
+.tl{font-size:13px;color:var(--mid)}.tl.act{color:var(--ink);font-weight:500}
+.sp-pill{background:linear-gradient(135deg,var(--g500),var(--g700));color:#fff;border-radius:99px;padding:2px 9px;font-size:11px;font-weight:600}
+.pgrid2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:1040px;margin:0 auto}
+.plan-klinik{border-color:var(--g400)!important;background:linear-gradient(160deg,#fff 70%,rgba(61,155,94,.04))}
+.plan{background:var(--white);border:1.5px solid var(--bdr);border-radius:18px;padding:30px;position:relative;text-align:left;transition:all .22s var(--ease)}
+.plan:hover{transform:translateY(-3px);box-shadow:var(--sh-lg)}
+.plan.feat{border-color:var(--g500);box-shadow:0 0 0 1px var(--g500),0 8px 32px var(--glow2)}
+.plan-pill{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--g500),var(--g700));color:#fff;border-radius:99px;padding:3px 13px;font-size:11px;font-weight:600;white-space:nowrap}
+.plan-name{font-family:var(--D);font-size:23px;font-weight:600;color:var(--ink);letter-spacing:-.025em;margin-bottom:3px}
+.plan-tag{font-size:13px;color:var(--mid);margin-bottom:20px}
+.plan-pr{margin-bottom:22px}
+.plan-sym{font-size:17px;color:var(--mid);vertical-align:top;margin-top:8px;display:inline-block}
+.plan-amt{font-family:var(--D);font-size:50px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.04em}
+.plan-per{font-size:13px;color:var(--mid)}
+.plan-note{font-size:11.5px;color:var(--g500);margin-top:4px}
+.plan-feats{list-style:none;margin-bottom:22px}
+.plan-feats li{display:flex;align-items:flex-start;gap:9px;padding:7px 0;border-bottom:1px solid var(--bdr2);font-size:13px;color:var(--ink2)}
+.plan-feats li:last-child{border:none}
+.plan-feats li::before{content:"✓";color:var(--g500);font-weight:700;font-size:11px;flex-shrink:0;margin-top:2px}
+.pcta{display:block;text-align:center;padding:12px;border-radius:10px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s var(--ease)}
+.pcta-fill{background:var(--g800);color:#fff;box-shadow:0 4px 14px var(--glow2)}
+.pcta-fill:hover{background:var(--g500);transform:translateY(-1px)}
+.pcta-out{background:var(--page);border:1.5px solid var(--bdr);color:var(--ink2)}
+.pcta-out:hover{border-color:var(--g500);color:var(--g600)}
+
+/* ── TESTI ─── */
+.testis{background:var(--s2)}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.tc{background:var(--white);border:1px solid var(--bdr);border-radius:14px;padding:26px;transition:all .2s var(--ease)}
+.tc:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
+.tc-stars{color:#C4882A;font-size:12px;letter-spacing:2px;margin-bottom:14px}
+.tc-q{font-family:var(--D);font-style:italic;font-size:17px;color:var(--ink2);line-height:1.68;margin-bottom:18px;font-weight:400}
+.tc-auth{display:flex;align-items:center;gap:10px}
+.tc-av{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:var(--D);font-style:italic;font-size:13px;font-weight:600;color:#fff;flex-shrink:0}
+.tc-name{font-size:13.5px;font-weight:600;color:var(--ink)}
+.tc-role{font-size:11.5px;color:var(--muted)}
+
+/* ── FAQ ─── */
+.faq{background:var(--white)}
+.faq-inner{max-width:680px;margin:48px auto 0;text-align:left}
+.fq{border-bottom:1px solid var(--bdr)}
+.fq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 0;cursor:pointer;font-size:15px;font-weight:500;color:var(--ink);transition:color .15s;user-select:none}
+.fq-q:hover{color:var(--g500)}
+.fq-ic{width:26px;height:26px;border-radius:50%;background:var(--s2);border:1px solid var(--bdr);display:grid;place-items:center;font-size:15px;color:var(--mid);flex-shrink:0;transition:all .22s var(--ease)}
+.fq.open .fq-ic{background:var(--g500);border-color:var(--g500);color:#fff;transform:rotate(45deg)}
+.fq-a{max-height:0;overflow:hidden;transition:max-height .32s var(--ease)}
+.fq.open .fq-a{max-height:280px}
+.fq-txt{padding:0 0 18px;font-size:14px;color:var(--mid);line-height:1.8}
+
+/* ── CTA ─── */
+.cta{background:var(--g900);padding:130px 48px;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(49,122,74,.09),transparent 60%);pointer-events:none}
+.cta-in{position:relative;z-index:2;max-width:600px;margin:0 auto}
+.cta h2{font-family:var(--D);font-size:clamp(40px,5.8vw,72px);font-weight:600;color:#fff;line-height:.97;letter-spacing:-.04em;margin-bottom:18px}
+.cta h2 em{font-style:italic;color:var(--g300)}
+.cta h2 span{display:block}
+.cta-sub{font-size:17px;font-weight:300;color:rgba(255,255,255,.4);max-width:420px;margin:0 auto 40px;line-height:1.8}
+.cta-btns{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}
+.cta-p{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--g900);padding:14px 30px;border-radius:11px;font-size:15px;font-weight:600;text-decoration:none;transition:all .22s var(--ease);box-shadow:0 8px 28px rgba(0,0,0,.22)}
+.cta-p:hover{background:var(--g300);color:var(--g900);transform:translateY(-2px);box-shadow:0 14px 36px var(--glow)}
+.cta-s{display:inline-flex;align-items:center;gap:7px;color:rgba(255,255,255,.45);padding:14px 22px;border-radius:11px;font-size:15px;text-decoration:none;border:1px solid rgba(255,255,255,.15);transition:all .2s var(--ease)}
+.cta-s:hover{color:#fff;border-color:rgba(255,255,255,.3)}
+.cta-note{margin-top:22px;font-size:12.5px;color:rgba(255,255,255,.2)}
+
+/* ── FOOTER ─── */
+footer{background:var(--dark);border-top:1px solid rgba(255,255,255,.07);padding:52px 48px 30px}
+.fw{max-width:1140px;margin:0 auto}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:34px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:22px}
+.flogo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-bottom:12px}
+.fm{width:27px;height:27px;border-radius:7px;background:linear-gradient(135deg,var(--g400),var(--g700));display:grid;place-items:center;font-family:var(--D);font-size:12px;font-weight:700;font-style:italic;color:#fff}
+.fn{font-family:var(--D);font-size:16px;font-weight:600;color:#fff}
+.ftag{font-size:13px;color:rgba(255,255,255,.26);line-height:1.7;max-width:230px}
+.fch{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.3);margin-bottom:13px}
+.flinks{list-style:none}
+.flinks li{margin-bottom:8px}
+.flinks a{font-size:13px;color:rgba(255,255,255,.28);text-decoration:none;transition:color .15s}
+.flinks a:hover{color:rgba(255,255,255,.7)}
+.fbot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:rgba(255,255,255,.2)}
+
+/* ── RESPONSIVE ─── */
+@media(max-width:1024px){
+  nav{padding:0 24px}
+  section{padding:80px 24px}
+  .mhead,.ai-layout,.tlayout{grid-template-columns:1fr}
+  .ai-tools-grid{grid-template-columns:repeat(2,1fr)}
+  .ai-demo-strip{grid-template-columns:1fr}
+  .ngrid{grid-template-columns:1fr 1fr}
+  .pgrid2{grid-template-columns:1fr 1fr;max-width:640px}
+  .tgrid{grid-template-columns:1fr}
+  .pgrid{grid-template-columns:1fr 1fr}
+  .ft{grid-template-columns:1fr 1fr}
+  .hero{padding:120px 24px 80px}
+  .ap-body{grid-template-columns:1fr}.ap-side{display:none}
+  .ap-stats{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  section{padding:64px 20px}
+  nav{padding:0 20px}
+  .hero{padding:110px 20px 64px}
+  h1{font-size:clamp(40px,12vw,54px)}
+  .pgrid{grid-template-columns:1fr}
+  .ngrid{grid-template-columns:1fr}
+  .ai-tools-grid{grid-template-columns:1fr}
+  .nlinks a:not(.ncta){display:none}
+  .ft{grid-template-columns:1fr}
+  .fbot{flex-direction:column;text-align:center}
+  .hero-app{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nw">
+    <a href="/" class="nlogo">
+      <div class="nmark">T</div>
+      <span class="nname">TerapiSeansım</span>
+    </a>
+    <div class="nlinks">
+      <a href="#platform">Platform</a>
+      <a href="#ai">AI Araçları</a>
+      <a href="#fiyat">Fiyatlar</a>
+      <a href="#sss">SSS</a>
+      <a href="blog.html">Blog</a>
+      <a href="giris.html">Giriş Yap</a>
+      <a href="giris.html" class="ncta">Ücretsiz Başla ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hw">
+    <div class="hero-tag rv"><div class="tag-dot"></div>Türkiye&#39;nin psikologlara özel platformu</div>
+    <h1>
+      <span class="br">Siz seansınıza</span>
+      <span class="br em">odaklanın —</span>
+      <span class="br" style="color:var(--mid);font-weight:300">gerisini biz halledelim.</span>
+    </h1>
+    <p class="hero-p">
+      Bir psikologun haftasının büyük bölümü terapiye değil,
+      <strong>randevu yönetimine, not yazmaya ve fatura takibine</strong> gidiyor.
+      TerapiSeansım bu işlerin hepsini tek platformda topluyor.
+    </p>
+    <div class="hero-btns">
+      <a href="giris.html" class="btn-p">14 Gün Ücretsiz Dene <span class="arr">→</span></a>
+      <a href="#platform" class="btn-s">Nasıl çalışır?</a>
+    </div>
+    <div class="hero-proof">
+      <div class="pavs">
+        <div class="pav av1">A</div><div class="pav av2">S</div>
+        <div class="pav av3">M</div><div class="pav av4">D</div>
+      </div>
+      <span class="proof-txt"><b>200+ psikolog</b> kullanıyor &nbsp;·&nbsp; Kredi kartı gerekmez</span>
+    </div>
+  </div>
+
+  <!-- App preview -->
+  <div class="hero-app">
+    <div class="flt flt1">
+      <div class="flt-l">AI Risk Analizi</div>
+      <div class="flt-g"><div class="flt-dot"></div> Stabil seyir</div>
+    </div>
+    <div class="flt flt2">
+      <div class="flt-l">Bu Ay Gelir</div>
+      <div class="flt-v">₺24.800</div>
+    </div>
+    <div class="app-wrap">
+      <div class="ap-bar">
+        <div class="ap-dot" style="background:#FF5F57"></div>
+        <div class="ap-dot" style="background:#FEBC2E"></div>
+        <div class="ap-dot" style="background:#28C840"></div>
+        <div class="ap-logo">T</div>
+        <span class="ap-title">TerapiSeansım — Gösterge Paneli</span>
+      </div>
+      <div class="ap-body">
+        <div class="ap-side">
+          <div class="ap-nav on">📊 Gösterge</div>
+          <div class="ap-nav">📅 Randevular</div>
+          <div class="ap-nav">🌿 Hastalar</div>
+          <div class="ap-nav">📝 Notlar</div>
+          <div class="ap-nav">✨ AI Araçlar</div>
+          <div class="ap-nav">🧾 Faturalar</div>
+          <div class="ap-nav">🔒 KVKK</div>
+        </div>
+        <div class="ap-main">
+          <div class="ap-stats">
+            <div class="ap-st"><div class="ap-sn">28</div><div class="ap-sl">Hasta</div></div>
+            <div class="ap-st"><div class="ap-sn">4</div><div class="ap-sl">Bugün</div></div>
+            <div class="ap-st"><div class="ap-sn">₺24.8K</div><div class="ap-sl">Bu Ay</div></div>
+            <div class="ap-st"><div class="ap-sn">96%</div><div class="ap-sl">Tahsilat</div></div>
+          </div>
+          <div class="ap-card">
+            <div class="ap-ch">Bugünkü Program</div>
+            <div class="ap-row"><span class="ap-tm">09:00</span><span class="ap-nm">Ayşe K.</span><span class="ap-tp">BDT · 50dk</span><span class="ap-badge">Aktif</span></div>
+            <div class="ap-row"><span class="ap-tm">11:00</span><span class="ap-nm">Mehmet D.</span><span class="ap-tp">EMDR · 90dk</span></div>
+            <div class="ap-row"><span class="ap-tm">14:30</span><span class="ap-nm">Selin A.</span><span class="ap-tp">Aile Terapisi</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BAND -->
+<div class="band">
+  <div class="band-track">
+    <span class="band-item">📅 Randevu Yönetimi</span>
+    <span class="band-item">📝 Şifreli Seans Notları</span>
+    <span class="band-item">🌿 Hasta Takibi</span>
+    <span class="band-item">🧾 Fatura ve Paket Yönetimi</span>
+    <span class="band-item">✨ AI Klinik Araçlar</span>
+    <span class="band-item">📈 PHQ-9 ve GAD-7 Takibi</span>
+    <span class="band-item">🔒 KVKK Uyumu</span>
+    <span class="band-item">🔗 Google Calendar</span>
+    <span class="band-item">📅 Randevu Yönetimi</span>
+    <span class="band-item">📝 Şifreli Seans Notları</span>
+    <span class="band-item">🌿 Hasta Takibi</span>
+    <span class="band-item">🧾 Fatura ve Paket Yönetimi</span>
+    <span class="band-item">✨ AI Klinik Araçlar</span>
+    <span class="band-item">📈 PHQ-9 ve GAD-7 Takibi</span>
+    <span class="band-item">🔒 KVKK Uyumu</span>
+    <span class="band-item">🔗 Google Calendar</span>
+  </div>
+</div>
+
+<!-- PILLARS -->
+<section class="pillars">
+  <div class="w">
+    <div class="ey rv">Neden TerapiSeansım?</div>
+    <h2 class="sh rv">Seans dışında da<br><em>çok iş var.</em></h2>
+    <p class="sp rv">Psikologlar zamanlarının büyük bölümünü terapiye değil, yönetim işlerine harcıyor. Hepsi ayrı araçlarda, hiçbiri birbirine bağlı değil.</p>
+    <div class="pgrid">
+      <div class="pillar rv">
+        <div class="pillar-n">01</div>
+        <div class="pillar-ico">⏱️</div>
+        <div class="pillar-h">Haftanın saatleri<br>idari işe gidiyor</div>
+        <div class="pillar-p">Randevu almak, not yazmak, hatırlatıcı göndermek, fatura kesmek, ödeme takip etmek. Bunların toplamı düşündüğünüzden çok daha büyük — ve hepsi terapiden çalınıyor.</div>
+        <div class="pillar-tag">Haftada 5 saat geri alın</div>
+      </div>
+      <div class="pillar rv d1">
+        <div class="pillar-n">02</div>
+        <div class="pillar-ico">🗂️</div>
+        <div class="pillar-h">Her şey dağınık,<br>arama yorucu</div>
+        <div class="pillar-p">Notlar Word&#39;de, randevular telefonda, faturalar Excel&#39;de, hasta mesajları WhatsApp&#39;ta. Bir hastanın son seansına, ödeme durumuna ve bir sonraki randevusuna ulaşmak için kaç ekran açıyorsunuz?</div>
+        <div class="pillar-tag">Tüm bilgi tek ekranda</div>
+      </div>
+      <div class="pillar rv d2">
+        <div class="pillar-n">03</div>
+        <div class="pillar-ico">📈</div>
+        <div class="pillar-h">Büyümek istiyorsunuz<br>ama sistem engelliyor</div>
+        <div class="pillar-p">Daha fazla hastaya yer açmak istiyorsunuz ama idari yük kapasiteyi dolduruyor. Organizasyon otomatik yürüdüğünde gerçek sınırın nerede olduğunu görürsünüz.</div>
+        <div class="pillar-tag">Kapasiteyi maksimize edin</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="mods" id="platform">
+  <div class="w">
+    <div class="mhead">
+      <div>
+        <div class="ey rv">Platform</div>
+        <h2 class="sh rv">Bir işin tüm adımları,<br><em>birbirine bağlı.</em></h2>
+      </div>
+      <p class="sp rv d2">Randevu aldığınızda hasta profili hazır. Seans bitti, notu yazdınız — AI özet çıkarıyor. Paket doldu — fatura hazır. Her modül bir sonrakini besliyor.</p>
+    </div>
+    <div class="mlist">
+      <div class="mod rv"><div class="mod-n">01</div><div class="mod-body"><div class="mod-h">Randevu ve Takvim Yönetimi</div><div class="mod-p">Google Takvim entegrasyonuyla telefon, bilgisayar ve platform her zaman senkron. Randevu oluşturulduğunda hasta kaydı otomatik güncellenir, çakışma kontrolü anlık yapılır. Hatırlatıcılar sistem tarafından gönderilir.</div><div class="mod-tags"><span class="mod-tag">Google Calendar</span><span class="mod-tag">Otomatik hatırlatıcı</span><span class="mod-tag">Çakışma koruması</span></div></div><div class="mod-ico">📅</div></div>
+      <div class="mod rv d1"><div class="mod-n">02</div><div class="mod-body"><div class="mod-h">Seans Notu ve Dokümantasyon</div><div class="mod-p">Seans sırasında not alın, bitince AI ile SOAP özeti çıkarın — 2 dakika. Tüm seans geçmişi kronolojik ve aranabilir. Notlar tarayıcınızda şifreleniyor; sunucumuz içeriği matematiksel olarak göremez.</div><div class="mod-tags"><span class="mod-tag">AI SOAP özeti</span><span class="mod-tag">Aranabilir arşiv</span><span class="mod-tag">AES-256 şifreli</span></div></div><div class="mod-ico">📝</div></div>
+      <div class="mod rv d2"><div class="mod-n">03</div><div class="mod-body"><div class="mod-h">Hasta Profili ve İlerleme Takibi</div><div class="mod-p">Her hasta için tam klinik kart: seans geçmişi, PHQ-9 ve GAD-7 skor grafikleri, iletişim bilgileri, seans paketi ve ödeme durumu. Seansa girmeden önce hastanızı 10 saniyede kavrayın.</div><div class="mod-tags"><span class="mod-tag">PHQ-9 ve GAD-7</span><span class="mod-tag">Seans geçmişi</span><span class="mod-tag">Paket durumu</span></div></div><div class="mod-ico">🌿</div></div>
+      <div class="mod rv d3"><div class="mod-n">04</div><div class="mod-body"><div class="mod-h">Faturalama ve Gelir Takibi</div><div class="mod-p">Seans paketleri tanımlayın; platform kalan seansı otomatik sayıyor. Paket dolduğunda tek tuşla fatura hazır. Aylık gelir, tahsilat durumu ve ödeme geçmişi tek panelde.</div><div class="mod-tags"><span class="mod-tag">Seans paket sayacı</span><span class="mod-tag">Otomatik fatura</span><span class="mod-tag">Gelir paneli</span></div></div><div class="mod-ico">🧾</div></div>
+      <div class="mod rv d4"><div class="mod-n">05</div><div class="mod-body"><div class="mod-h">Veri Güvenliği ve KVKK Uyumu</div><div class="mod-p">Notlarınız end-to-end şifreli. KVKK rıza formları, denetim izi ve veri hakları otomatik yönetiliyor. Ekstra bir şey yapmanıza gerek yok; yasal uyum platformun içinde.</div><div class="mod-tags"><span class="mod-tag">AES-256-GCM</span><span class="mod-tag">Otomatik rıza</span><span class="mod-tag">KVKK Madde 12</span></div></div><div class="mod-ico">🔒</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<section class="nums">
+  <div class="w" style="position:relative;z-index:2">
+    <div class="ey rv">Somut Fark</div>
+    <h2 class="sh rv">Birleşik platform,<br><em>ölçülebilir sonuç.</em></h2>
+    <p class="sp rv">Dağınık araçlar yerine tek platform kullandığınızda değişen şeyler.</p>
+    <div class="ngrid">
+      <div class="nb rv"><div class="nb-n">5<em> saat</em></div><div class="nb-l">Haftada kazanılan süre</div><div class="nb-d">Randevu, not, iletişim, fatura</div></div>
+      <div class="nb rv d1"><div class="nb-n"><em>1</em> yer</div><div class="nb-l">Tüm hasta bilgileri için</div><div class="nb-d">Eskisi: ajanda, Word, WhatsApp, Excel</div></div>
+      <div class="nb rv d2"><div class="nb-n"><em>2</em> dk</div><div class="nb-l">Seans özeti için</div><div class="nb-d">AI SOAP — eskisi 20 dakika</div></div>
+      <div class="nb rv d3"><div class="nb-n">0</div><div class="nb-l">Unutulan hatırlatıcı</div><div class="nb-d">Otomatik gönderim, takip yok</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="ai" id="ai">
+  <div class="w">
+    <div style="text-align:center;max-width:640px;margin:0 auto 56px">
+      <div class="ey rv">Yapay Zeka — Claude Destekli</div>
+      <h2 class="sh rv">Seans bitti, özet hazır.<br><em>2 dakika, her seferinde.</em></h2>
+      <p class="sp rv" style="margin:0 auto">Seans notunuzu yazın, AI klinik dili, DSM-5 formatı ve profesyonel yapıyla dakikalar içinde hazır belgeler üretsin. 8 araç, her klinik adım için.</p>
+    </div>
+
+    <div class="ai-tools-grid rv">
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">📋</span>
+          <div>
+            <div class="ai-tc-t">SOAP Seans Özeti</div>
+            <div class="ai-tc-save">⏱ 20 dk → 2 dk</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">Ham notunuzu yapıştırın — Subjektif, Objektif, Değerlendirme, Plan formatında DSM-5 uyumlu klinik özet anında hazır.</div>
+        <div class="ai-tc-tags"><span>DSM-5</span><span>SOAP</span><span>Tüm terapiler</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">⚠️</span>
+          <div>
+            <div class="ai-tc-t">Risk Değerlendirmesi</div>
+            <div class="ai-tc-save">📊 Veri odaklı</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">PHQ-9 trendleri, seans geçmişi ve klinik bilgileri birleştirerek sistematik kriz riski analizi ve öneriler üretir.</div>
+        <div class="ai-tc-tags"><span>C-SSRS</span><span>PHQ-9</span><span>Kriz protokolü</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">📈</span>
+          <div>
+            <div class="ai-tc-t">İlerleme Raporu</div>
+            <div class="ai-tc-save">📄 Süpervizyon için</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">Tüm seans geçmişini, ölçek skorlarını ve ruh hali trendini analiz ederek kapsamlı tedavi ilerleme raporu oluşturur.</div>
+        <div class="ai-tc-tags"><span>Trend analizi</span><span>Hedef takibi</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">🧩</span>
+          <div>
+            <div class="ai-tc-t">Vaka Formülasyonu</div>
+            <div class="ai-tc-save">🔬 BDT çerçevesi</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">Tetikleyiciler, ara inançlar, temel şemalar ve telafi stratejilerini BDT modeline göre yapılandırır.</div>
+        <div class="ai-tc-tags"><span>BDT</span><span>Şema terapi</span><span>ACT</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">📚</span>
+          <div>
+            <div class="ai-tc-t">Terapötik Ödev</div>
+            <div class="ai-tc-save">✏️ Hastaya özel</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">Hastanın profili, şikayeti ve terapi tekniğine göre uygulanabilir CBT/ACT/DBT ev ödevleri ve egzersizler üretir.</div>
+        <div class="ai-tc-tags"><span>CBT</span><span>ACT</span><span>DBT</span><span>EMDR</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">✍️</span>
+          <div>
+            <div class="ai-tc-t">Not Asistanı</div>
+            <div class="ai-tc-save">📝 Anında yapılandır</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">Seans sırasında aldığınız düzensiz notları profesyonel, akışkan ve yapılandırılmış klinik seans notuna dönüştürür.</div>
+        <div class="ai-tc-tags"><span>Hızlı notlar</span><span>Yeniden yaz</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">🚨</span>
+          <div>
+            <div class="ai-tc-t">Kriz Planı</div>
+            <div class="ai-tc-save">🛡 Güvenlik protokolü</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">Hastanın öyküsünü ve tetikleyicilerini göz önünde bulundurarak Türkiye kaynaklarıyla kişiselleştirilmiş kriz müdahale planı oluşturur.</div>
+        <div class="ai-tc-tags"><span>182 ALO</span><span>Güvenlik adımları</span></div>
+      </div>
+      <div class="ai-tool-card">
+        <div class="ai-tc-head">
+          <span class="ai-tc-ico">📊</span>
+          <div>
+            <div class="ai-tc-t">Ölçek Yorumlama</div>
+            <div class="ai-tc-save">📉 Trend analizi</div>
+          </div>
+        </div>
+        <div class="ai-tc-p">PHQ-9, GAD-7, BAI, BDI-II, PCL-5 ve daha fazlasının puan trendlerini klinik bağlama otururarak yorumlar ve önerir.</div>
+        <div class="ai-tc-tags"><span>PHQ-9</span><span>GAD-7</span><span>PCL-5</span><span>BAI</span></div>
+      </div>
+    </div>
+
+    <div class="ai-demo-strip rv d2">
+      <div class="ai-demo">
+        <div class="demo-lbl">Giriş — Ham Seans Notu</div>
+        <div class="demo-in">"Hasta annesinin hastalandığını öğrenince yoğun kaygı yaşadığını belirtti. Uyku bozukluğu ve konsantrasyon güçlüğü bildiriyor. Felaketleştiriyor gibi görünüyor."</div>
+        <div class="demo-lbl">AI Çıktısı — SOAP Özeti (2 saniyede)</div>
+        <div class="demo-out">
+          <strong>S (Subjektif):</strong> Bakım veren yakının hastalığına ilişkin yoğun kaygı bildiriyor. Uyku başlatma güçlüğü ve konsantrasyon bozukluğu eşlik ediyor.<br><br>
+          <strong>O (Objektif):</strong> PHQ-9 geçen haftaya kıyasla +3 artış (8→11). Göz teması uygun, motor aktivite normal sınırlar içinde.<br><br>
+          <strong>A (Değerlendirme):</strong> Yaşam olayıyla tetiklenmiş reaktif kaygı tablosu. Felaketleştirme ve zihin okuma bilişsel çarpıtmaları belirgin.<br><br>
+          <strong>P (Plan):</strong> Bilişsel yeniden yapılandırma — "en kötü senaryo" egzersizi. Duygu günlüğü ödevi. Bir sonraki seans: kayıp ve kontrol teması.
+        </div>
+        <div class="demo-note"><span>🔒</span><span>Hasta kimlik bilgileri (ad, TC) AI sorgusuna otomatik olarak dahil edilmez. Yurt dışı aktarım için kayıt sırasında açık rıza alınır.</span></div>
+      </div>
+      <div class="ai-demo-stat">
+        <div class="ads-item"><div class="ads-n">8</div><div class="ads-l">AI klinik araç</div></div>
+        <div class="ads-item"><div class="ads-n">2<span style="font-size:20px;font-weight:400">dk</span></div><div class="ads-l">SOAP özeti süresi</div></div>
+        <div class="ads-item"><div class="ads-n">0</div><div class="ads-l">Kimlik verisi paylaşımı</div></div>
+        <div class="ads-item"><div class="ads-n">DSM<span style="font-size:20px;font-weight:400">-5</span></div><div class="ads-l">Uyumlu terminoloji</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="trust" id="guvenlik">
+  <div class="w">
+    <div class="tlayout">
+      <div>
+        <div class="ey rv">Güvenlik</div>
+        <h2 class="sh rv">Hasta verisinde<br><em>sıfır risk.</em></h2>
+        <p class="sp rv">Psikolog-hasta gizliliği hem etik hem yasal zorunluluk. Bu, TerapiSeansım&#39;ın platform kurgusunun merkezinde — bir ek özellik olarak değil.</p>
+        <div class="titems">
+          <div class="ti rv"><div class="ti-ico ti-g">🔐</div><div><div class="ti-h">Sıfır-Bilgi Şifreleme</div><div class="ti-p">AES-256-GCM şifreleme tarayıcınızda gerçekleşir. Sunucumuz seans notlarınızın içeriğini matematiksel olarak göremez.</div></div></div>
+          <div class="ti rv"><div class="ti-ico ti-g">🇹🇷</div><div><div class="ti-h">KVKK Otomatik Uyum</div><div class="ti-p">Aydınlatma metni, açık rıza, denetim izi ve veri hakları otomatik yönetiliyor. Madde 12 kapsamı tam.</div></div></div>
+          <div class="ti rv"><div class="ti-ico ti-g">📋</div><div><div class="ti-h">Tam Denetim İzi</div><div class="ti-p">Her işlem zaman damgasıyla kayıt altına alınır. KVKK denetimi veya hukuki süreçlerde belge olarak sunabilirsiniz.</div></div></div>
+          <div class="ti rv"><div class="ti-ico ti-g">☁️</div><div><div class="ti-h">Günlük Yedek, AB Sunucuları</div><div class="ti-p">Verileriniz Avrupa&#39;da günlük yedeklenir. JSON/CSV ile istediğiniz zaman tam dışa aktarım yapabilirsiniz.</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="spec rv">
+          <div class="spec-h">Teknik Güvenlik</div>
+          <div class="srow"><span class="sk">Not şifreleme</span><span class="sv sv-ok">✓ AES-256-GCM</span></div>
+          <div class="srow"><span class="sk">Şifreleme katmanı</span><span class="sv">Tarayıcı — sıfır bilgi</span></div>
+          <div class="srow"><span class="sk">Şifre hashing</span><span class="sv sv-ok">✓ bcrypt 12 round</span></div>
+          <div class="srow"><span class="sk">Bağlantı</span><span class="sv sv-ok">✓ TLS 1.3</span></div>
+          <div class="srow"><span class="sk">Oturum</span><span class="sv sv-ok">✓ JWT RS256</span></div>
+          <div class="srow"><span class="sk">Denetim izi</span><span class="sv sv-ok">✓ Tüm işlemler</span></div>
+          <div class="srow"><span class="sk">KVKK kapsamı</span><span class="sv"><span class="sb">Madde 12 — Tam</span></span></div>
+          <div class="srow"><span class="sk">Yedekleme</span><span class="sv sv-ok">✓ Günlük, AB</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="fiyat">
+  <div class="w">
+    <div class="ey rv">Fiyatlandırma</div>
+    <h2 class="sh rv" style="text-align:center">Büyüdükçe değer katar,<br><em>yük değil.</em></h2>
+    <p class="sp rv" style="margin:0 auto 36px;text-align:center">14 gün ücretsiz · kredi kartı gerekmez · kurulum yok</p>
+    <div style="text-align:center">
+      <div class="tog rv">
+        <div class="tog-tr" id="ttr" onclick="togP()"><div class="tog-th"></div></div>
+        <span class="tl act" id="lm">Aylık</span>
+        <span style="color:var(--pale)">·</span>
+        <span class="tl" id="ly">Yıllık <span class="sp-pill">%20 İndirim</span></span>
+      </div>
+    </div>
+    <div class="pgrid2">
+
+      <!-- BAŞLANGIÇ -->
+      <div class="plan rv">
+        <div class="plan-name">Başlangıç</div>
+        <div class="plan-tag">Bağımsız psikolog için eksiksiz</div>
+        <div class="plan-pr"><span class="plan-sym">₺</span><span class="plan-amt" id="ps">490</span><span class="plan-per">/ay</span><div class="plan-note" id="pns" style="display:none">Yıllık ödemede · 2 ay bedava</div></div>
+        <ul class="plan-feats">
+          <li>Sınırsız hasta kaydı ve profili</li>
+          <li>Akıllı randevu takvimi</li>
+          <li>Google Takvim entegrasyonu</li>
+          <li>AES-256 şifreli seans notları</li>
+          <li>7 ölçek grafik takibi (PHQ-9, GAD-7...)</li>
+          <li>Seans paketi ve otomatik fatura</li>
+          <li>Gelir takip paneli</li>
+          <li>KVKK otomatik uyum</li>
+        </ul>
+        <a href="giris.html" class="pcta pcta-out">14 Gün Ücretsiz Dene</a>
+      </div>
+
+      <!-- PROFESYONEL -->
+      <div class="plan feat rv">
+        <div class="plan-pill">⭐ En Popüler</div>
+        <div class="plan-name">Profesyonel</div>
+        <div class="plan-tag">AI araçları + hasta hatırlatıcı</div>
+        <div class="plan-pr"><span class="plan-sym">₺</span><span class="plan-amt" id="pp">990</span><span class="plan-per">/ay</span><div class="plan-note" id="pnp" style="display:none">Yıllık ödemede · 2 ay bedava</div></div>
+        <ul class="plan-feats">
+          <li>Başlangıç planındaki her şey</li>
+          <li>8 AI klinik araç (SOAP, risk, formülasyon...)</li>
+          <li>Vaka formülasyonu ve not asistanı</li>
+          <li>📧 <strong>Otomatik hasta hatırlatıcı</strong> (e-posta)</li>
+          <li>📊 Gelişmiş gelir analizi ve raporlama</li>
+          <li>JSON/CSV tam veri dışa aktarım</li>
+          <li>Öncelikli destek</li>
+        </ul>
+        <a href="giris.html" class="pcta pcta-fill">14 Gün Ücretsiz Dene</a>
+      </div>
+
+      <!-- KLİNİK -->
+      <div class="plan plan-klinik rv">
+        <div class="plan-pill" style="background:linear-gradient(135deg,#2A6040,#0C1F14)">🏥 Klinik</div>
+        <div class="plan-name">Klinik</div>
+        <div class="plan-tag">Çok psikologlu klinikler için</div>
+        <div class="plan-pr"><span class="plan-sym">₺</span><span class="plan-amt" id="pk">1.690</span><span class="plan-per">/ay</span><div class="plan-note" id="pnk" style="display:none">Yıllık ödemede · 2 ay bedava</div></div>
+        <ul class="plan-feats">
+          <li>Profesyonel planındaki her şey</li>
+          <li>🏥 <strong>3 psikolog</strong> hesabı dahil (+eklenebilir)</li>
+          <li>🗓️ Ortak klinik takvimi</li>
+          <li>💳 Merkezi fatura ve gelir yönetimi</li>
+          <li>👥 Klinik asistanı erişimi (okuma)</li>
+          <li>📋 Klinik geneli raporlama</li>
+          <li>🔐 Yönetici paneli ve izin yönetimi</li>
+          <li>☎️ Öncelikli telefon desteği</li>
+        </ul>
+        <a href="giris.html" class="pcta pcta-out">Bize Ulaşın →</a>
+      </div>
+
+    </div>
+    <p class="rv" style="text-align:center;margin-top:18px;font-size:13px;color:var(--muted)">İstediğiniz zaman iptal · Verileriniz size ait · 30 gün veri koruma garantisi</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testis" id="yorumlar">
+  <div class="w">
+    <div class="ey rv">Kullanıcılar</div>
+    <h2 class="sh rv">Meslektaşlarınız<br><em>ne söylüyor?</em></h2>
+    <div class="tgrid">
+      <div class="tc rv">
+        <div class="tc-stars">★★★★★</div>
+        <div class="tc-q">"Sabah geliyorum, programım hazır. Seans bitti, AI özeti çıkardı. Fatura otomatik. Eski sisteme nasıl katlandığımı gerçekten anlamıyorum."</div>
+        <div class="tc-auth"><div class="tc-av" style="background:linear-gradient(135deg,#7B5EA7,#5440A0)">A</div><div><div class="tc-name">Dr. Ayşe Kılıç</div><div class="tc-role">Klinik Psikolog · İstanbul</div></div></div>
+      </div>
+      <div class="tc rv d1">
+        <div class="tc-stars">★★★★★</div>
+        <div class="tc-q">"AI SOAP özeti seanstan sonra 20 dakikamı geri verdi. O 20 dakikayı artık bir sonraki hastama ya da kendime ayırıyorum. Devrim niteliğinde."</div>
+        <div class="tc-auth"><div class="tc-av" style="background:linear-gradient(135deg,var(--g400),var(--g700))">M</div><div><div class="tc-name">Uzm. Psk. Mert Demir</div><div class="tc-role">Psikoterapist · Ankara</div></div></div>
+      </div>
+      <div class="tc rv d2">
+        <div class="tc-stars">★★★★★</div>
+        <div class="tc-q">"PHQ-9 trendlerini grafikle görmek süpervizyonda tamamen farklı bir diyalog kurmamı sağladı. Artık sezgiyle değil, somut veriyle konuşuyorum."</div>
+        <div class="tc-auth"><div class="tc-av" style="background:linear-gradient(135deg,#C05070,#983A58)">S</div><div><div class="tc-name">Psk. Selin Arslan</div><div class="tc-role">Çocuk ve Ergen Terapisti · İzmir</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq" id="sss">
+  <div class="w" style="text-align:center">
+    <div class="ey rv">SSS</div>
+    <h2 class="sh rv">Aklınızdaki sorular.</h2>
+    <div class="faq-inner">
+      <div class="fq"><div class="fq-q" onclick="fq(this)">Mevcut hasta verilerimi içe aktarabilir miyim?<div class="fq-ic">+</div></div><div class="fq-a"><div class="fq-txt">Evet. CSV formatında hasta listesi aktarımı destekleniyor. Geçmiş seans notlarını manuel olarak ekleyebilirsiniz. Destek ekibimiz geçiş sürecinde yardımcı olur.</div></div></div>
+      <div class="fq"><div class="fq-q" onclick="fq(this)">Google Takvim entegrasyonu nasıl çalışıyor?<div class="fq-ic">+</div></div><div class="fq-a"><div class="fq-txt">Hesabınızı Google ile bağladıktan sonra TerapiSeansım&#39;daki randevular otomatik olarak Google Takviminize yansır. İki yönlü senkronizasyon çalışır.</div></div></div>
+      <div class="fq"><div class="fq-q" onclick="fq(this)">AI araçları hasta bilgilerini nasıl işliyor?<div class="fq-ic">+</div></div><div class="fq-a"><div class="fq-txt">AI istekleri kendi güvenli sunucumuz üzerinden Anthropic&#39;e proxy olarak iletilir. Yurt dışı aktarım için kayıt sırasında açık rıza alınır. Hasta adı ve kimlik numarası gibi tanımlayıcıların sorguya eklenmemesi için uyarı mekanizması vardır.</div></div></div>
+      <div class="fq"><div class="fq-q" onclick="fq(this)">Aboneliği iptal edersem verilerime ne olur?<div class="fq-ic">+</div></div><div class="fq-a"><div class="fq-txt">İptal sonrası 30 gün tam erişim devam eder. Bu sürede JSON/CSV ile tüm verilerinizi dışa aktarabilirsiniz. 30 gün sonunda hesap ve veriler KVKK uyumlu şekilde kalıcı olarak silinir.</div></div></div>
+      <div class="fq"><div class="fq-q" onclick="fq(this)">Birden fazla cihazdan kullanabilir miyim?<div class="fq-ic">+</div></div><div class="fq-a"><div class="fq-txt">Evet, TerapiSeansım tamamen web tabanlı. Bilgisayar, tablet veya telefon — herhangi bir güncel tarayıcıdan erişebilirsiniz. Uygulama indirmenize gerek yok.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-in rv">
+    <h2><span>Daha az araç,</span><span><em>daha fazla terapi.</em></span></h2>
+    <p class="cta-sub">14 gün boyunca pratiğinizin tüm iş akışını tek platformdan yönetin. Kurulum yok. Kredi kartı gerekmez.</p>
+    <div class="cta-btns">
+      <a href="giris.html" class="cta-p">Ücretsiz Hesap Oluştur →</a>
+      <a href="mailto:destek@terapiseansim.com" class="cta-s">Sorularım var</a>
+    </div>
+    <p class="cta-note">İstediğiniz zaman iptal · Verileriniz size ait · KVKK uyumlu</p>
+  </div>
+</section>
+
+<footer>
+  <div class="fw">
+    <div class="ft">
+      <div><a href="/" class="flogo"><div class="fm">T</div><span class="fn">TerapiSeansım</span></a><p class="ftag">Psikologlara özel klinik yönetim platformu. Planlamadan seansa, nottan faturaya — tek yerde.</p></div>
+      <div><div class="fch">Platform</div><ul class="flinks"><li><a href="#platform">Özellikler</a></li><li><a href="#ai">AI Araçları</a></li><li><a href="#fiyat">Fiyatlar</a></li><li><a href="#sss">SSS</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+      <div><div class="fch">Hukuki</div><ul class="flinks"><li><a href="giris.html">KVKK Aydınlatma</a></li><li><a href="giris.html">Kullanım Koşulları</a></li><li><a href="giris.html">Gizlilik Politikası</a></li></ul></div>
+      <div><div class="fch">İletişim</div><ul class="flinks"><li><a href="mailto:destek@terapiseansim.com">destek@terapiseansim.com</a></li><li><a href="giris.html">Giriş Yap</a></li><li><a href="giris.html">Ücretsiz Başla</a></li></ul></div>
+    </div>
+    <div class="fbot"><span>© 2025 TerapiSeansım. Tüm hakları saklıdır.</span><span>🔒 KVKK Uyumlu · AES-256-GCM · Türkiye&#39;de Geliştirildi</span></div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById("nav");
+window.addEventListener("scroll",()=>nav.classList.toggle("up",scrollY>36),{passive:true});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vis");io.unobserve(e.target)}}),{threshold:.1,rootMargin:"0px 0px -28px 0px"});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+let ann=false;
+function togP(){
+  ann=!ann;
+  document.getElementById("ttr").classList.toggle("on",ann);
+  document.getElementById("lm").classList.toggle("act",!ann);
+  document.getElementById("ly").classList.toggle("act",ann);
+  document.getElementById("ps").textContent=ann?"390":"490";
+  document.getElementById("pp").textContent=ann?"790":"990";
+  document.getElementById("pk").textContent=ann?"1.350":"1.690";
+  document.getElementById("pns").style.display=ann?"block":"none";
+  document.getElementById("pnp").style.display=ann?"block":"none";
+  document.getElementById("pnk").style.display=ann?"block":"none";
+}
+function fq(btn){const i=btn.closest(".fq"),o=i.classList.contains("open");document.querySelectorAll(".fq").forEach(x=>x.classList.remove("open"));if(!o)i.classList.add("open");}
+document.querySelectorAll("a[href^=\"#\"]").forEach(a=>a.addEventListener("click",e=>{const t=document.querySelector(a.getAttribute("href"));if(t){e.preventDefault();t.scrollIntoView({behavior:"smooth",block:"start"})}}));
+</script>
+</body>
+</html>
