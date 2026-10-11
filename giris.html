@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+<script defer src="https://guzellik.seansim.com/t.js" data-site="terapi"></script>
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -556,6 +557,7 @@ function regSubmit(){
     termsAccepted:true, kvkkAccepted:true, aiConsentGiven:isCb('CB-AI')
   }).then(function(r){
     if(!r.ok){showErr('A-REG2',r.d.error||'Kayıt sırasında hata oluştu.');setBusy('B-REG-SUBMIT',false);return;}
+    if(window.seansim)window.seansim('signup');
     if(!r.d.needsVerification){
       // RESEND yoksa direkt giriş yap
       doLoginWithCreds(ST.form.email, ST.form.password);
