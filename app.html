@@ -386,7 +386,7 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="sb-item" data-v="calendar"><span class="ic">📅</span>Takvim <span class="sb-badge" id="badge-today" style="display:none">0</span></div>
     <div class="sb-sec">Klinik</div>
     <div class="sb-item" data-v="appointments"><span class="ic">🕐</span>Randevular</div>
-    <div class="sb-item" data-v="patients"><span class="ic">◉</span>Hastalar</div>
+    <div class="sb-item" data-v="patients"><span class="ic">◉</span>Danışanlar</div>
     <div class="sb-item" data-v="notes"><span class="ic">✍️</span>Seans Notları</div>
     <div class="sb-item" data-v="scores"><span class="ic">📊</span>Değerlendirmeler</div>
     <div class="sb-sec">Araçlar</div>
@@ -424,13 +424,13 @@ tbody tr:hover td{background:var(--sage5)}
       <!-- Hızlı aksiyon bar -->
       <div class="dash-actions">
         <button class="dash-act-btn" id="btn-dash-new-apt"><span class="dash-act-ic">🕐</span><span>Randevu Ekle</span></button>
-        <button class="dash-act-btn" id="btn-dash-new-pat"><span class="dash-act-ic">◉</span><span>Hasta Ekle</span></button>
+        <button class="dash-act-btn" id="btn-dash-new-pat"><span class="dash-act-ic">◉</span><span>Danışan Ekle</span></button>
         <button class="dash-act-btn" id="btn-dash-new-note"><span class="dash-act-ic">✍️</span><span>Not Ekle</span></button>
         <button class="dash-act-btn" id="btn-dash-new-inv"><span class="dash-act-ic">🧾</span><span>Fatura Kes</span></button>
       </div>
       <!-- KPI kartlar -->
       <div class="stat-grid">
-        <div class="stat" style="cursor:pointer" data-nav="patients"><div class="stat-accent" style="background:var(--sage3)"></div><div class="stat-ic">◉</div><div class="stat-v stat-sk" id="ds-total" style="width:60px;border-radius:6px"> </div><div class="stat-l">Toplam Hasta</div></div>
+        <div class="stat" style="cursor:pointer" data-nav="patients"><div class="stat-accent" style="background:var(--sage3)"></div><div class="stat-ic">◉</div><div class="stat-v stat-sk" id="ds-total" style="width:60px;border-radius:6px"> </div><div class="stat-l">Toplam Danışan</div></div>
         <div class="stat" style="cursor:pointer" data-nav="appointments"><div class="stat-accent" style="background:var(--blue)"></div><div class="stat-ic">🕐</div><div class="stat-v stat-sk" id="ds-today" style="width:60px;border-radius:6px"> </div><div class="stat-l">Bugün Randevu</div></div>
         <div class="stat" style="cursor:pointer" data-nav="appointments"><div class="stat-accent" style="background:var(--amber)"></div><div class="stat-ic">📆</div><div class="stat-v stat-sk" id="ds-month" style="width:60px;border-radius:6px"> </div><div class="stat-l">Bu Ay Seans</div></div>
         <div class="stat" style="cursor:pointer" data-nav="finance"><div class="stat-accent" style="background:var(--rose)"></div><div class="stat-ic">💰</div><div class="stat-v stat-sk" id="ds-rev" style="width:80px;border-radius:6px"> </div><div class="stat-l">Bu Ay Gelir</div></div>
@@ -481,19 +481,19 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="view" id="v-appointments">
       <div class="ph"><h2>Randevular</h2><div class="ph-ac"><button class="btn bp" id="btn-apt-new">+ Yeni Randevu</button></div></div>
       <div class="srch-row">
-        <input class="srch wide" id="apt-srch" placeholder="🔍 Hasta adı ara...">
+        <input class="srch wide" id="apt-srch" placeholder="🔍 Danışan adı ara...">
         <input class="srch" type="date" id="apt-date-f">
-        <select class="sel" id="apt-status-f"><option value="">Tüm Durumlar</option><option value="scheduled">Planlandı</option><option value="completed">Tamamlandı</option><option value="cancelled">İptal</option></select>
+        <select class="sel" id="apt-status-f"><option value="">Tüm Durumlar</option><option value="scheduled">Planlandı</option><option value="completed">Tamamlandı</option><option value="no_show">Gelmedi</option><option value="cancelled">İptal</option></select>
       </div>
       <div class="tbl-wrap">
-        <table><thead><tr><th>Hasta</th><th>Tarih & Saat</th><th>Süre</th><th>Terapi</th><th>Ortam</th><th>Durum</th><th>GCal</th><th></th></tr></thead>
+        <table><thead><tr><th>Danışan</th><th>Tarih & Saat</th><th>Süre</th><th>Terapi</th><th>Ortam</th><th>Durum</th><th>GCal</th><th></th></tr></thead>
         <tbody id="apt-tbody"></tbody></table>
       </div>
     </div>
 
     <!-- ═ HASTALAR ═ -->
     <div class="view" id="v-patients">
-      <div class="ph"><h2>Hastalar</h2><div class="ph-ac"><button class="btn bp" id="btn-pat-new">+ Yeni Hasta</button></div></div>
+      <div class="ph"><h2>Danışanlar</h2><div class="ph-ac"><button class="btn bp" id="btn-pat-new">+ Yeni Danışan</button></div></div>
       <div class="srch-row"><input class="srch wide" id="pat-srch" placeholder="🔍 Ad, telefon, terapi türü..."></div>
       <div class="tbl-wrap">
         <table><thead><tr><th>Ad Soyad</th><th>Telefon</th><th>Terapi</th><th>Seans</th><th>Kayıt</th><th>PHQ-9</th><th></th></tr></thead>
@@ -505,22 +505,22 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="view" id="v-notes">
       <div class="ph"><h2>Seans Notları</h2>
         <div class="ph-ac">
-          <select class="sel" id="notes-pat-sel"><option value="">— Hasta seçin —</option></select>
+          <select class="sel" id="notes-pat-sel"><option value="">— Danışan seçin —</option></select>
           <button class="btn bp" id="btn-note-new" disabled>+ Yeni Not</button>
         </div>
       </div>
-      <div id="notes-list"><div class="empty"><div class="empty-ic">✍️</div><div class="empty-t">Bir hasta seçin</div></div></div>
+      <div id="notes-list"><div class="empty"><div class="empty-ic">✍️</div><div class="empty-t">Bir danışan seçin</div></div></div>
     </div>
 
     <!-- ═ DEĞERLENDİRMELER ═ -->
     <div class="view" id="v-scores">
       <div class="ph"><h2>Değerlendirmeler</h2>
         <div class="ph-ac">
-          <select class="sel" id="scores-pat-sel"><option value="">— Hasta seçin —</option></select>
+          <select class="sel" id="scores-pat-sel"><option value="">— Danışan seçin —</option></select>
           <button class="btn bp" id="btn-score-new" disabled>+ Yeni Ölçek</button>
         </div>
       </div>
-      <div id="scores-list"><div class="empty"><div class="empty-ic">📊</div><div class="empty-t">Bir hasta seçin</div></div></div>
+      <div id="scores-list"><div class="empty"><div class="empty-ic">📊</div><div class="empty-t">Bir danışan seçin</div></div></div>
     </div>
 
     <!-- ═ AI ═ -->
@@ -530,7 +530,7 @@ tbody tr:hover td{background:var(--sage5)}
         <div class="card-body">
           <div class="ai-grid" id="ai-tool-grid"></div>
           <div class="fg"><label id="ai-lbl">Giriş</label>
-            <select class="sel" id="ai-pat-sel" style="margin-bottom:8px;display:none"><option value="">— Hasta bağlamı (opsiyonel) —</option></select>
+            <select class="sel" id="ai-pat-sel" style="margin-bottom:8px;display:none"><option value="">— Danışan bağlamı (opsiyonel) —</option></select>
             <textarea id="ai-inp" rows="5" placeholder="Buraya yazın..."></textarea>
           </div>
           <div class="alert a-err" id="ai-err"></div>
@@ -553,7 +553,7 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="view" id="v-packages">
       <div class="ph"><h2>Paketler</h2><div class="ph-ac"><button class="btn bp" id="btn-pkg-new">+ Yeni Paket</button></div></div>
       <div class="tbl-wrap">
-        <table><thead><tr><th>Hasta</th><th>Paket</th><th>Toplam</th><th>Kalan</th><th>Tutar</th><th>Başlangıç</th><th></th></tr></thead>
+        <table><thead><tr><th>Danışan</th><th>Paket</th><th>Toplam</th><th>Kalan</th><th>Tutar</th><th>Başlangıç</th><th></th></tr></thead>
         <tbody id="pkg-tbody"></tbody></table>
       </div>
     </div>
@@ -580,9 +580,9 @@ tbody tr:hover td{background:var(--sage5)}
         <div class="fin-bars" id="fin-bars-wrap"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <!-- Hasta başına gelir -->
+        <!-- Danışan başına gelir -->
         <div class="fin-section">
-          <div class="fin-section-h">Hasta Başına Gelir (Bu Yıl)</div>
+          <div class="fin-section-h">Danışan Başına Gelir (Bu Yıl)</div>
           <div id="fin-by-patient"><div class="empty" style="padding:8px 0"><div class="empty-t">Yükleniyor...</div></div></div>
         </div>
         <!-- Bekleyen faturalar -->
@@ -602,7 +602,7 @@ tbody tr:hover td{background:var(--sage5)}
       </div>
       <div id="inv-stats-row" style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap"></div>
       <div class="tbl-wrap">
-        <table><thead><tr><th>#</th><th>Hasta</th><th>Açıklama</th><th>Tutar</th><th>KDV</th><th>Tarih</th><th>Durum</th><th></th></tr></thead>
+        <table><thead><tr><th>#</th><th>Danışan</th><th>Açıklama</th><th>Tutar</th><th>KDV</th><th>Tarih</th><th>Durum</th><th></th></tr></thead>
         <tbody id="inv-tbody"></tbody></table>
       </div>
     </div>
@@ -703,13 +703,17 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="mo-body">
       <div class="alert a-err" id="apt-err"></div>
       <div class="f2">
-        <div class="fg"><label>Hasta *</label><select id="apt-pat"><option value="">Seçin</option></select></div>
+        <div class="fg"><label>Danışan *</label><select id="apt-pat"><option value="">Seçin</option></select></div>
         <div class="fg"><label>Tarih & Saat *</label><input type="datetime-local" id="apt-dt"></div>
       </div>
       <div class="f3">
         <div class="fg"><label>Süre (dk)</label><input type="number" id="apt-dur" value="50" min="15"></div>
         <div class="fg"><label>Terapi Türü</label><select id="apt-type"></select></div>
         <div class="fg"><label>Ortam</label><select id="apt-med"><option value="face">🏥 Yüz yüze</option><option value="online">💻 Online</option><option value="phone">📞 Telefon</option></select></div>
+      </div>
+      <div class="f2" id="apt-rep-row">
+        <div class="fg"><label>Tekrar</label><select id="apt-rep" onchange="document.getElementById('apt-rep-n-wrap').style.display=this.value?'':'none'"><option value="">Tek seferlik</option><option value="7">Her hafta aynı saatte</option><option value="14">2 haftada bir</option></select></div>
+        <div class="fg" id="apt-rep-n-wrap" style="display:none"><label>Seans sayısı</label><input type="number" id="apt-rep-n" value="8" min="2" max="52"></div>
       </div>
       <div class="fg"><label>Notlar</label><textarea id="apt-notes" rows="2"></textarea></div>
       <div class="fg" style="flex-direction:row;align-items:center;gap:8px">
@@ -718,7 +722,7 @@ tbody tr:hover td{background:var(--sage5)}
       </div>
       <div class="fg" style="flex-direction:row;align-items:center;gap:8px">
         <input type="checkbox" id="apt-remind" style="width:auto;cursor:pointer">
-        <label for="apt-remind" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--body);font-weight:400;cursor:pointer">📧 Hastaya hatırlatıcı e-posta gönder</label>
+        <label for="apt-remind" style="text-transform:none;letter-spacing:0;font-size:13px;color:var(--body);font-weight:400;cursor:pointer">📧 Danışana hatırlatıcı e-posta gönder</label>
       </div>
     </div>
     <div class="mo-foot"><button class="btn bo" data-close="mo-apt">İptal</button><button class="btn bp" id="btn-apt-save">💾 Kaydet</button></div>
@@ -728,7 +732,7 @@ tbody tr:hover td{background:var(--sage5)}
 <!-- HASTA -->
 <div class="mo" id="mo-pat">
   <div class="mo-box">
-    <div class="mo-head"><span class="mo-title" id="mo-pat-t">Hasta</span><button class="mo-close" data-close="mo-pat">✕</button></div>
+    <div class="mo-head"><span class="mo-title" id="mo-pat-t">Danışan</span><button class="mo-close" data-close="mo-pat">✕</button></div>
     <div class="mo-body">
       <div class="alert a-err" id="pat-err"></div>
       <div class="f2">
@@ -763,7 +767,7 @@ tbody tr:hover td{background:var(--sage5)}
         <div class="fg"><label>Terapi Türü</label><select id="note-therapy"></select></div>
         <div class="fg"><label>Süre (dk)</label><input id="note-dur" type="number" value="50" min="15"></div>
       </div>
-      <div class="fg"><label>Not İçeriği *</label><textarea id="note-body" rows="7" placeholder="Seans içeriği, gözlemler, hasta ifadeleri..."></textarea></div>
+      <div class="fg"><label>Not İçeriği *</label><textarea id="note-body" rows="7" placeholder="Seans içeriği, gözlemler, danışan ifadeleri..."></textarea></div>
       <div class="f2">
         <div class="fg"><label>Duygu Durumu</label><select id="note-mood"><option value="neutral">Nötr</option><option value="positive">İyi</option><option value="negative">Zor</option><option value="mixed">Karışık</option></select></div>
         <div class="fg"><label>Ödev / Ev Çalışması</label><input id="note-hw" type="text" placeholder="Bu seans verilen ödev..."></div>
@@ -796,7 +800,7 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="mo-head"><span class="mo-title">Yeni Paket</span><button class="mo-close" data-close="mo-pkg">✕</button></div>
     <div class="mo-body">
       <div class="alert a-err" id="pkg-err"></div>
-      <div class="fg"><label>Hasta *</label><select id="pkg-pat"><option value="">Seçin</option></select></div>
+      <div class="fg"><label>Danışan *</label><select id="pkg-pat"><option value="">Seçin</option></select></div>
       <div class="f2">
         <div class="fg"><label>Paket Adı</label><input id="pkg-name" type="text" placeholder="10 Seans Paketi"></div>
         <div class="fg"><label>Seans Sayısı *</label><input id="pkg-sess" type="number" min="1" value="10"></div>
@@ -813,7 +817,7 @@ tbody tr:hover td{background:var(--sage5)}
     <div class="mo-head"><span class="mo-title">Yeni Fatura</span><button class="mo-close" data-close="mo-inv">✕</button></div>
     <div class="mo-body">
       <div class="alert a-err" id="inv-err"></div>
-      <div class="fg"><label>Hasta *</label><select id="inv-pat"><option value="">Seçin</option></select></div>
+      <div class="fg"><label>Danışan *</label><select id="inv-pat"><option value="">Seçin</option></select></div>
       <div class="fg"><label>Açıklama</label><input id="inv-desc" type="text" placeholder="Terapi Seansı"></div>
       <div class="f2">
         <div class="fg"><label>Tutar ₺ *</label><input id="inv-amt" type="number" min="0"></div>
@@ -896,17 +900,17 @@ var SC = {
 
 /* ════ AI TOOLS — endpoint: POST /api/ai/complete ════ */
 var AI_TOOLS = [
-  {k:'soap',  ic:'📋',t:'SOAP Özeti',    d:'DSM-5 uyumlu özet', ph:'Seans içeriği, hasta ifadeleri, gözlemler...',lbl:'Seans içeriği',
-   sys:'Klinik psikolog asistanısın. DSM-5 uyumlu SOAP formatında Türkçe klinik özet yaz:\nS (Subjektif): Hastanın ifadeleri\nO (Objektif): Klinisyen gözlemleri\nA (Değerlendirme): Klinik değerlendirme\nP (Plan): Sonraki adımlar ve ödevler'},
+  {k:'soap',  ic:'📋',t:'SOAP Özeti',    d:'DSM-5 uyumlu özet', ph:'Seans içeriği, danışan ifadeleri, gözlemler...',lbl:'Seans içeriği',
+   sys:'Klinik psikolog asistanısın. DSM-5 uyumlu SOAP formatında Türkçe klinik özet yaz:\nS (Subjektif): Danışanın ifadeleri\nO (Objektif): Klinisyen gözlemleri\nA (Değerlendirme): Klinik değerlendirme\nP (Plan): Sonraki adımlar ve ödevler'},
   {k:'note',  ic:'✍️',t:'Not Asistanı',  d:'Ham notları yapılandırır', ph:'Düzensiz notlar, anahtar kelimeler...',lbl:'Ham notlar',
    sys:'Klinik psikolog asistanısın. Ham notları düzenli seans notuna dönüştür. Profesyonel klinik Türkçe.'},
-  {k:'hw',    ic:'📚',t:'Ödev Önerisi',  d:'Terapötik ödevler', ph:'Yaş, şikayet, terapi türü, haftalık hedef...',lbl:'Hasta profili',
-   sys:'Klinik psikolog asistanısın. Hastaya uygun 2-3 terapötik ödev/egzersiz öner. Her ödev: başlık, amaç, talimat, süre. Türkçe.'},
-  {k:'form',  ic:'🧩',t:'Vaka Formülasyonu',d:'BDT vaka analizi', ph:'Şikayet, geçmiş, tetikleyiciler...',lbl:'Hasta bilgileri',
+  {k:'hw',    ic:'📚',t:'Ödev Önerisi',  d:'Terapötik ödevler', ph:'Yaş, şikayet, terapi türü, haftalık hedef...',lbl:'Danışan profili',
+   sys:'Klinik psikolog asistanısın. Danışana uygun 2-3 terapötik ödev/egzersiz öner. Her ödev: başlık, amaç, talimat, süre. Türkçe.'},
+  {k:'form',  ic:'🧩',t:'Vaka Formülasyonu',d:'BDT vaka analizi', ph:'Şikayet, geçmiş, tetikleyiciler...',lbl:'Danışan bilgileri',
    sys:'Klinik psikolog asistanısın. BDT vaka formülasyonu:\n1. Tetikleyiciler\n2. Ara inançlar\n3. Temel inançlar/şemalar\n4. Telafi stratejileri\n5. Otomatik düşünceler\n6. Duygusal/davranışsal sonuçlar\nTürkçe.'},
   {k:'risk',  ic:'⚠️',t:'Risk Değerlendirmesi',d:'Klinik risk analizi', ph:'Son değişiklikler, risk ve koruyucu faktörler...',lbl:'Klinik bilgi',
    sys:'Klinik psikolog asistanısın. Risk değerlendirmesi:\n1. Koruyucu faktörler\n2. Risk faktörleri\n3. Risk düzeyi (düşük/orta/yüksek)\n4. Önerilen adımlar\nTürkçe.'},
-  {k:'crisis',ic:'🚨',t:'Kriz Planı',    d:'Güvenlik planı', ph:'Kriz geçmişi, tetikleyiciler, destek...',lbl:'Hasta bilgileri',
+  {k:'crisis',ic:'🚨',t:'Kriz Planı',    d:'Güvenlik planı', ph:'Kriz geçmişi, tetikleyiciler, destek...',lbl:'Danışan bilgileri',
    sys:'Klinik psikolog asistanısın. Kriz müdahale planı:\n1. Uyarı işaretleri\n2. Başa çıkma stratejileri\n3. Destek kişiler\n4. Kriz hatları: 182 ALO Psikiyatri\n5. Güvenlik adımları\nTürkçe.'},
   {k:'prog',  ic:'📈',t:'İlerleme Raporu',d:'Tedavi süreci analizi', ph:'Başlangıç, hedefler, tamamlanan seanslar...',lbl:'Tedavi bilgisi',
    sys:'Klinik psikolog asistanısın. Tedavi ilerleme raporu:\n1. Mevcut durum\n2. Hedeflere ulaşma\n3. Başarılar\n4. Güçlükler\n5. Sonraki adımlar\nTürkçe.'},
@@ -1014,7 +1018,7 @@ function showCfgBanner(){
 function doLogout(){sessionStorage.clear();location.href='giris.html';}
 
 /* ════ NAV ════ */
-var VIEW_TITLES={dashboard:'Gösterge Paneli',calendar:'Takvim',appointments:'Randevular',patients:'Hastalar',notes:'Seans Notları',scores:'Değerlendirmeler',ai:'AI Araçlar',packages:'Paketler',invoices:'Faturalar',finance:'Gelir Analizi',settings:'Ayarlar',kvkk:'KVKK & Veri'};
+var VIEW_TITLES={dashboard:'Gösterge Paneli',calendar:'Takvim',appointments:'Randevular',patients:'Danışanlar',notes:'Seans Notları',scores:'Değerlendirmeler',ai:'AI Araçlar',packages:'Paketler',invoices:'Faturalar',finance:'Gelir Analizi',settings:'Ayarlar',kvkk:'KVKK & Veri'};
 function nav(v){
   S.view=v;
   document.querySelectorAll('.view').forEach(function(el){el.classList.remove('on');});
@@ -1092,7 +1096,7 @@ function setupListeners(){
   document.getElementById('apt-date-f').addEventListener('change',filterApts);
   document.getElementById('apt-status-f').addEventListener('change',filterApts);
   document.getElementById('btn-apt-save').addEventListener('click',saveApt);
-  // Hastalar
+  // Danışanlar
   document.getElementById('btn-pat-new').addEventListener('click',function(){openPatModal();});
   document.getElementById('pat-srch').addEventListener('input',filterPats);
   document.getElementById('btn-pat-save').addEventListener('click',savePat);
@@ -1181,7 +1185,7 @@ function loadDashboard(){
     // Bugünkü randevular — zengin kart
     var todayEl=document.getElementById('dash-today');
     if(today.length){
-      var stMap={completed:'<span class="badge bg-g">✓ Tamamlandı</span>',cancelled:'<span class="badge bg-r">İptal</span>',scheduled:'<span class="badge bg-m">Planlandı</span>'};
+      var stMap={completed:'<span class="badge bg-g">✓ Tamamlandı</span>',cancelled:'<span class="badge bg-r">İptal</span>',no_show:'<span class="badge bg-a">Gelmedi</span>',scheduled:'<span class="badge bg-m">Planlandı</span>'};
       var medMap={online:'💻 Online',phone:'📞 Telefon',face:'🏥 Yüz yüze'};
       todayEl.innerHTML=today.map(function(a){
         var name=a.fn&&a.ln?esc(a.fn+' '+a.ln):(S.patients.find(function(x){return x.id===a.patient_id;})||{fn:'?',ln:'?'});
@@ -1380,7 +1384,7 @@ function loadPatients(){
 }
 function renderPats(list){
   var tb=document.getElementById('pat-tbody');
-  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><div class="empty-ic">◉</div><div class="empty-t">Henüz hasta yok</div><div class="empty-s">+ Yeni Hasta butonunu kullanın</div></div></td></tr>';return;}
+  if(!list.length){tb.innerHTML='<tr><td colspan="7"><div class="empty"><div class="empty-ic">◉</div><div class="empty-t">Henüz danışan yok</div><div class="empty-s">+ Yeni Danışan butonunu kullanın</div></div></td></tr>';return;}
   tb.innerHTML=list.map(function(p){
     var phq=p.last_phq9!=null?'<span class="badge '+(p.last_phq9>=15?'bg-r':p.last_phq9>=10?'bg-a':'bg-g')+'">'+p.last_phq9+'</span>':'<span class="badge bg-m">—</span>';
     return '<tr>'+
@@ -1407,7 +1411,7 @@ function filterPats(){
 }
 function openPatModal(id){
   S.editPatId=id||null;
-  document.getElementById('mo-pat-t').textContent=id?'Hasta Düzenle':'Yeni Hasta';
+  document.getElementById('mo-pat-t').textContent=id?'Danışan Düzenle':'Yeni Danışan';
   hideAl('pat-err');fillThSel('pat-therapy');
   if(id){
     var p=S.patients.find(function(x){return x.id===id;});
@@ -1443,14 +1447,14 @@ function savePat(){
     emergency_contact:(document.getElementById('pat-emrg').value||'').trim()};
   busy('btn-pat-save',true);
   (S.editPatId?apiFetch('PUT','/patients/'+S.editPatId,payload):apiFetch('POST','/patients',payload))
-    .then(function(){toast(S.editPatId?'Hasta güncellendi':'Hasta eklendi','ok');closeMo('mo-pat');return loadPatients();})
+    .then(function(){toast(S.editPatId?'Danışan güncellendi':'Danışan eklendi','ok');closeMo('mo-pat');return loadPatients();})
     .then(function(){populateSels();loadDashboard();})
     .catch(function(e){al('pat-err',e.message,'err');})
     .finally(function(){busy('btn-pat-save',false);});
 }
 function deletePat(id,name){
-  if(!confirm((name||'Bu hasta')+' silinecek. Tüm randevu ve notlar da silinir. Emin misiniz?'))return;
-  apiFetch('DELETE','/patients/'+id).then(function(){toast('Hasta silindi','ok');loadPatients();populateSels();loadDashboard();}).catch(function(e){toast(e.message,'err');});
+  if(!confirm((name||'Bu danışan')+' silinecek. Tüm randevu ve notlar da silinir. Emin misiniz?'))return;
+  apiFetch('DELETE','/patients/'+id).then(function(){toast('Danışan silindi','ok');loadPatients();populateSels();loadDashboard();}).catch(function(e){toast(e.message,'err');});
 }
 
 /* ════ APPOINTMENTS ════ */
@@ -1460,7 +1464,7 @@ function loadApts(){
 function renderApts(list){
   var tb=document.getElementById('apt-tbody');
   if(!list.length){tb.innerHTML='<tr><td colspan="8"><div class="empty"><div class="empty-ic">🕐</div><div class="empty-t">Randevu yok</div></div></td></tr>';return;}
-  var sMap={'scheduled':'<span class="badge bg-b">Planlandı</span>','completed':'<span class="badge bg-g">Tamamlandı</span>','cancelled':'<span class="badge bg-r">İptal</span>'};
+  var sMap={'scheduled':'<span class="badge bg-b">Planlandı</span>','completed':'<span class="badge bg-g">Tamamlandı</span>','cancelled':'<span class="badge bg-r">İptal</span>','no_show':'<span class="badge bg-a">Gelmedi</span>'};
   var mMap={face:'🏥 Yüz yüze',online:'💻 Online',phone:'📞 Telefon'};
   tb.innerHTML=list.map(function(a){
     // backend fmt(): at_time, fn, ln, patient_id, therapy_type, duration, medium, status, gcal_synced
@@ -1475,8 +1479,9 @@ function renderApts(list){
       '<td>'+(a.gcal_synced?'<span class="badge bg-g">✓</span>':'<span class="badge bg-m">—</span>')+'</td>'+
       '<td><div class="td-ac">'+
         '<button class="btn bo btn-xs" data-ae="'+esc(a.id)+'">Düzenle</button>'+
-        (a.status!=='completed'?'<button class="btn ba btn-xs" data-ac="'+esc(a.id)+'">✓ Tamamla</button>':'')+
-        '<button class="reminder-btn" data-ar="'+esc(a.id)+'" title="Hastaya hatırlatıcı e-posta gönder">📧</button>'+
+        (a.status!=='completed'&&a.status!=='no_show'?'<button class="btn ba btn-xs" data-ac="'+esc(a.id)+'">✓ Tamamla</button><button class="btn bo btn-xs" data-an="'+esc(a.id)+'" title="Danışan seansa gelmedi">Gelmedi</button>':'')+
+        '<button class="reminder-btn" data-aw="'+esc(a.id)+'" title="WhatsApp ile hatırlat">💬</button>'+
+        '<button class="reminder-btn" data-ar="'+esc(a.id)+'" title="Danışana hatırlatıcı e-posta gönder">📧</button>'+
         '<button class="btn br btn-xs" data-ad="'+esc(a.id)+'">Sil</button>'+
       '</div></td></tr>';
   }).join('');
@@ -1485,6 +1490,8 @@ function renderApts(list){
   tb.querySelectorAll('[data-ac]').forEach(function(e){e.addEventListener('click',function(){completeApt(e.dataset.ac);});});
   tb.querySelectorAll('[data-ad]').forEach(function(e){e.addEventListener('click',function(){deleteApt(e.dataset.ad);});});
   tb.querySelectorAll('[data-ar]').forEach(function(e){e.addEventListener('click',function(){sendReminder(e.dataset.ar);});});
+  tb.querySelectorAll('[data-an]').forEach(function(e){e.addEventListener('click',function(){noShowApt(e.dataset.an);});});
+  tb.querySelectorAll('[data-aw]').forEach(function(e){e.addEventListener('click',function(){waRemind(e.dataset.aw);});});
 }
 function filterApts(){
   var q=(document.getElementById('apt-srch').value||'').toLowerCase();
@@ -1496,6 +1503,9 @@ function filterApts(){
   }));
 }
 function openAptModal(id,patId,dt){
+  var rr=document.getElementById('apt-rep-row');if(rr)rr.style.display=id?'none':'';
+  var rp=document.getElementById('apt-rep');if(rp)rp.value='';
+  var rw=document.getElementById('apt-rep-n-wrap');if(rw)rw.style.display='none';
   S.editAptId=id||null;
   document.getElementById('mo-apt-t').textContent=id?'Randevu Düzenle':'Yeni Randevu';
   hideAl('apt-err');fillThSel('apt-type');populateSels();
@@ -1524,7 +1534,7 @@ function openAptModal(id,patId,dt){
 function saveApt(){
   var patId=document.getElementById('apt-pat').value;
   var dt=document.getElementById('apt-dt').value;
-  if(!patId||!dt){al('apt-err','Hasta ve tarih/saat zorunludur.','err');return;}
+  if(!patId||!dt){al('apt-err','Danışan ve tarih/saat zorunludur.','err');return;}
   var sendRemind=document.getElementById('apt-remind').checked;
   var payload={patient_id:patId,at_time:dt,
     duration:parseInt(document.getElementById('apt-dur').value)||50,
@@ -1532,10 +1542,12 @@ function saveApt(){
     medium:document.getElementById('apt-med').value,
     notes:(document.getElementById('apt-notes').value||'').trim(),
     sync_gcal:document.getElementById('apt-gcal').checked};
+  var rep=S.editAptId?0:parseInt(document.getElementById('apt-rep').value)||0;
+  var repN=rep?Math.min(52,Math.max(2,parseInt(document.getElementById('apt-rep-n').value)||8)):1;
   busy('btn-apt-save',true);
-  (S.editAptId?apiFetch('PUT','/appointments/'+S.editAptId,payload):apiFetch('POST','/appointments',payload))
+  (S.editAptId?apiFetch('PUT','/appointments/'+S.editAptId,payload):addRecurring(payload,rep,repN))
     .then(function(res){
-      toast(S.editAptId?'Randevu güncellendi':'Randevu eklendi','ok');
+      toast(S.editAptId?'Randevu güncellendi':(repN>1?repN+' seans takvime eklendi':'Randevu eklendi'),'ok');
       // Hatırlatıcı gönder (yeni randevularda)
       if(sendRemind&&!S.editAptId&&res&&res.id){
         apiFetch('POST','/reminders/appointment/'+res.id)
@@ -1547,6 +1559,35 @@ function saveApt(){
     .then(function(){buildMiniCal();loadDashboard();if(S.view==='calendar')renderCal();})
     .catch(function(e){al('apt-err',e.message,'err');})
     .finally(function(){busy('btn-apt-save',false);});
+}
+/* Haftalık / iki haftalık düzenli seanslar: aynı saatte N randevu sırayla eklenir, ilki döndürülür. */
+function addRecurring(payload,stepDays,n){
+  if(!stepDays||n<2)return apiFetch('POST','/appointments',payload);
+  var base=new Date(payload.at_time),first=null,i=0;
+  function pad(x){return String(x).padStart(2,'0');}
+  function next(){
+    if(i>=n)return Promise.resolve(first);
+    var d=new Date(base.getTime());d.setDate(d.getDate()+stepDays*i);
+    var p=Object.assign({},payload,{at_time:d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+'T'+pad(d.getHours())+':'+pad(d.getMinutes())});
+    i++;
+    return apiFetch('POST','/appointments',p).then(function(r){if(!first)first=r;return next();});
+  }
+  return next();
+}
+function noShowApt(id){
+  apiFetch('PUT','/appointments/'+id,{status:'no_show'}).then(function(){toast('Gelmedi olarak işaretlendi','ok');loadApts();loadDashboard();}).catch(function(e){toast(e.message,'err');});
+}
+/* WhatsApp hatırlatma: danışanın telefonuna hazır mesajla wa.me açılır (ücretsiz, SMS gerekmez). */
+function waPhone(ph){var d=String(ph||'').replace(/\D/g,'');if(!d)return '';if(d.indexOf('90')===0&&d.length===12)return d;if(d.charAt(0)==='0')d=d.slice(1);return d.length===10?'90'+d:d;}
+function waRemind(id){
+  var a=(S.apts||[]).find(function(x){return x.id===id;});if(!a)return;
+  var p=S.patients.find(function(x){return x.id===a.patient_id;})||{};
+  var ph=waPhone(p.phone);if(!ph){toast('Danışanın telefon numarası kayıtlı değil','warn');return;}
+  var d=new Date(a.at_time),u={};try{u=JSON.parse(sessionStorage.getItem('ts_user')||'{}');}catch(e){}
+  var gun=d.toLocaleDateString('tr-TR',{day:'numeric',month:'long',weekday:'long'}),saat=d.toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+  var ort={online:' (online)',phone:' (telefon)'}[a.medium]||'';
+  var msg='Merhaba '+(p.fn||'')+', '+gun+' saat '+saat+' seansınızı'+ort+' hatırlatmak isterim. Görüşmek üzere.'+(u.name?'\n'+u.name:'');
+  window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(msg),'_blank','noopener');
 }
 function completeApt(id){
   apiFetch('PUT','/appointments/'+id,{status:'completed'}).then(function(){toast('Seans tamamlandı ✅','ok');loadApts();loadDashboard();}).catch(function(e){toast(e.message,'err');});
@@ -1598,7 +1639,7 @@ function openNoteModal(){
 function saveNote(){
   var patId=document.getElementById('notes-pat-sel').value;
   var body=(document.getElementById('note-body').value||'').trim();
-  if(!patId){al('note-err','Hasta seçin.','err');return;}
+  if(!patId){al('note-err','Danışan seçin.','err');return;}
   if(!body){al('note-err','Not içeriği zorunludur.','err');return;}
   busy('btn-note-save',true);
   apiFetch('POST','/notes',{
@@ -1688,13 +1729,16 @@ function updateScoreBox(){
   var tot=calcTotal();
   box.style.display='block';
   document.getElementById('sc-total').textContent=tot+(sc.max?'/'+sc.max:'');
-  document.getElementById('sc-info').textContent=sc.info(tot);
+  var info=sc.info(tot);
+  // PHQ-9 9. madde (kendine zarar verme düşünceleri) toplam puandan bağımsız olarak değerlendirilmelidir.
+  if(S.scaleKey==='PHQ9'&&S.scaleAns[8]>0)info+=' · ⚠️ 9. madde pozitif: kendine zarar verme/intihar düşüncesi bildirildi. Aynı seansta güvenlik değerlendirmesi (ör. C-SSRS) ve güvenlik planı önerilir. Acil durumda 112.';
+  document.getElementById('sc-info').textContent=info;
 }
 function openScoreModal(){S.scaleAns={};hideAl('score-err');buildScaleTabs();renderScaleBody();openMo('mo-score');}
 function saveScore(){
   var patId=document.getElementById('scores-pat-sel').value;
   var sc=SC[S.scaleKey];
-  if(!patId){al('score-err','Hasta seçin.','err');return;}
+  if(!patId){al('score-err','Danışan seçin.','err');return;}
   if(Object.keys(S.scaleAns).length<sc.qs.length){al('score-err','Tüm soruları yanıtlayın.','err');return;}
   var tot=calcTotal();
   busy('btn-score-save',true);
@@ -1800,7 +1844,7 @@ function openPkgModal(){
 function savePkg(){
   var patId=document.getElementById('pkg-pat').value;
   var sess=document.getElementById('pkg-sess').value;
-  if(!patId||!sess){al('pkg-err','Hasta ve seans sayısı zorunludur.','err');return;}
+  if(!patId||!sess){al('pkg-err','Danışan ve seans sayısı zorunludur.','err');return;}
   busy('btn-pkg-save',true);
   apiFetch('POST','/packages',{patient_id:patId,name:(document.getElementById('pkg-name').value||'').trim(),sessions_total:parseInt(sess),price:parseFloat(document.getElementById('pkg-price').value)||0})
     .then(function(){toast('Paket oluşturuldu','ok');closeMo('mo-pkg');loadPackages();})
@@ -1861,7 +1905,7 @@ function openInvModal(){
 function saveInv(){
   var patId=document.getElementById('inv-pat').value;
   var amt=document.getElementById('inv-amt').value;
-  if(!patId||!amt){al('inv-err','Hasta ve tutar zorunludur.','err');return;}
+  if(!patId||!amt){al('inv-err','Danışan ve tutar zorunludur.','err');return;}
   busy('btn-inv-save',true);
   apiFetch('POST','/invoices',{patient_id:patId,description:(document.getElementById('inv-desc').value||'').trim()||'Terapi Seansı',amount:parseFloat(amt),tax_rate:parseFloat(document.getElementById('inv-tax').value)||0,status:document.getElementById('inv-status').value})
     .then(function(){toast('Fatura oluşturuldu','ok');closeMo('mo-inv');loadInvoices();})
@@ -1917,7 +1961,7 @@ function loadFinance(){
       }).join('');
     }else if(bars){bars.innerHTML='<div style="color:var(--muted);font-size:12px">Henüz veri yok</div>';}
 
-    // Hasta başına
+    // Danışan başına
     var pp=document.getElementById('fin-by-patient');
     if(pp){
       if(!d.byPatient||!d.byPatient.length){pp.innerHTML='<div class="empty" style="padding:8px 0"><div class="empty-t">Veri yok</div></div>';
@@ -1963,7 +2007,7 @@ function exportFinanceCsv(){
   var year=document.getElementById('fin-year-sel')?document.getElementById('fin-year-sel').value:new Date().getFullYear();
   apiFetch('GET','/invoices?from='+year+'-01-01&to='+year+'-12-31').then(function(invs){
     if(!invs||!invs.length){toast('Dışa aktarılacak fatura yok','info');return;}
-    var rows=[['#','Hasta','Açıklama','Tutar','KDV','Tarih','Durum']];
+    var rows=[['#','Danışan','Açıklama','Tutar','KDV','Tarih','Durum']];
     invs.forEach(function(i){
       rows.push([i.number||'',((i.fn||'')+' '+(i.ln||'')).trim(),i.description||'Terapi Seansı',i.amount||0,i.tax_rate||0,(i.date||'').slice(0,10),i.status==='paid'?'Ödendi':'Bekliyor']);
     });
@@ -2067,7 +2111,7 @@ function kvkkAnon(){
   if(S.patients.length){
     apiFetch('POST','/patients/'+S.patients[0].id+'/anonymize',{}).then(function(){toast('Anonimleştirme başlatıldı','ok');}).catch(function(e){toast(e.message,'err');});
   }else{
-    toast('Silinecek hasta verisi yok','info');
+    toast('Silinecek danışan verisi yok','info');
   }
 }
 function loadAudit(){
@@ -2117,7 +2161,7 @@ function populateSels(){
     var sel=document.getElementById(id);if(!sel)return;
     var cur=sel.value;
     var isNote=(id==='notes-pat-sel'||id==='scores-pat-sel');
-    sel.innerHTML=(isNote?'<option value="">— Hasta seçin —</option>':'<option value="">Seçin</option>')+
+    sel.innerHTML=(isNote?'<option value="">— Danışan seçin —</option>':'<option value="">Seçin</option>')+
       S.patients.map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.fn+' '+p.ln)+'</option>';}).join('');
     if(cur)sel.value=cur;
   });
