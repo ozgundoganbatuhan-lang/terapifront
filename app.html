@@ -1714,7 +1714,7 @@ function runAI(){
   var prompt=inp;
   if(patId){
     var p=S.patients.find(function(x){return x.id===patId;});
-    if(p)prompt='Hasta: '+p.fn+' '+p.ln+(p.therapy_type?' | '+p.therapy_type:'')+(p.complaint?' | '+p.complaint:'')+'\n\n'+inp;
+    if(p)prompt='Danışan: '+((p.fn||'').charAt(0)+'.'+(p.ln||'').charAt(0)+'.').toUpperCase()+(p.therapy_type?' | '+p.therapy_type:'')+(p.complaint?' | '+p.complaint:'')+'\n\n'+inp;
   }
   var _af=document.getElementById('ai-footer');if(_af)_af.style.display='none';
   var _arb=document.getElementById('ai-result-box');if(_arb)_arb.style.display='none';
