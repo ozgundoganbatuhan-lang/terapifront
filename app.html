@@ -360,6 +360,15 @@ tbody tr:hover td{background:var(--sage5)}
   .f2,.f3{grid-template-columns:1fr}
   .ai-grid{grid-template-columns:1fr 1fr}
 }
+
+.tw{position:fixed;inset:0;z-index:9000;display:none;place-items:center;padding:16px;background:rgba(10,24,16,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tw.show{display:grid}
+.tw-c{width:100%;max-width:420px;background:#fff;border-radius:18px;padding:28px 24px 18px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.tw-i{font-size:30px;margin-bottom:10px}
+.tw-c h3{font-size:20px;font-weight:700;margin:0 0 8px;color:#14201a}
+.tw-c p{font-size:14.5px;line-height:1.6;color:#4b5a52;margin:0 0 18px}
+.tw-p,.tw-s,.tw-x{display:block;width:100%;border:0;border-radius:11px;padding:12px 16px;font:600 14.5px/1.2 inherit;cursor:pointer;margin-top:8px}
+.tw-p{background:#276638;color:#fff}.tw-s{background:#eef3ef;color:#14201a}.tw-x{background:none;color:#6b7a72;font-weight:500}
 </style>
 </head>
 <body>
@@ -947,6 +956,7 @@ function fmtTime(s){
 }
 
 /* ════ API ════ */
+function ymd(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function apiFetch(method,path,body){
   if(!API){
     showCfgBanner();
@@ -957,12 +967,11 @@ function apiFetch(method,path,body){
   return fetch(API+path,opts)
     .then(function(res){
       if(res.status===401){doLogout();return Promise.reject(new Error('Oturum süresi doldu'));}
-      return res.json().then(function(d){
-        if(!res.ok)return Promise.reject(new Error(d.error||'HTTP '+res.status));
+      return res.json().catch(function(){return null;}).then(function(d){
+        if(res.status===402&&d&&d.code==='TRIAL_EXPIRED')showTrialWall();
+        if(!res.ok)return Promise.reject(new Error((d&&d.error)||('Sunucu hatası ('+res.status+')')));
+        if(d===null)return Promise.reject(new Error('Yanıt okunamadı ('+res.status+')'));
         return d;
-      }).catch(function(parseErr){
-        if(parseErr.message&&(parseErr.message.startsWith('HTTP')||parseErr.message==='Oturum süresi doldu'))return Promise.reject(parseErr);
-        return Promise.reject(new Error('Yanıt okunamadı ('+res.status+')'));
       });
     })
     .catch(function(e){
@@ -972,6 +981,28 @@ function apiFetch(method,path,body){
       }
       return Promise.reject(e);
     });
+}
+
+/* Deneme bittiğinde: hesap salt okunur, kullanıcıya ne yapacağını söyle (online ödeme gelene kadar talep e-postayla). */
+function showTrialWall(){
+  var w=document.getElementById('trial-wall');if(w){w.classList.add('show');return;}
+  w=document.createElement('div');w.id='trial-wall';w.className='tw show';w.setAttribute('role','dialog');w.setAttribute('aria-modal','true');
+  w.innerHTML='<div class="tw-c"><div class="tw-i">⏳</div><h3>Deneme süreniz doldu</h3>'+
+    '<p>Verileriniz güvende ve 30 gün boyunca saklanıyor. Bu sürede kayıtlarınızı görebilir ve dışa aktarabilirsiniz; yeni kayıt için planınızı aktifleştirin.</p>'+
+    '<button type="button" class="tw-p" id="tw-req">Planımı aktifleştir</button>'+
+    '<button type="button" class="tw-s" id="tw-exp">Verilerimi indir (JSON)</button>'+
+    '<button type="button" class="tw-x" id="tw-close">Kayıtlarıma göz at</button></div>';
+  document.body.appendChild(w);
+  document.getElementById('tw-req').addEventListener('click',requestPlan);
+  document.getElementById('tw-exp').addEventListener('click',function(){kvkkExport();});
+  document.getElementById('tw-close').addEventListener('click',function(){w.classList.remove('show');});
+}
+function requestPlan(){
+  try{window.seansim&&window.seansim('lead');}catch(e){}
+  var u={};try{u=JSON.parse(sessionStorage.getItem('ts_user')||'{}');}catch(e){}
+  var body='Merhaba,\n\nTerapiSeansım planımı aktifleştirmek istiyorum.\n\nAd: '+(u.name||'')+'\nHesap e-postası: '+(u.email||'')+'\n';
+  location.href='mailto:info@seansim.com?subject='+encodeURIComponent('TerapiSeansım plan aktivasyonu')+'&body='+encodeURIComponent(body);
+  toast('E-posta taslağı açıldı. Ekibimiz aynı gün size dönecek.','ok');
 }
 
 function showCfgBanner(){
@@ -1015,7 +1046,8 @@ function init(){
       if(u.plan==='trial'&&u.trialEnds){
         var days=Math.ceil((new Date(u.trialEnds)-new Date())/86400000);
         var t=document.getElementById('sb-trial');
-        if(t){t.style.display='inline';t.textContent=days>0?'Deneme: '+days+' gün':'Deneme Bitti';}
+        if(t){t.style.display='inline';t.textContent=days>0?'Deneme: '+days+' gün':'Deneme bitti';t.style.cursor='pointer';t.onclick=days>0?requestPlan:showTrialWall;}
+        if(days<=0)showTrialWall();
       }
       return Promise.all([loadPatients(),loadApts()]);
     })
@@ -1243,7 +1275,7 @@ function buildMiniCal(){
   var y=S.calY,m=S.calM;
   var first=(new Date(y,m,1).getDay()+6)%7;
   var dim=new Date(y,m+1,0).getDate();
-  var todayStr=new Date().toISOString().slice(0,10);
+  var todayStr=ymd();
   var aptDs={};S.apts.forEach(function(a){if(a.at_time)aptDs[a.at_time.slice(0,10)]=true;});
   var h='<div class="mc-head"><button class="mc-nav" id="mcp-p">‹</button><span class="mc-label">'+months[m]+' '+y+'</span><button class="mc-nav" id="mcp-n">›</button></div><div class="mc-grid">';
   wdays.forEach(function(d){h+='<div class="mc-dh">'+d+'</div>';});
@@ -1267,7 +1299,7 @@ function renderCal(){
   var y=S.calY,m=S.calM;
   var first=(new Date(y,m,1).getDay()+6)%7;
   var dim=new Date(y,m+1,0).getDate();
-  var todayStr=new Date().toISOString().slice(0,10);
+  var todayStr=ymd();
 
   var aptMap={};
   S.apts.forEach(function(a){
@@ -1555,7 +1587,7 @@ function loadNotes(){
 }
 function openNoteModal(){
   hideAl('note-err');fillThSel('note-therapy');
-  document.getElementById('note-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('note-date').value=ymd();
   document.getElementById('note-body').value='';
   document.getElementById('note-mood').value='neutral';
   document.getElementById('note-dur').value='50';
@@ -1867,7 +1899,7 @@ function loadFinance(){
     if(bars&&d.monthly&&d.monthly.length){
       var maxV=Math.max.apply(null,d.monthly.map(function(x){return x.paid||0;}));
       if(maxV<1)maxV=1;
-      var curMon=new Date().toISOString().slice(0,7);
+      var curMon=ymd().slice(0,7);
       bars.innerHTML=d.monthly.map(function(x){
         var h=Math.max(4,Math.round((x.paid||0)/maxV*80));
         var mon=x.month;
@@ -2017,14 +2049,14 @@ function changePw(){
 /* ════ KVKK ════ */
 function kvkkExport(){
   var blob=new Blob([JSON.stringify({exportDate:new Date().toISOString(),patients:S.patients},null,2)],{type:'application/json'});
-  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='terapiseansim-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='terapiseansim-'+ymd()+'.json';a.click();
   toast('Veriler indirildi','ok');
 }
 function legalProof(){
   // ✓ Doğru endpoint: /auth/legal-proof
   apiFetch('GET','/auth/legal-proof').then(function(d){
     var blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
-    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hukuki-onay-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='hukuki-onay-'+ymd()+'.json';a.click();
     toast('Belge indirildi','ok');
   }).catch(function(e){toast('Belge alınamadı: '+e.message,'err');});
 }
